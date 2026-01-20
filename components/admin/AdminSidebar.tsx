@@ -21,8 +21,17 @@ interface AdminSidebarProps {
   onToggle: () => void;
 }
 
+// Nav item type
+interface NavItem {
+  title: string;
+  href: string;
+  icon: typeof LayoutDashboard;
+  disabled?: boolean;
+  badge?: string;
+}
+
 // Admin navigation items
-const navItems = [
+const navItems: NavItem[] = [
   {
     title: "Dashboard",
     href: "/admin/dashboard",

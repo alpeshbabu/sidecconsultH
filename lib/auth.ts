@@ -92,9 +92,9 @@ declare module "next-auth" {
   }
 }
 
-declare module "next-auth/jwt" {
-  interface JWT {
-    id?: string;
-    role?: string;
-  }
+// JWT augmentation for next-auth v5
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+interface ExtendedJWT {
+  id?: string;
+  role?: string;
 }

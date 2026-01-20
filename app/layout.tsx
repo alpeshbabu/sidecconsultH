@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
 import { WebVitalsReporter, GoogleAnalytics, CookieConsent } from "@/components/shared";
@@ -102,7 +103,9 @@ export default function RootLayout({
       >
         <ThemeProvider>
           <SessionProvider>
-            <GoogleAnalytics />
+            <Suspense fallback={null}>
+              <GoogleAnalytics />
+            </Suspense>
             <WebVitalsReporter />
             <CookieConsent />
             {children}

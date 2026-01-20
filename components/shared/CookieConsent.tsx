@@ -42,7 +42,7 @@ export function CookieConsent() {
 
     // Update GA consent mode
     if (typeof window !== "undefined" && window.gtag) {
-      window.gtag("consent", "update", {
+      (window.gtag as (...args: unknown[]) => void)("consent", "update", {
         analytics_storage: prefs.analytics ? "granted" : "denied",
         ad_storage: prefs.marketing ? "granted" : "denied",
       });

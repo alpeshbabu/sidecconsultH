@@ -169,7 +169,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     featuredImage: post.featuredImage,
     publishedAt: post.publishedAt,
     updatedAt: post.updatedAt,
-    authorName: post.author?.name,
+    authorName: post.author?.name ?? undefined,
   });
 
   const breadcrumbItems = [

@@ -2,6 +2,8 @@
  * Performance monitoring utilities for Core Web Vitals
  */
 
+import React from "react";
+
 // Track Web Vitals
 export function reportWebVitals(metric: {
   id: string;
@@ -52,9 +54,6 @@ export function lazyLoadComponent<T extends React.ComponentType<any>>(
     );
   };
 }
-
-// Import React for lazy loading
-import React from "react";
 
 // Performance observer for monitoring
 export class PerformanceMonitor {

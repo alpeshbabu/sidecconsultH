@@ -430,7 +430,7 @@ export default async function ServicesPage() {
       <section className="border-y bg-muted/30 py-8" id="categories">
         <div className="container-wide">
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {serviceCategories.map((category) => {
+            {serviceCategories.map((category: any) => {
               const IconComponent = category.icon;
               return (
                 <Link key={category.id} href={`#${category.id}`}>
@@ -456,7 +456,7 @@ export default async function ServicesPage() {
 
       {/* Services by Category */}
       <div id="services">
-        {serviceCategories.map((category, categoryIndex) => {
+        {serviceCategories.map((category: any, categoryIndex: number) => {
           const CategoryIcon = category.icon;
           
           return (
@@ -488,7 +488,7 @@ export default async function ServicesPage() {
 
                 {/* Services Grid */}
                 <div className="space-y-8">
-                  {category.services.map((service, serviceIndex) => {
+                  {category.services.map((service: any, serviceIndex: number) => {
                     const ServiceIcon = service.icon;
                     const isEven = serviceIndex % 2 === 0;
 
@@ -520,7 +520,7 @@ export default async function ServicesPage() {
                                 Expected Outcomes
                               </h4>
                               <div className="mt-3 flex flex-wrap gap-2">
-                                {service.outcomes.map((outcome, outcomeIndex) => (
+                                {service.outcomes.map((outcome: string, outcomeIndex: number) => (
                                   <Badge
                                     key={outcomeIndex}
                                     variant="outline"
@@ -552,7 +552,7 @@ export default async function ServicesPage() {
                               What we deliver in this service area
                             </p>
                             <ul className="space-y-3">
-                              {service.keyOfferings.map((offering, offeringIndex) => (
+                              {service.keyOfferings.map((offering: string, offeringIndex: number) => (
                                 <li
                                   key={offeringIndex}
                                   className="flex items-start gap-3"
@@ -589,7 +589,7 @@ export default async function ServicesPage() {
           </div>
 
           <div className="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-            {whyChooseUs.map((item, index) => {
+            {whyChooseUs.map((item: any, index: number) => {
               const IconComponent = item.icon;
               return (
                 <div key={index} className="text-center">
@@ -675,7 +675,7 @@ export default async function ServicesPage() {
                     "Sustainability plan",
                   ],
                 },
-              ].map((step, index) => (
+              ].map((step: any, index: number) => (
                 <Card key={index} className="relative card-hover">
                   <CardHeader className="text-center pb-2">
                     <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-primary text-primary-foreground text-xl font-bold">
@@ -692,7 +692,7 @@ export default async function ServicesPage() {
                         Key Deliverables
                       </p>
                       <div className="flex flex-wrap justify-center gap-1">
-                        {step.deliverables.map((item, i) => (
+                        {step.deliverables.map((item: string, i: number) => (
                           <Badge
                             key={i}
                             variant="secondary"
@@ -728,7 +728,7 @@ export default async function ServicesPage() {
           </div>
 
           <div className="mt-16 grid gap-8 md:grid-cols-3">
-            {engagementModels.map((model, index) => (
+            {engagementModels.map((model: any, index: number) => (
               <Card key={index} className="text-center card-hover">
                 <CardHeader>
                   <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary text-xl font-bold">
@@ -739,7 +739,7 @@ export default async function ServicesPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-2">
-                    {model.examples.map((example, exIndex) => (
+                    {model.examples.map((example: string, exIndex: number) => (
                       <Badge key={exIndex} variant="outline" className="mr-1">
                         {example}
                       </Badge>
@@ -811,7 +811,7 @@ export default async function ServicesPage() {
                   ],
                   color: "bg-red-500/10 text-red-600 border-red-500/30",
                 },
-              ].map((item, index) => (
+              ].map((item: any, index: number) => (
                 <Card key={index} className="card-hover overflow-hidden">
                   <div className={`p-4 ${item.color} border-b`}>
                     <div className="flex items-center justify-between">
@@ -832,7 +832,7 @@ export default async function ServicesPage() {
                         Examples
                       </p>
                       <ul className="text-sm space-y-1">
-                        {item.examples.map((example, i) => (
+                        {item.examples.map((example: string, i: number) => (
                           <li key={i} className="flex items-center gap-2">
                             <CheckCircle className="h-3 w-3 text-primary" />
                             {example}
@@ -893,7 +893,7 @@ export default async function ServicesPage() {
                   name: "Combination Products",
                   description: "Drug-device combinations, biologic-device combinations, and prefilled systems",
                 },
-              ].map((category, index) => {
+              ].map((category: any, index: number) => {
                 const IconComponent = category.icon;
                 return (
                   <Card key={index} className="card-hover">

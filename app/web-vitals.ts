@@ -3,7 +3,15 @@
  * This file exports a function that can be used in _app.tsx or layout.tsx
  */
 
-import type { Metric } from "web-vitals";
+// Define Metric type inline to avoid dependency on web-vitals package
+interface Metric {
+  name: string;
+  value: number;
+  rating: "good" | "needs-improvement" | "poor";
+  delta: number;
+  id: string;
+  navigationType: string;
+}
 
 export function reportWebVitals(metric: Metric) {
   // Log to console in development

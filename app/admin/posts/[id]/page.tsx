@@ -31,7 +31,7 @@ export default async function PostEditorPage({ params }: PageProps) {
   // Fetch post data if editing
   let post = null;
   if (!isNew) {
-    post = await prisma.blogPost.findUnique({
+    const dbPost = await prisma.blogPost.findUnique({
       where: { id },
       include: {
         category: {
@@ -44,9 +44,17 @@ export default async function PostEditorPage({ params }: PageProps) {
       },
     });
 
-    if (!post) {
+    if (!dbPost) {
       notFound();
     }
+
+    // Convert Date objects to ISO strings for the client component
+    post = {
+      ...dbPost,
+      publishedAt: dbPost.publishedAt?.toISOString() ?? null,
+      createdAt: dbPost.createdAt.toISOString(),
+      updatedAt: dbPost.updatedAt.toISOString(),
+    };
   }
 
   // Fetch categories for dropdown

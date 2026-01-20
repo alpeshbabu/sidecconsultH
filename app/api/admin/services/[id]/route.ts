@@ -7,12 +7,13 @@ export const runtime = "nodejs";
 // Note: Authentication is handled by middleware
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
 
     const service = await prisma.service.findUnique({
-      where: { id: params.id },
+      where: { id },
     });
 
     if (!service) {
@@ -36,15 +37,15 @@ export async function GET(
 // Note: Authentication is handled by middleware
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-
+    const { id } = await params;
     const body = await request.json();
 
     // Check if service exists
     const existing = await prisma.service.findUnique({
-      where: { id: params.id },
+      where: { id },
     });
 
     if (!existing) {
@@ -70,7 +71,7 @@ export async function PUT(
 
     // Update service
     const service = await prisma.service.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         ...(body.categoryName && { categoryName: body.categoryName }),
         ...(body.categorySlug && { categorySlug: body.categorySlug }),
@@ -103,13 +104,14 @@ export async function PUT(
 // Note: Authentication is handled by middleware
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
 
     // Check if service exists
     const existing = await prisma.service.findUnique({
-      where: { id: params.id },
+      where: { id },
     });
 
     if (!existing) {
@@ -121,7 +123,7 @@ export async function DELETE(
 
     // Delete service
     await prisma.service.delete({
-      where: { id: params.id },
+      where: { id },
     });
 
     return NextResponse.json({ success: true });
