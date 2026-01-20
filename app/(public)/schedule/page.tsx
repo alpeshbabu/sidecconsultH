@@ -32,10 +32,12 @@ interface Slot {
   startAt: string;
   endAt: string;
   isBooked: boolean;
+  localTime?: string; // Pre-formatted time in business timezone
 }
 
-const formatTimeLabel = (value: string) =>
-  new Date(value).toLocaleTimeString(undefined, { timeStyle: "short" });
+// Format time - use localTime if available (from API), otherwise format in user's timezone
+const formatTimeLabel = (slot: Slot) =>
+  slot.localTime || new Date(slot.startAt).toLocaleTimeString(undefined, { timeStyle: "short" });
 
 const getMonthLabel = (value: Date) =>
   value.toLocaleDateString(undefined, { month: "long", year: "numeric" });
@@ -307,7 +309,7 @@ export default function SchedulePage() {
                                   : "hover:bg-muted"
                               }`}
                             >
-                              {formatTimeLabel(slot.startAt)}
+                              {formatTimeLabel(slot)}
                             </button>
                           );
                         })}
@@ -375,7 +377,7 @@ export default function SchedulePage() {
                             undefined,
                             { dateStyle: "full" }
                           )}{" "}
-                          at {formatTimeLabel(selectedSlot.startAt)}
+                          at {formatTimeLabel(selectedSlot)}
                         </p>
                       </div>
                     )}
