@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 
-// Business timezone - adjust this to your business location
-// Common values: "America/New_York", "America/Los_Angeles", "America/Chicago"
-const BUSINESS_TIMEZONE = "America/New_York";
+// Default business timezone - can be overridden in settings
+const DEFAULT_TIMEZONE = "America/New_York";
 
 // Helper to create a date in a specific timezone
 function createDateInTimezone(
@@ -73,12 +72,14 @@ export async function GET(request: NextRequest) {
         startTime: "08:00",
         endTime: "17:00",
         slotDurationMinutes: 30,
+        timezone: DEFAULT_TIMEZONE,
         createdAt: new Date(),
         updatedAt: new Date(),
       };
     }
 
-    const { startTime, endTime, slotDurationMinutes } = settings;
+    const { startTime, endTime, slotDurationMinutes, timezone } = settings;
+    const BUSINESS_TIMEZONE = timezone || DEFAULT_TIMEZONE;
     const [startHour, startMin] = startTime.split(":").map(Number);
     const [endHour, endMin] = endTime.split(":").map(Number);
 

@@ -2,10 +2,25 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/lib/db";
 
+// Valid IANA timezones for US
+const VALID_TIMEZONES = [
+  "America/New_York",
+  "America/Chicago",
+  "America/Denver",
+  "America/Los_Angeles",
+  "America/Phoenix",
+  "America/Anchorage",
+  "Pacific/Honolulu",
+  "UTC",
+];
+
 const settingsSchema = z.object({
-  startTime: z.string().regex(/^\d{2}:\d{2}$/, "Invalid time format"),
-  endTime: z.string().regex(/^\d{2}:\d{2}$/, "Invalid time format"),
-  slotDurationMinutes: z.number().int().min(15).max(240),
+  startTime: z.string().regex(/^\d{2}:\d{2}$/, "Invalid time format").optional(),
+  endTime: z.string().regex(/^\d{2}:\d{2}$/, "Invalid time format").optional(),
+  slotDurationMinutes: z.number().int().min(15).max(240).optional(),
+  timezone: z.string().refine((val) => VALID_TIMEZONES.includes(val), {
+    message: "Invalid timezone",
+  }).optional(),
 });
 
 // GET /api/admin/appointments/settings
@@ -22,6 +37,7 @@ export async function GET() {
           startTime: "08:00",
           endTime: "17:00",
           slotDurationMinutes: 30,
+          timezone: "America/New_York",
         },
       });
     }
@@ -56,20 +72,30 @@ export async function PUT(request: NextRequest) {
       );
     }
 
-    const { startTime, endTime, slotDurationMinutes } = validation.data;
+    const { startTime, endTime, slotDurationMinutes, timezone } = validation.data;
+
+    // Build update data - only include fields that were provided
+    const updateData: {
+      startTime?: string;
+      endTime?: string;
+      slotDurationMinutes?: number;
+      timezone?: string;
+    } = {};
+    
+    if (startTime !== undefined) updateData.startTime = startTime;
+    if (endTime !== undefined) updateData.endTime = endTime;
+    if (slotDurationMinutes !== undefined) updateData.slotDurationMinutes = slotDurationMinutes;
+    if (timezone !== undefined) updateData.timezone = timezone;
 
     const settings = await prisma.availabilitySettings.upsert({
       where: { id: "default" },
-      update: {
-        startTime,
-        endTime,
-        slotDurationMinutes,
-      },
+      update: updateData,
       create: {
         id: "default",
-        startTime,
-        endTime,
-        slotDurationMinutes,
+        startTime: startTime || "08:00",
+        endTime: endTime || "17:00",
+        slotDurationMinutes: slotDurationMinutes || 30,
+        timezone: timezone || "America/New_York",
       },
     });
 

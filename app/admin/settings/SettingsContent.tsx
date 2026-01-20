@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Settings,
   Bell,
@@ -13,6 +13,11 @@ import {
   Download,
   Trash2,
   AlertTriangle,
+  Clock,
+  Eye,
+  EyeOff,
+  Loader2,
+  Check,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -24,15 +29,49 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
+
+// Common US timezones
+const TIMEZONES = [
+  { value: "America/New_York", label: "Eastern Time (ET)" },
+  { value: "America/Chicago", label: "Central Time (CT)" },
+  { value: "America/Denver", label: "Mountain Time (MT)" },
+  { value: "America/Los_Angeles", label: "Pacific Time (PT)" },
+  { value: "America/Phoenix", label: "Arizona (MST)" },
+  { value: "America/Anchorage", label: "Alaska Time (AKT)" },
+  { value: "Pacific/Honolulu", label: "Hawaii Time (HST)" },
+  { value: "UTC", label: "UTC" },
+];
 
 type Tab = "general" | "notifications" | "security" | "data" | "appearance";
 
 export function SettingsContent() {
   const [activeTab, setActiveTab] = useState<Tab>("general");
   const [saving, setSaving] = useState(false);
+  const [loadingTimezone, setLoadingTimezone] = useState(true);
+
+  // Password change state
+  const [passwordData, setPasswordData] = useState({
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [changingPassword, setChangingPassword] = useState(false);
+
+  // Timezone state
+  const [timezone, setTimezone] = useState("America/New_York");
+  const [savingTimezone, setSavingTimezone] = useState(false);
 
   // General Settings
   const [generalSettings, setGeneralSettings] = useState({
@@ -41,6 +80,26 @@ export function SettingsContent() {
     siteUrl: "https://sidecconsulting.com",
     contactEmail: "contact@sidecconsult.com",
   });
+
+  // Load timezone from settings
+  useEffect(() => {
+    async function loadTimezone() {
+      try {
+        const res = await fetch("/api/admin/appointments/settings");
+        if (res.ok) {
+          const data = await res.json();
+          if (data.data?.timezone) {
+            setTimezone(data.data.timezone);
+          }
+        }
+      } catch (error) {
+        console.error("Failed to load timezone:", error);
+      } finally {
+        setLoadingTimezone(false);
+      }
+    }
+    loadTimezone();
+  }, []);
 
   // Notification Settings
   const [notificationSettings, setNotificationSettings] = useState({
@@ -65,6 +124,76 @@ export function SettingsContent() {
     accentColor: "#3b82f6",
     compactMode: false,
   });
+
+  // Handle password change
+  const handleChangePassword = async () => {
+    if (!passwordData.currentPassword || !passwordData.newPassword) {
+      toast.error("Please fill in all password fields");
+      return;
+    }
+
+    if (passwordData.newPassword !== passwordData.confirmPassword) {
+      toast.error("New passwords do not match");
+      return;
+    }
+
+    if (passwordData.newPassword.length < 8) {
+      toast.error("New password must be at least 8 characters");
+      return;
+    }
+
+    try {
+      setChangingPassword(true);
+      const res = await fetch("/api/admin/profile/password", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          currentPassword: passwordData.currentPassword,
+          newPassword: passwordData.newPassword,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        toast.error(data.error || "Failed to change password");
+        return;
+      }
+
+      toast.success("Password changed successfully");
+      setPasswordData({
+        currentPassword: "",
+        newPassword: "",
+        confirmPassword: "",
+      });
+    } catch (error) {
+      toast.error("Failed to change password");
+    } finally {
+      setChangingPassword(false);
+    }
+  };
+
+  // Handle timezone save
+  const handleSaveTimezone = async () => {
+    try {
+      setSavingTimezone(true);
+      const res = await fetch("/api/admin/appointments/settings", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ timezone }),
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to save timezone");
+      }
+
+      toast.success("Timezone saved successfully");
+    } catch (error) {
+      toast.error("Failed to save timezone");
+    } finally {
+      setSavingTimezone(false);
+    }
+  };
 
   const handleSaveGeneral = async () => {
     try {
@@ -176,6 +305,7 @@ export function SettingsContent() {
         <div className="flex-1 space-y-6">
           {/* General Settings */}
           {activeTab === "general" && (
+            <>
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -263,6 +393,60 @@ export function SettingsContent() {
                 </Button>
               </CardContent>
             </Card>
+
+            {/* Timezone Settings */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Clock className="h-5 w-5" />
+                  Business Timezone
+                </CardTitle>
+                <CardDescription>
+                  Set the default timezone for appointment scheduling
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="timezone">Default Timezone</Label>
+                    {loadingTimezone ? (
+                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        Loading...
+                      </div>
+                    ) : (
+                      <Select value={timezone} onValueChange={setTimezone}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select timezone" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {TIMEZONES.map((tz) => (
+                            <SelectItem key={tz.value} value={tz.value}>
+                              {tz.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    )}
+                    <p className="text-xs text-muted-foreground">
+                      Appointment slots will be displayed in this timezone
+                    </p>
+                  </div>
+                </div>
+
+                <Separator />
+
+                <Button onClick={handleSaveTimezone} disabled={savingTimezone || loadingTimezone}>
+                  {savingTimezone ? (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  ) : (
+                    <Save className="mr-2 h-4 w-4" />
+                  )}
+                  {savingTimezone ? "Saving..." : "Save Timezone"}
+                </Button>
+              </CardContent>
+            </Card>
+            </>
           )}
 
           {/* Notification Settings */}
@@ -378,11 +562,144 @@ export function SettingsContent() {
 
           {/* Security Settings */}
           {activeTab === "security" && (
+            <>
+            {/* Password Change Card */}
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Shield className="h-5 w-5" />
-                  Security Settings
+                  Change Password
+                </CardTitle>
+                <CardDescription>
+                  Update your admin account password
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="currentPassword">Current Password</Label>
+                    <div className="relative">
+                      <Input
+                        id="currentPassword"
+                        type={showCurrentPassword ? "text" : "password"}
+                        value={passwordData.currentPassword}
+                        onChange={(e) =>
+                          setPasswordData({
+                            ...passwordData,
+                            currentPassword: e.target.value,
+                          })
+                        }
+                        placeholder="Enter current password"
+                      />
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                        onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                      >
+                        {showCurrentPassword ? (
+                          <EyeOff className="h-4 w-4 text-muted-foreground" />
+                        ) : (
+                          <Eye className="h-4 w-4 text-muted-foreground" />
+                        )}
+                      </Button>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="newPassword">New Password</Label>
+                    <div className="relative">
+                      <Input
+                        id="newPassword"
+                        type={showNewPassword ? "text" : "password"}
+                        value={passwordData.newPassword}
+                        onChange={(e) =>
+                          setPasswordData({
+                            ...passwordData,
+                            newPassword: e.target.value,
+                          })
+                        }
+                        placeholder="Enter new password"
+                      />
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                        onClick={() => setShowNewPassword(!showNewPassword)}
+                      >
+                        {showNewPassword ? (
+                          <EyeOff className="h-4 w-4 text-muted-foreground" />
+                        ) : (
+                          <Eye className="h-4 w-4 text-muted-foreground" />
+                        )}
+                      </Button>
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      Must be at least 8 characters
+                    </p>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="confirmPassword">Confirm New Password</Label>
+                    <Input
+                      id="confirmPassword"
+                      type="password"
+                      value={passwordData.confirmPassword}
+                      onChange={(e) =>
+                        setPasswordData({
+                          ...passwordData,
+                          confirmPassword: e.target.value,
+                        })
+                      }
+                      placeholder="Confirm new password"
+                    />
+                    {passwordData.newPassword &&
+                      passwordData.confirmPassword &&
+                      passwordData.newPassword === passwordData.confirmPassword && (
+                        <p className="text-xs text-green-600 flex items-center gap-1">
+                          <Check className="h-3 w-3" />
+                          Passwords match
+                        </p>
+                      )}
+                    {passwordData.newPassword &&
+                      passwordData.confirmPassword &&
+                      passwordData.newPassword !== passwordData.confirmPassword && (
+                        <p className="text-xs text-destructive">
+                          Passwords do not match
+                        </p>
+                      )}
+                  </div>
+                </div>
+
+                <Separator />
+
+                <Button
+                  onClick={handleChangePassword}
+                  disabled={
+                    changingPassword ||
+                    !passwordData.currentPassword ||
+                    !passwordData.newPassword ||
+                    passwordData.newPassword !== passwordData.confirmPassword
+                  }
+                >
+                  {changingPassword ? (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  ) : (
+                    <Shield className="mr-2 h-4 w-4" />
+                  )}
+                  {changingPassword ? "Changing..." : "Change Password"}
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Other Security Settings Card */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Settings className="h-5 w-5" />
+                  Security Preferences
                 </CardTitle>
                 <CardDescription>
                   Manage security and authentication preferences
@@ -491,6 +808,7 @@ export function SettingsContent() {
                 </Button>
               </CardContent>
             </Card>
+            </>
           )}
 
           {/* Appearance Settings */}

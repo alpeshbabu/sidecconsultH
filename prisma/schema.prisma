@@ -97,6 +97,7 @@ model AvailabilitySettings {
   startTime           String   @default("08:00") // HH:mm format
   endTime             String   @default("17:00") // HH:mm format
   slotDurationMinutes Int      @default(30)
+  timezone            String   @default("America/New_York") // IANA timezone
   createdAt           DateTime @default(now())
   updatedAt           DateTime @updatedAt
 
