@@ -22,13 +22,19 @@ export interface ContactInquiry {
   name: string;
   email: string;
   phone?: string | null;
-  company?: string | null;
+  companyName?: string | null;
   serviceInterest: string;
-  projectTimeline: string;
+  projectTimeline?: string | null;
   message: string;
+  supplierAddress?: string | null;
+  estimatedBudget?: string | null;
+  otherSites?: string | null;
+  otherSiteLocations?: string | null;
+  expectedDocuments?: string | null;
+  regulatoryStandards?: string | null;
   status: InquiryStatus;
   isRead: boolean;
-  notes?: string | null;
+  internalNotes?: string | null;
   createdAt: Date;
   updatedAt: Date;
 }

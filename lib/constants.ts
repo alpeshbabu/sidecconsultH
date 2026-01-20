@@ -1,11 +1,11 @@
 // Site Configuration
 export const SITE_CONFIG = {
-  name: "MedDevice Consulting",
+  name: "SIDEC Consulting",
   title: "Medical Device Injection Molding Consultant",
   description:
     "25+ years of expertise in medical device manufacturing, ISO 13485 quality systems, injection molding process development, and facility design.",
-  url: "https://meddeviceconsulting.com", // Update with actual domain
-  author: "Alpesh",
+  url: "https://sidecconsulting.com", // Update with actual domain
+  author: "SIDEC Consulting",
   email: "", // To be provided
   phone: "", // To be provided
   linkedin: "", // To be provided
@@ -142,6 +142,7 @@ export const FOOTER_LINKS = {
   legal: [
     { label: "Privacy Policy", href: "/privacy" },
     { label: "Terms of Service", href: "/terms" },
+    { label: "Cookie Policy", href: "/cookies" },
   ],
 } as const;
 

@@ -1,14 +1,28 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
+import { InquiriesContent } from "./InquiriesContent";
 
 export const metadata: Metadata = {
   title: "Inquiries",
+  description: "Manage contact form submissions and inquiries",
 };
 
 export default function AdminInquiriesPage() {
   return (
-    <div className="container-wide section-padding">
-      <h1 className="text-3xl font-bold">Inquiries</h1>
-      <p className="mt-4 text-muted-foreground">Coming in Phase 5...</p>
+    <Suspense fallback={<InquiriesLoading />}>
+      <InquiriesContent />
+    </Suspense>
+  );
+}
+
+function InquiriesLoading() {
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div className="h-8 w-32 bg-muted animate-pulse rounded" />
+        <div className="h-10 w-32 bg-muted animate-pulse rounded" />
+      </div>
+      <div className="h-96 bg-muted animate-pulse rounded-lg" />
     </div>
   );
 }

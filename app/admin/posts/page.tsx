@@ -1,14 +1,28 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
+import { PostsContent } from "./PostsContent";
 
 export const metadata: Metadata = {
   title: "Blog Posts",
+  description: "Manage blog posts and articles",
 };
 
 export default function AdminPostsPage() {
   return (
-    <div className="container-wide section-padding">
-      <h1 className="text-3xl font-bold">Blog Posts</h1>
-      <p className="mt-4 text-muted-foreground">Coming in Phase 5...</p>
+    <Suspense fallback={<PostsLoading />}>
+      <PostsContent />
+    </Suspense>
+  );
+}
+
+function PostsLoading() {
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div className="h-8 w-32 bg-muted animate-pulse rounded" />
+        <div className="h-10 w-32 bg-muted animate-pulse rounded" />
+      </div>
+      <div className="h-96 bg-muted animate-pulse rounded-lg" />
     </div>
   );
 }

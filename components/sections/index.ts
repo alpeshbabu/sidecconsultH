@@ -1,0 +1,8 @@
+export { AnimatedStats } from "./AnimatedStats";
+export { CTASection } from "./CTASection";
+export { TestimonialsCarousel } from "./TestimonialsCarousel";
+export type { Testimonial } from "./TestimonialsCarousel";
+export { ServiceCard } from "./ServiceCard";
+export type { ServiceCardProps } from "./ServiceCard";
+export { ProfileCard } from "./ProfileCard";
+export type { ProfileCardProps } from "./ProfileCard";

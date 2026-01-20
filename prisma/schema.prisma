@@ -1,0 +1,221 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider   = "prisma-client-js"
+  output     = "../lib/generated/prisma"
+  engineType = "library"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// =============================================================================
+// ENUMS
+// =============================================================================
+
+enum Role {
+  ADMIN
+  EDITOR
+}
+
+enum InquiryStatus {
+  NEW
+  IN_PROGRESS
+  RESPONDED
+  ARCHIVED
+}
+
+enum AppointmentStatus {
+  REQUESTED
+  CONFIRMED
+  CANCELLED
+}
+
+enum PostStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+// =============================================================================
+// MODELS
+// =============================================================================
+
+/// User model for admin authentication
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  passwordHash  String
+  name          String?
+  role          Role      @default(EDITOR)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  lastLoginAt   DateTime?
+
+  // Relations
+  posts         BlogPost[] @relation("AuthoredPosts")
+
+  @@map("users")
+}
+
+/// Contact inquiry from website visitors
+model ContactInquiry {
+  id              String        @id @default(cuid())
+  name            String
+  email           String
+  phone           String?
+  companyName     String?
+  serviceInterest String        // One of the 7 service areas or "General Inquiry"
+  projectTimeline String?       // Optional timeline dropdown value
+  message         String        @db.Text
+  supplierAddress String?       @db.Text
+  estimatedBudget String?
+  otherSites      String?       @db.Text
+  otherSiteLocations String?    @db.Text
+  expectedDocuments String?     @db.Text
+  regulatoryStandards String?   @db.Text
+  status          InquiryStatus @default(NEW)
+  isRead          Boolean       @default(false)
+  internalNotes   String?       @db.Text
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@index([status])
+  @@index([createdAt])
+  @@index([email])
+  @@map("contact_inquiries")
+}
+
+/// Availability settings for appointment scheduling
+model AvailabilitySettings {
+  id                  String   @id @default("default")
+  startTime           String   @default("08:00") // HH:mm format
+  endTime             String   @default("17:00") // HH:mm format
+  slotDurationMinutes Int      @default(30)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  @@map("availability_settings")
+}
+
+/// Appointment slots available for booking (legacy, kept for migration)
+model AppointmentSlot {
+  id        String      @id @default(cuid())
+  startAt   DateTime
+  endAt     DateTime
+  isBooked  Boolean     @default(false)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  appointmentLegacy Appointment? @relation("LegacySlot")
+
+  @@index([startAt])
+  @@index([isBooked])
+  @@map("appointment_slots")
+}
+
+/// Appointment booked by a client
+model Appointment {
+  id              String            @id @default(cuid())
+  bookedAt        DateTime          // The start time of the booked slot
+  bookedEndAt     DateTime          // The end time of the booked slot
+  slotId          String?           @unique // Legacy field for old bookings
+  slot            AppointmentSlot?  @relation("LegacySlot", fields: [slotId], references: [id], onDelete: SetNull)
+  name            String
+  email           String
+  phone           String?
+  companyName     String?
+  serviceInterest String?
+  notes           String?           @db.Text
+  timeZone        String?
+  status          AppointmentStatus @default(REQUESTED)
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  @@index([bookedAt])
+  @@index([status])
+  @@index([createdAt])
+  @@index([email])
+  @@map("appointments")
+}
+
+/// Blog post / resource article
+model BlogPost {
+  id              String      @id @default(cuid())
+  title           String
+  slug            String      @unique
+  excerpt         String?     @db.Text
+  content         String      @db.Text
+  featuredImage   String?     // URL to featured image
+  status          PostStatus  @default(DRAFT)
+  publishedAt     DateTime?
+  metaTitle       String?     // SEO meta title
+  metaDescription String?     @db.Text // SEO meta description
+  readingTime     Int?        // Estimated reading time in minutes
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  // Relations
+  author          User?       @relation("AuthoredPosts", fields: [authorId], references: [id], onDelete: SetNull)
+  authorId        String?
+  category        Category?   @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  categoryId      String?
+
+  @@index([status])
+  @@index([publishedAt])
+  @@index([categoryId])
+  @@map("blog_posts")
+}
+
+/// Blog category for organizing posts
+model Category {
+  id          String     @id @default(cuid())
+  name        String     @unique
+  slug        String     @unique
+  description String?
+  sortOrder   Int        @default(0)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  // Relations
+  posts       BlogPost[]
+
+  @@index([sortOrder])
+  @@map("categories")
+}
+
+/// Service offerings displayed on services page
+model Service {
+  id              String   @id @default(cuid())
+  categoryName    String   // e.g., "Manufacturing & Operations"
+  categorySlug    String   // URL-friendly category identifier
+  categoryIcon    String?  // Icon name from lucide-react
+  categoryColor   String?  // Tailwind gradient classes
+  categoryBorder  String?  // Tailwind border classes
+  
+  // Service details
+  serviceId       String   @unique // e.g., "manufacturing-engineering"
+  icon            String?  // Icon name from lucide-react
+  title           String
+  tagline         String?
+  description     String   @db.Text
+  keyOfferings    String[] // Array of key offering strings
+  outcomes        String[] // Array of expected outcome strings
+  
+  // Display settings
+  isActive        Boolean  @default(true)
+  sortOrder       Int      @default(0)
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([categorySlug])
+  @@index([sortOrder])
+  @@index([isActive])
+  @@map("services")
+}
