@@ -156,13 +156,6 @@ const careerTimeline = [
       "Led design assurance activities ensuring product designs met regulatory requirements and manufacturing feasibility. Managed design controls, risk management (ISO 14971), and design transfer processes.",
   },
   {
-    period: "R&D Engineering",
-    role: "Director, R&D Engineering",
-    company: "Research & Development",
-    description:
-      "Directed R&D engineering teams in new product development, from concept through commercialization. Oversaw design for manufacturability, prototyping, and technology evaluation initiatives.",
-  },
-  {
     period: "Foundation",
     role: "Engineering Manager → Project Engineer",
     company: "Career Foundation",
@@ -399,7 +392,7 @@ export default function AboutPage() {
               Professional Background
             </h2>
             <p className="mt-4 text-muted-foreground">
-              Our founder&apos;s career spans 10 progressive roles across
+              Our founder&apos;s career spans 6 progressive roles across
               manufacturing engineering, quality, design assurance, and
               R&D—providing the cross-functional expertise that sets SIDEC
               Consulting apart.
