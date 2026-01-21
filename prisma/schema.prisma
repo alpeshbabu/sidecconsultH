@@ -36,6 +36,12 @@ enum AppointmentStatus {
   CANCELLED
 }
 
+enum BookingType {
+  CLIENT      // Booked by a client through the public form
+  ADMIN       // Booked by admin on behalf of a client
+  BLOCKED     // Blocked by admin (unavailable)
+}
+
 enum PostStatus {
   DRAFT
   PUBLISHED
@@ -120,13 +126,14 @@ model AppointmentSlot {
   @@map("appointment_slots")
 }
 
-/// Appointment booked by a client
+/// Appointment booked by a client or admin
 model Appointment {
   id              String            @id @default(cuid())
   bookedAt        DateTime          // The start time of the booked slot
   bookedEndAt     DateTime          // The end time of the booked slot
   slotId          String?           @unique // Legacy field for old bookings
   slot            AppointmentSlot?  @relation("LegacySlot", fields: [slotId], references: [id], onDelete: SetNull)
+  bookingType     BookingType       @default(CLIENT) // CLIENT, ADMIN, or BLOCKED
   name            String
   email           String
   phone           String?
@@ -142,6 +149,7 @@ model Appointment {
   @@index([status])
   @@index([createdAt])
   @@index([email])
+  @@index([bookingType])
   @@map("appointments")
 }
 
