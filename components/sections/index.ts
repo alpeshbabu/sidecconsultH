@@ -6,3 +6,4 @@ export { ServiceCard } from "./ServiceCard";
 export type { ServiceCardProps } from "./ServiceCard";
 export { ProfileCard } from "./ProfileCard";
 export type { ProfileCardProps } from "./ProfileCard";
+export { NewsletterForm } from "./NewsletterForm";

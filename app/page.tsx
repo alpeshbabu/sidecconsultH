@@ -26,7 +26,7 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { MainLayout } from "@/components/layout";
-import { AnimatedStats, CTASection } from "@/components/sections";
+import { AnimatedStats, CTASection, NewsletterForm } from "@/components/sections";
 import { SERVICE_AREAS, STATS } from "@/lib/constants";
 import Image from "next/image";
 import { prisma } from "@/lib/db";
@@ -597,23 +597,7 @@ export default async function HomePage() {
           )}
 
           {/* Newsletter CTA */}
-          <div className="mt-12 p-8 rounded-2xl bg-gradient-to-r from-primary/10 via-accent/5 to-primary/10 border text-center">
-            <h3 className="text-xl font-semibold mb-2">
-              Stay Updated on Industry Trends
-            </h3>
-            <p className="text-muted-foreground mb-6 max-w-md mx-auto">
-              Subscribe to our newsletter for the latest insights on medical
-              device manufacturing and regulatory updates.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-3 justify-center max-w-md mx-auto">
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="flex h-11 w-full rounded-lg border border-input bg-background px-4 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-              />
-              <Button className="shrink-0">Subscribe</Button>
-            </div>
-          </div>
+          <NewsletterForm />
         </div>
       </section>
 

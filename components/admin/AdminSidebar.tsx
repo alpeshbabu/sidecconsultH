@@ -12,6 +12,7 @@ import {
   ChevronRight,
   Sparkles,
   Calendar,
+  Mail,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -46,6 +47,11 @@ const navItems: NavItem[] = [
     title: "Appointments",
     href: "/admin/appointments",
     icon: Calendar,
+  },
+  {
+    title: "Subscribers",
+    href: "/admin/subscribers",
+    icon: Mail,
   },
   {
     title: "Blog Posts",

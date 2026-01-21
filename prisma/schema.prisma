@@ -228,3 +228,18 @@ model Service {
   @@index([isActive])
   @@map("services")
 }
+
+/// Newsletter subscriber
+model Subscriber {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  isActive      Boolean   @default(true)
+  subscribedAt  DateTime  @default(now())
+  unsubscribedAt DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@index([email])
+  @@index([isActive])
+  @@map("subscribers")
+}
