@@ -111,7 +111,8 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ success: true, data: appointment });
   } catch (error) {
     console.error("Error blocking slot:", error);
-    return NextResponse.json({ success: false, error: "Failed to block slot" }, { status: 500 });
+    const message = error instanceof Error ? error.message : "Failed to block slot";
+    return NextResponse.json({ success: false, error: message }, { status: 500 });
   }
 }
 
