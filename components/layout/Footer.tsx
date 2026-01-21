@@ -17,9 +17,9 @@ export function Footer() {
               <Image
                 src="/SIDEC Consulting.png"
                 alt="SIDEC Consulting"
-                width={180}
-                height={50}
-                className="h-10 w-auto transition-transform group-hover:scale-105"
+                width={220}
+                height={55}
+                className="h-12 w-auto transition-transform group-hover:scale-105"
               />
             </Link>
             <p className="mt-6 text-sm text-muted-foreground max-w-sm leading-relaxed">

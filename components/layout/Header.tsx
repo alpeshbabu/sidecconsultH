@@ -83,9 +83,9 @@ export function Header() {
             <Image
               src="/SIDEC Consulting.png"
               alt="SIDEC Consulting"
-              width={180}
-              height={50}
-              className="h-10 w-auto transition-transform group-hover:scale-105 lg:h-12"
+              width={240}
+              height={60}
+              className="h-12 w-auto transition-transform group-hover:scale-105 lg:h-14"
               priority
             />
           </Link>
@@ -216,9 +216,9 @@ export function Header() {
                     <Image
                       src="/SIDEC Consulting.png"
                       alt="SIDEC Consulting"
-                      width={140}
-                      height={40}
-                      className="h-8 w-auto"
+                      width={180}
+                      height={50}
+                      className="h-10 w-auto"
                     />
                   </Link>
                   <SheetClose asChild>
