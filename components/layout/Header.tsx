@@ -2,14 +2,15 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import {
-  Cog,
   Menu,
   X,
   ChevronDown,
   Settings,
   ShieldCheck,
+  Cog,
   Wrench,
   Building,
   Globe,
@@ -78,16 +79,15 @@ export function Header() {
       <div className="container-wide" suppressHydrationWarning>
         <div className="flex h-16 items-center justify-between lg:h-20">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-3 group">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-primary-foreground transition-transform group-hover:scale-105">
-              <Cog className="h-6 w-6" />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-xl font-bold tracking-tight">SIDEC</span>
-              <span className="text-xs text-muted-foreground -mt-1 hidden sm:block">
-                Consulting
-              </span>
-            </div>
+          <Link href="/" className="flex items-center group">
+            <Image
+              src="/SIDEC Consulting.png"
+              alt="SIDEC Consulting"
+              width={180}
+              height={50}
+              className="h-10 w-auto transition-transform group-hover:scale-105 lg:h-12"
+              priority
+            />
           </Link>
 
           {/* Desktop Navigation */}
@@ -212,11 +212,14 @@ export function Header() {
               <div className="flex flex-col h-full">
                 {/* Mobile Header */}
                 <div className="flex items-center justify-between p-4 border-b">
-                  <Link href="/" className="flex items-center space-x-2">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-                      <Cog className="h-5 w-5" />
-                    </div>
-                    <span className="text-lg font-bold">SIDEC</span>
+                  <Link href="/" className="flex items-center">
+                    <Image
+                      src="/SIDEC Consulting.png"
+                      alt="SIDEC Consulting"
+                      width={140}
+                      height={40}
+                      className="h-8 w-auto"
+                    />
                   </Link>
                   <SheetClose asChild>
                     <Button variant="ghost" size="icon">

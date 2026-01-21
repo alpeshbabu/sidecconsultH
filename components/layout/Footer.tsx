@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { Cog, Linkedin, Mail, Phone, MapPin } from "lucide-react";
+import Image from "next/image";
+import { Linkedin, Mail, Phone, MapPin } from "lucide-react";
 import { SITE_CONFIG, FOOTER_LINKS, SERVICE_AREAS } from "@/lib/constants";
 
 export function Footer() {
@@ -12,16 +13,14 @@ export function Footer() {
         <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-12">
           {/* Brand Column */}
           <div className="lg:col-span-4">
-            <Link href="/" className="flex items-center space-x-3 group">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-primary-foreground transition-transform group-hover:scale-105">
-                <Cog className="h-6 w-6" />
-              </div>
-              <div className="flex flex-col">
-                <span className="text-xl font-bold tracking-tight">SIDEC</span>
-                <span className="text-xs text-muted-foreground -mt-1">
-                  Consulting
-                </span>
-              </div>
+            <Link href="/" className="flex items-center group">
+              <Image
+                src="/SIDEC Consulting.png"
+                alt="SIDEC Consulting"
+                width={180}
+                height={50}
+                className="h-10 w-auto transition-transform group-hover:scale-105"
+              />
             </Link>
             <p className="mt-6 text-sm text-muted-foreground max-w-sm leading-relaxed">
               Expert consulting services for medical device manufacturing,
