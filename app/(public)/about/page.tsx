@@ -27,7 +27,6 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { MainLayout } from "@/components/layout";
 import { AnimatedStats, CTASection } from "@/components/sections";
-import { CVDownloadButton } from "@/components/shared";
 import Image from "next/image";
 import { createPersonSchema, getJsonLd } from "@/lib/structured-data";
 
@@ -493,37 +492,11 @@ export default function AboutPage() {
               </h2>
               <p className="mt-4 text-muted-foreground">
                 Interested in learning more about our background and
-                qualifications? Connect with us on LinkedIn or download our
-                professional summary.
+                qualifications? Schedule a consultation to discuss how we can
+                help your organization.
               </p>
 
               <div className="mt-8 space-y-4">
-                {/* LinkedIn Card */}
-                <Card className="card-hover overflow-hidden">
-                  <CardContent className="p-0">
-                    <a
-                      href="https://linkedin.com/in/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-4 p-6 transition-colors hover:bg-muted/50"
-                    >
-                      <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg bg-[#0077b5] text-white">
-                        <Linkedin className="h-7 w-7" />
-                      </div>
-                      <div className="flex-1">
-                        <h3 className="font-semibold">LinkedIn Profile</h3>
-                        <p className="text-sm text-muted-foreground">
-                          View complete professional history and connect
-                        </p>
-                      </div>
-                      <ArrowRight className="h-5 w-5 text-muted-foreground" />
-                    </a>
-                  </CardContent>
-                </Card>
-
-                {/* CV Download Card */}
-                <CVDownloadButton />
-
                 {/* Email Card */}
                 <Card className="card-hover overflow-hidden">
                   <CardContent className="p-0">
