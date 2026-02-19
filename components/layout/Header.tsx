@@ -16,6 +16,7 @@ import {
   Globe,
   Lightbulb,
   ArrowRight,
+  Search,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -26,6 +27,7 @@ import {
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 import { SERVICE_AREAS, NAV_LINKS } from "@/lib/constants";
+import { SearchDialog } from "@/components/search";
 
 // Map icon names to components
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -42,6 +44,7 @@ export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isServicesOpen, setIsServicesOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -55,6 +58,18 @@ export function Header() {
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Global Cmd+K / Ctrl+K shortcut
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        setSearchOpen((prev) => !prev);
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
   }, []);
 
   // Check if a nav link is active
@@ -190,8 +205,18 @@ export function Header() {
             )}
           </nav>
 
-          {/* Desktop CTA */}
+          {/* Desktop Search + CTA */}
           <div className="hidden lg:flex items-center gap-3">
+            <button
+              onClick={() => setSearchOpen(true)}
+              className="flex items-center gap-2 text-sm text-muted-foreground border rounded-lg px-3 py-1.5 hover:bg-muted transition-colors"
+            >
+              <Search className="h-4 w-4" />
+              <span>Search...</span>
+              <kbd className="ml-1 pointer-events-none inline-flex h-5 items-center rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground">
+                ⌘K
+              </kbd>
+            </button>
             <Link href="/schedule">
               <Button className="btn-glow">
                 Schedule Consultation
@@ -200,9 +225,18 @@ export function Header() {
             </Link>
           </div>
 
-          {/* Mobile Menu */}
+          {/* Mobile Search + Menu */}
+          <div className="flex items-center gap-1 lg:hidden">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setSearchOpen(true)}
+              aria-label="Search"
+            >
+              <Search className="h-5 w-5" />
+            </Button>
           <Sheet>
-            <SheetTrigger asChild className="lg:hidden">
+            <SheetTrigger asChild>
               <Button variant="ghost" size="icon">
                 <Menu className="h-6 w-6" />
                 <span className="sr-only">Open menu</span>
@@ -304,8 +338,12 @@ export function Header() {
               </div>
             </SheetContent>
           </Sheet>
+          </div>
         </div>
       </div>
+
+      {/* Search Dialog */}
+      <SearchDialog open={searchOpen} onOpenChange={setSearchOpen} />
     </header>
   );
 }
