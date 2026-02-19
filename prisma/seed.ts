@@ -1,14 +1,11 @@
 import "dotenv/config";
 import { PrismaClient, Role, PostStatus } from "../lib/generated/prisma";
-import { PrismaPg } from "@prisma/adapter-pg";
-import { Pool } from "pg";
+import { withAccelerate } from "@prisma/extension-accelerate";
 import { hash } from "bcryptjs";
 
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-});
-const adapter = new PrismaPg(pool);
-const prisma = new PrismaClient({ adapter });
+const prisma = new PrismaClient({
+  accelerateUrl: process.env.DATABASE_URL,
+}).$extends(withAccelerate());
 
 async function main() {
   console.log("🌱 Starting database seed...");
