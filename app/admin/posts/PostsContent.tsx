@@ -67,6 +67,7 @@ interface Post {
   updatedAt: string;
   readingTime: number | null;
   category: Category | null;
+  tags?: { id: string; name: string; slug: string }[];
 }
 
 interface PaginationInfo {
@@ -358,13 +359,20 @@ export function PostsContent() {
                       </div>
                     </TableCell>
                     <TableCell className="hidden md:table-cell">
-                      {post.category ? (
-                        <Badge variant="outline" className="text-xs">
-                          {post.category.name}
-                        </Badge>
-                      ) : (
-                        <span className="text-muted-foreground text-sm">—</span>
-                      )}
+                      <div className="flex flex-wrap gap-1">
+                        {post.category ? (
+                          <Badge variant="outline" className="text-xs">
+                            {post.category.name}
+                          </Badge>
+                        ) : (
+                          <span className="text-muted-foreground text-sm">—</span>
+                        )}
+                        {post.tags?.map((tag) => (
+                          <Badge key={tag.id} variant="secondary" className="text-xs">
+                            {tag.name}
+                          </Badge>
+                        ))}
+                      </div>
                     </TableCell>
                     <TableCell>
                       <Badge variant={statusConfig[post.status].color}>

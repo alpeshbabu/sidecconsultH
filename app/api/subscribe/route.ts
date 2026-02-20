@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { z } from "zod";
+import { sendEmail } from "@/lib/email";
+import { newsletterWelcomeEmail } from "@/lib/email-templates";
 
 const subscribeSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -57,6 +59,14 @@ export async function POST(request: NextRequest) {
         email: normalizedEmail,
       },
     });
+
+    // Send welcome email to new subscriber (fire-and-forget)
+    const welcome = newsletterWelcomeEmail(normalizedEmail);
+    sendEmail({
+      to: normalizedEmail,
+      subject: welcome.subject,
+      html: welcome.html,
+    }).catch((err) => console.error("Failed to send newsletter welcome:", err));
 
     return NextResponse.json({
       success: true,

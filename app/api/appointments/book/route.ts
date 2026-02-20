@@ -1,6 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/lib/db";
+import { sendEmail } from "@/lib/email";
+import {
+  bookingConfirmationEmail,
+  adminNotificationEmail,
+} from "@/lib/email-templates";
 
 const bookingSchema = z.object({
   date: z.string().min(10), // YYYY-MM-DD
@@ -107,6 +112,25 @@ export async function POST(request: NextRequest) {
         status: "REQUESTED",
       },
     });
+
+    // Send confirmation email to client (fire-and-forget)
+    const confirmationEmail = bookingConfirmationEmail(appointment);
+    sendEmail({
+      to: appointment.email,
+      subject: confirmationEmail.subject,
+      html: confirmationEmail.html,
+    }).catch((err) => console.error("Failed to send booking confirmation:", err));
+
+    // Notify admin of new request (fire-and-forget)
+    const adminEmail = process.env.ADMIN_NOTIFICATION_EMAIL;
+    if (adminEmail) {
+      const adminNotif = adminNotificationEmail(appointment);
+      sendEmail({
+        to: adminEmail,
+        subject: adminNotif.subject,
+        html: adminNotif.html,
+      }).catch((err) => console.error("Failed to send admin notification:", err));
+    }
 
     return NextResponse.json(
       {

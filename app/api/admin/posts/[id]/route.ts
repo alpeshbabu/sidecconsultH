@@ -15,6 +15,7 @@ const updatePostSchema = z.object({
   metaDescription: z.string().optional().nullable(),
   readingTime: z.number().optional().nullable(),
   categoryId: z.string().optional().nullable(),
+  tagIds: z.array(z.string()).optional(),
 });
 
 // GET /api/admin/posts/[id] - Get single post
@@ -39,6 +40,13 @@ export async function GET(
           select: {
             id: true,
             name: true,
+          },
+        },
+        tags: {
+          select: {
+            id: true,
+            name: true,
+            slug: true,
           },
         },
       },
@@ -155,10 +163,20 @@ export async function PUT(
         ...(data.metaDescription !== undefined && { metaDescription: data.metaDescription }),
         ...(readingTime && { readingTime }),
         ...(data.categoryId !== undefined && { categoryId: data.categoryId }),
+        ...(data.tagIds !== undefined && {
+          tags: { set: data.tagIds.map((id: string) => ({ id })) },
+        }),
         updatedAt: new Date(),
       },
       include: {
         category: {
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+          },
+        },
+        tags: {
           select: {
             id: true,
             name: true,

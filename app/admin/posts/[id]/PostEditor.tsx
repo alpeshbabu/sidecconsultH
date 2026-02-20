@@ -17,6 +17,8 @@ import {
   Sparkles,
   Upload,
   X,
+  Plus,
+  Tag as TagIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -47,6 +49,12 @@ interface Category {
   slug: string;
 }
 
+interface TagItem {
+  id: string;
+  name: string;
+  slug: string;
+}
+
 interface Post {
   id: string;
   title: string;
@@ -63,11 +71,13 @@ interface Post {
   readingTime: number | null;
   categoryId: string | null;
   category: Category | null;
+  tags?: TagItem[];
 }
 
 interface PostEditorProps {
   post: Post | null;
   categories: Category[];
+  allTags: TagItem[];
   isNew: boolean;
 }
 
@@ -85,7 +95,7 @@ function calculateReadingTime(content: string): number {
   return Math.max(1, Math.ceil(words / 200));
 }
 
-export function PostEditor({ post, categories, isNew }: PostEditorProps) {
+export function PostEditor({ post, categories, allTags, isNew }: PostEditorProps) {
   const router = useRouter();
   const [isSaving, setIsSaving] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
@@ -93,6 +103,16 @@ export function PostEditor({ post, categories, isNew }: PostEditorProps) {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Tag state
+  const [selectedTagIds, setSelectedTagIds] = useState<string[]>(
+    post?.tags?.map((t) => t.id) || []
+  );
+  const [availableTags, setAvailableTags] = useState<TagItem[]>(allTags);
+  const [tagSearchQuery, setTagSearchQuery] = useState("");
+  const [isCreatingTag, setIsCreatingTag] = useState(false);
+  const [showTagDropdown, setShowTagDropdown] = useState(false);
+  const tagDropdownRef = useRef<HTMLDivElement>(null);
 
   // Form state
   const [formData, setFormData] = useState({
@@ -110,8 +130,11 @@ export function PostEditor({ post, categories, isNew }: PostEditorProps) {
   // Track changes
   useEffect(() => {
     if (isNew) {
-      setHasChanges(formData.title.length > 0 || formData.content.length > 0);
+      setHasChanges(formData.title.length > 0 || formData.content.length > 0 || selectedTagIds.length > 0);
     } else {
+      const originalTagIds = (post?.tags || []).map((t) => t.id).sort().join(",");
+      const currentTagIds = [...selectedTagIds].sort().join(",");
+      const tagsChanged = originalTagIds !== currentTagIds;
       const changed =
         formData.title !== (post?.title || "") ||
         formData.slug !== (post?.slug || "") ||
@@ -121,10 +144,22 @@ export function PostEditor({ post, categories, isNew }: PostEditorProps) {
         formData.status !== (post?.status || "DRAFT") ||
         formData.categoryId !== (post?.categoryId || "") ||
         formData.metaTitle !== (post?.metaTitle || "") ||
-        formData.metaDescription !== (post?.metaDescription || "");
+        formData.metaDescription !== (post?.metaDescription || "") ||
+        tagsChanged;
       setHasChanges(changed);
     }
-  }, [formData, post, isNew]);
+  }, [formData, post, isNew, selectedTagIds]);
+
+  // Close tag dropdown on outside click
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (tagDropdownRef.current && !tagDropdownRef.current.contains(event.target as Node)) {
+        setShowTagDropdown(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   // Auto-generate slug from title
   const handleTitleChange = (title: string) => {
@@ -222,6 +257,55 @@ export function PostEditor({ post, categories, isNew }: PostEditorProps) {
     setUploadError(null);
   };
 
+  // Tag helpers
+  const toggleTag = (tagId: string) => {
+    setSelectedTagIds((prev) =>
+      prev.includes(tagId) ? prev.filter((id) => id !== tagId) : [...prev, tagId]
+    );
+  };
+
+  const removeTag = (tagId: string) => {
+    setSelectedTagIds((prev) => prev.filter((id) => id !== tagId));
+  };
+
+  const createAndAddTag = async () => {
+    const name = tagSearchQuery.trim();
+    if (!name) return;
+
+    setIsCreatingTag(true);
+    try {
+      const slug = generateSlug(name);
+      const response = await fetch("/api/admin/tags", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, slug }),
+      });
+      const data = await response.json();
+      if (data.success) {
+        const newTag: TagItem = data.data;
+        setAvailableTags((prev) => [...prev, newTag].sort((a, b) => a.name.localeCompare(b.name)));
+        setSelectedTagIds((prev) => [...prev, newTag.id]);
+        setTagSearchQuery("");
+      }
+    } catch (error) {
+      console.error("Error creating tag:", error);
+    } finally {
+      setIsCreatingTag(false);
+    }
+  };
+
+  const filteredTags = availableTags.filter(
+    (tag) =>
+      tag.name.toLowerCase().includes(tagSearchQuery.toLowerCase()) &&
+      !selectedTagIds.includes(tag.id)
+  );
+
+  const selectedTags = availableTags.filter((tag) => selectedTagIds.includes(tag.id));
+
+  const tagSearchHasExactMatch = availableTags.some(
+    (tag) => tag.name.toLowerCase() === tagSearchQuery.trim().toLowerCase()
+  );
+
   // Save post
   const savePost = async (publish: boolean = false) => {
     if (!validateForm()) return;
@@ -236,6 +320,7 @@ export function PostEditor({ post, categories, isNew }: PostEditorProps) {
         status,
         readingTime,
         categoryId: formData.categoryId || null,
+        tagIds: selectedTagIds,
       };
 
       const url = isNew ? "/api/admin/posts" : `/api/admin/posts/${post?.id}`;
@@ -505,6 +590,98 @@ export function PostEditor({ post, categories, isNew }: PostEditorProps) {
                     ))}
                   </SelectContent>
                 </Select>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Tags */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <TagIcon className="h-5 w-5" />
+                Tags
+              </CardTitle>
+              <CardDescription>
+                Add tags for cross-cutting classification
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {/* Selected tags */}
+              {selectedTags.length > 0 && (
+                <div className="flex flex-wrap gap-1.5">
+                  {selectedTags.map((tag) => (
+                    <Badge
+                      key={tag.id}
+                      variant="secondary"
+                      className="gap-1 pr-1"
+                    >
+                      {tag.name}
+                      <button
+                        type="button"
+                        onClick={() => removeTag(tag.id)}
+                        className="ml-0.5 rounded-full hover:bg-muted-foreground/20 p-0.5"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </Badge>
+                  ))}
+                </div>
+              )}
+
+              {/* Tag search and dropdown */}
+              <div className="relative" ref={tagDropdownRef}>
+                <Input
+                  placeholder="Search or create tags..."
+                  value={tagSearchQuery}
+                  onChange={(e) => {
+                    setTagSearchQuery(e.target.value);
+                    setShowTagDropdown(true);
+                  }}
+                  onFocus={() => setShowTagDropdown(true)}
+                  className="text-sm"
+                />
+
+                {showTagDropdown && (tagSearchQuery || filteredTags.length > 0) && (
+                  <div className="absolute z-50 mt-1 w-full rounded-md border bg-popover shadow-md max-h-48 overflow-y-auto">
+                    {filteredTags.map((tag) => (
+                      <button
+                        key={tag.id}
+                        type="button"
+                        className="flex w-full items-center px-3 py-2 text-sm hover:bg-accent hover:text-accent-foreground transition-colors"
+                        onClick={() => {
+                          toggleTag(tag.id);
+                          setTagSearchQuery("");
+                          setShowTagDropdown(false);
+                        }}
+                      >
+                        {tag.name}
+                      </button>
+                    ))}
+                    {tagSearchQuery.trim() && !tagSearchHasExactMatch && (
+                      <button
+                        type="button"
+                        className="flex w-full items-center gap-2 px-3 py-2 text-sm text-primary hover:bg-accent transition-colors border-t"
+                        onClick={() => {
+                          createAndAddTag();
+                          setShowTagDropdown(false);
+                        }}
+                        disabled={isCreatingTag}
+                      >
+                        {isCreatingTag ? (
+                          <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                        ) : (
+                          <Plus className="h-3.5 w-3.5" />
+                        )}
+                        Create &quot;{tagSearchQuery.trim()}&quot;
+                      </button>
+                    )}
+                    {filteredTags.length === 0 && !tagSearchQuery.trim() && (
+                      <p className="px-3 py-2 text-sm text-muted-foreground">
+                        No more tags available
+                      </p>
+                    )}
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>

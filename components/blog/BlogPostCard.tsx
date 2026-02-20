@@ -20,6 +20,10 @@ export interface BlogPostCardProps {
     name: string;
     slug: string;
   } | null;
+  tags?: {
+    name: string;
+    slug: string;
+  }[];
   author?: {
     name: string | null;
   } | null;
@@ -35,6 +39,7 @@ export function BlogPostCard({
   excerpt,
   featuredImage,
   category,
+  tags,
   author,
   publishedAt,
   readingTime,
@@ -100,6 +105,15 @@ export function BlogPostCard({
               <CardTitle className="text-2xl mb-3 group-hover:text-primary transition-colors line-clamp-2">
                 {title}
               </CardTitle>
+              {tags && tags.length > 0 && (
+                <div className="flex items-center gap-1.5 mb-3 flex-wrap">
+                  {tags.slice(0, 3).map((tag) => (
+                    <Badge key={tag.slug} variant="outline" className="text-xs">
+                      {tag.name}
+                    </Badge>
+                  ))}
+                </div>
+              )}
               {excerpt && (
                 <CardDescription className="text-base line-clamp-3">
                   {excerpt}
@@ -186,12 +200,17 @@ export function BlogPostCard({
         </div>
 
         <CardHeader className="pb-2">
-          <div className="flex items-center gap-2 mb-2">
+          <div className="flex items-center gap-2 mb-2 flex-wrap">
             {category && (
               <Badge variant="secondary" className="text-xs">
                 {category.name}
               </Badge>
             )}
+            {tags && tags.slice(0, 3).map((tag) => (
+              <Badge key={tag.slug} variant="outline" className="text-xs">
+                {tag.name}
+              </Badge>
+            ))}
             {readingTime && (
               <span className="text-xs text-muted-foreground">
                 {readingTime} min read

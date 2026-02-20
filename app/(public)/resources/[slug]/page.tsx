@@ -115,6 +115,13 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           name: true,
         },
       },
+      tags: {
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+        },
+      },
     },
   });
 
@@ -122,12 +129,17 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     notFound();
   }
 
-  // Fetch related posts
+  // Fetch related posts (same category or shared tags)
   const relatedPosts = await prisma.blogPost.findMany({
     where: {
       status: "PUBLISHED",
-      categoryId: post.categoryId,
       id: { not: post.id },
+      OR: [
+        ...(post.categoryId ? [{ categoryId: post.categoryId }] : []),
+        ...(post.tags.length > 0
+          ? [{ tags: { some: { id: { in: post.tags.map((t) => t.id) } } } }]
+          : []),
+      ],
     },
     include: {
       category: {
@@ -139,6 +151,12 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       author: {
         select: {
           name: true,
+        },
+      },
+      tags: {
+        select: {
+          name: true,
+          slug: true,
         },
       },
     },
@@ -338,23 +356,43 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           {/* Tags and Share Section */}
           <div className="mt-16 pt-8 border-t border-border">
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-              {/* Category Tag */}
-              {post.category && (
-                <div className="flex items-center gap-3">
-                  <span className="text-sm text-muted-foreground">
-                    Filed under:
-                  </span>
-                  <Link href={`/resources?category=${post.category.slug}`}>
-                    <Badge
-                      variant="secondary"
-                      className="hover:bg-primary hover:text-primary-foreground transition-colors"
-                    >
-                      <Tag className="h-3 w-3 mr-1.5" />
-                      {post.category.name}
-                    </Badge>
-                  </Link>
-                </div>
-              )}
+              {/* Category and Tags */}
+              <div className="flex items-center gap-3 flex-wrap">
+                {post.category && (
+                  <>
+                    <span className="text-sm text-muted-foreground">
+                      Filed under:
+                    </span>
+                    <Link href={`/resources?category=${post.category.slug}`}>
+                      <Badge
+                        variant="secondary"
+                        className="hover:bg-primary hover:text-primary-foreground transition-colors"
+                      >
+                        <Tag className="h-3 w-3 mr-1.5" />
+                        {post.category.name}
+                      </Badge>
+                    </Link>
+                  </>
+                )}
+                {post.tags && post.tags.length > 0 && (
+                  <>
+                    {post.category && (
+                      <Separator orientation="vertical" className="h-5" />
+                    )}
+                    <span className="text-sm text-muted-foreground">Tags:</span>
+                    {post.tags.map((tag) => (
+                      <Link key={tag.id} href={`/resources?tag=${tag.slug}`}>
+                        <Badge
+                          variant="outline"
+                          className="hover:bg-primary/10 transition-colors"
+                        >
+                          {tag.name}
+                        </Badge>
+                      </Link>
+                    ))}
+                  </>
+                )}
+              </div>
 
               {/* Share Buttons */}
               <div className="flex items-center gap-4">
@@ -452,6 +490,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                   excerpt={relatedPost.excerpt}
                   featuredImage={relatedPost.featuredImage}
                   category={relatedPost.category}
+                  tags={relatedPost.tags}
                   author={relatedPost.author}
                   publishedAt={relatedPost.publishedAt}
                   readingTime={relatedPost.readingTime}

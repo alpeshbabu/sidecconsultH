@@ -1,5 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
+import { sendEmail } from "@/lib/email";
+import {
+  appointmentConfirmedEmail,
+  appointmentCancelledEmail,
+} from "@/lib/email-templates";
 
 // GET /api/admin/appointments - List all appointments
 export async function GET(request: NextRequest) {
@@ -68,6 +73,28 @@ export async function PUT(request: NextRequest) {
       where: { id },
       data: { status },
     });
+
+    // Send status change email (skip internal/blocked bookings)
+    if (
+      appointment.email !== "blocked@internal" &&
+      appointment.bookingType !== "BLOCKED"
+    ) {
+      if (status === "CONFIRMED") {
+        const email = appointmentConfirmedEmail(appointment);
+        sendEmail({
+          to: appointment.email,
+          subject: email.subject,
+          html: email.html,
+        }).catch((err) => console.error("Failed to send confirmation email:", err));
+      } else if (status === "CANCELLED") {
+        const email = appointmentCancelledEmail(appointment);
+        sendEmail({
+          to: appointment.email,
+          subject: email.subject,
+          html: email.html,
+        }).catch((err) => console.error("Failed to send cancellation email:", err));
+      }
+    }
 
     return NextResponse.json({
       success: true,

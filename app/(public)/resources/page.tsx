@@ -39,10 +39,23 @@ export const metadata: Metadata = {
 
 // Fetch initial data on server
 async function getInitialData() {
-  const [categories, featuredPosts, recentPosts, totalPosts] = await Promise.all([
+  const [categories, tags, featuredPosts, recentPosts, totalPosts] = await Promise.all([
     // Get categories with post counts
     prisma.category.findMany({
       orderBy: { sortOrder: "asc" },
+      include: {
+        _count: {
+          select: {
+            posts: {
+              where: { status: "PUBLISHED" },
+            },
+          },
+        },
+      },
+    }),
+    // Get tags with post counts
+    prisma.tag.findMany({
+      orderBy: { name: "asc" },
       include: {
         _count: {
           select: {
@@ -59,6 +72,7 @@ async function getInitialData() {
       include: {
         category: { select: { name: true, slug: true } },
         author: { select: { name: true } },
+        tags: { select: { id: true, name: true, slug: true } },
       },
       orderBy: { publishedAt: "desc" },
       take: 2,
@@ -69,6 +83,7 @@ async function getInitialData() {
       include: {
         category: { select: { name: true, slug: true } },
         author: { select: { name: true } },
+        tags: { select: { id: true, name: true, slug: true } },
       },
       orderBy: { publishedAt: "desc" },
       take: 12,
@@ -87,6 +102,12 @@ async function getInitialData() {
       description: cat.description,
       postCount: cat._count.posts,
     })),
+    tags: tags.map((tag) => ({
+      id: tag.id,
+      name: tag.name,
+      slug: tag.slug,
+      postCount: tag._count.posts,
+    })),
     featuredPosts,
     recentPosts,
     totalPosts,
@@ -94,7 +115,7 @@ async function getInitialData() {
 }
 
 export default async function ResourcesPage() {
-  const { categories, featuredPosts, recentPosts, totalPosts } =
+  const { categories, tags, featuredPosts, recentPosts, totalPosts } =
     await getInitialData();
 
   const hasPublishedPosts = totalPosts > 0;
@@ -148,6 +169,7 @@ export default async function ResourcesPage() {
                     excerpt={featuredPosts[0].excerpt}
                     featuredImage={featuredPosts[0].featuredImage}
                     category={featuredPosts[0].category}
+                    tags={featuredPosts[0].tags}
                     author={featuredPosts[0].author}
                     publishedAt={featuredPosts[0].publishedAt}
                     readingTime={featuredPosts[0].readingTime}
@@ -163,6 +185,7 @@ export default async function ResourcesPage() {
                         excerpt={post.excerpt}
                         featuredImage={post.featuredImage}
                         category={post.category}
+                        tags={post.tags}
                         author={post.author}
                         publishedAt={post.publishedAt}
                         readingTime={post.readingTime}
@@ -192,6 +215,7 @@ export default async function ResourcesPage() {
             <ResourcesContent
               initialPosts={recentPosts}
               categories={categories}
+              tags={tags}
               totalPosts={totalPosts}
             />
           </Suspense>

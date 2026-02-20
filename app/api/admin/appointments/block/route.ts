@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { auth } from "@/lib/auth";
 import { z } from "zod";
+import { sendEmail } from "@/lib/email";
+import { appointmentConfirmedEmail } from "@/lib/email-templates";
 
 const blockSlotSchema = z.object({
   date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Invalid date format"),
@@ -107,6 +109,20 @@ export async function POST(request: NextRequest) {
         timeZone: timezone,
       },
     });
+
+    // Send confirmation email for admin bookings on behalf of a client
+    if (
+      bookingType === "ADMIN" &&
+      clientEmail &&
+      clientEmail !== "admin@internal"
+    ) {
+      const email = appointmentConfirmedEmail(appointment);
+      sendEmail({
+        to: clientEmail,
+        subject: email.subject,
+        html: email.html,
+      }).catch((err) => console.error("Failed to send admin booking confirmation:", err));
+    }
 
     return NextResponse.json({ success: true, data: appointment });
   } catch (error) {

@@ -45,6 +45,7 @@ export function Header() {
   const [isServicesOpen, setIsServicesOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -71,6 +72,11 @@ export function Header() {
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, []);
+
+  // Close mobile menu on route change
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [pathname]);
 
   // Check if a nav link is active
   const isActive = (href: string) => {
@@ -235,7 +241,7 @@ export function Header() {
             >
               <Search className="h-5 w-5" />
             </Button>
-          <Sheet>
+          <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon">
                 <Menu className="h-6 w-6" />

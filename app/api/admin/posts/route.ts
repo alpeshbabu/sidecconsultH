@@ -15,6 +15,7 @@ const postSchema = z.object({
   metaDescription: z.string().optional().nullable(),
   readingTime: z.number().optional().nullable(),
   categoryId: z.string().optional().nullable(),
+  tagIds: z.array(z.string()).optional(),
 });
 
 // GET /api/admin/posts - Get all posts (with filters)
@@ -35,14 +36,8 @@ export async function GET(request: NextRequest) {
     const skip = (page - 1) * limit;
 
     // Build where clause
-    const where: {
-      status?: "DRAFT" | "PUBLISHED" | "ARCHIVED";
-      categoryId?: string;
-      OR?: Array<
-        | { title: { contains: string; mode: "insensitive" } }
-        | { excerpt: { contains: string; mode: "insensitive" } }
-      >;
-    } = {};
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const where: any = {};
 
     // Filter by status
     if (status && status !== "all") {
@@ -85,6 +80,13 @@ export async function GET(request: NextRequest) {
           select: {
             id: true,
             name: true,
+          },
+        },
+        tags: {
+          select: {
+            id: true,
+            name: true,
+            slug: true,
           },
         },
       },
@@ -171,9 +173,19 @@ export async function POST(request: NextRequest) {
         metaDescription: data.metaDescription,
         readingTime,
         categoryId: data.categoryId,
+        ...(data.tagIds?.length && {
+          tags: { connect: data.tagIds.map((id: string) => ({ id })) },
+        }),
       },
       include: {
         category: {
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+          },
+        },
+        tags: {
           select: {
             id: true,
             name: true,

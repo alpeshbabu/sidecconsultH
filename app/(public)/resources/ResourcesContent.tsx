@@ -16,6 +16,13 @@ interface Category {
   postCount: number;
 }
 
+interface Tag {
+  id: string;
+  name: string;
+  slug: string;
+  postCount: number;
+}
+
 interface Post {
   id: string;
   slug: string;
@@ -28,6 +35,10 @@ interface Post {
     name: string;
     slug: string;
   } | null;
+  tags?: {
+    name: string;
+    slug: string;
+  }[];
   author: {
     name: string | null;
   } | null;
@@ -36,6 +47,7 @@ interface Post {
 interface ResourcesContentProps {
   initialPosts: Post[];
   categories: Category[];
+  tags: Tag[];
   totalPosts: number;
 }
 
@@ -44,6 +56,7 @@ const POSTS_PER_PAGE = 12;
 export function ResourcesContent({
   initialPosts,
   categories,
+  tags,
   totalPosts,
 }: ResourcesContentProps) {
   const router = useRouter();
@@ -58,6 +71,9 @@ export function ResourcesContent({
   const [activeCategory, setActiveCategory] = useState(
     searchParams.get("category") || "all"
   );
+  const [activeTag, setActiveTag] = useState(
+    searchParams.get("tag") || ""
+  );
   const [currentPage, setCurrentPage] = useState(
     parseInt(searchParams.get("page") || "1")
   );
@@ -69,7 +85,7 @@ export function ResourcesContent({
 
   // Fetch posts from API
   const fetchPosts = useCallback(
-    async (category: string, search: string, page: number) => {
+    async (category: string, search: string, page: number, tag: string) => {
       setIsLoading(true);
       try {
         const params = new URLSearchParams();
@@ -80,6 +96,9 @@ export function ResourcesContent({
         }
         if (search) {
           params.set("search", search);
+        }
+        if (tag) {
+          params.set("tag", tag);
         }
 
         const response = await fetch(`/api/posts?${params.toString()}`);
@@ -104,13 +123,16 @@ export function ResourcesContent({
 
   // Update URL params
   const updateUrlParams = useCallback(
-    (category: string, search: string, page: number) => {
+    (category: string, search: string, page: number, tag: string) => {
       const params = new URLSearchParams();
       if (category && category !== "all") {
         params.set("category", category);
       }
       if (search) {
         params.set("search", search);
+      }
+      if (tag) {
+        params.set("tag", tag);
       }
       if (page > 1) {
         params.set("page", page.toString());
@@ -128,31 +150,40 @@ export function ResourcesContent({
   const handleCategoryChange = (categorySlug: string) => {
     setActiveCategory(categorySlug);
     setCurrentPage(1);
-    updateUrlParams(categorySlug, searchQuery, 1);
-    fetchPosts(categorySlug, searchQuery, 1);
+    updateUrlParams(categorySlug, searchQuery, 1, activeTag);
+    fetchPosts(categorySlug, searchQuery, 1, activeTag);
+  };
+
+  // Handle tag change
+  const handleTagChange = (tagSlug: string) => {
+    const newTag = activeTag === tagSlug ? "" : tagSlug;
+    setActiveTag(newTag);
+    setCurrentPage(1);
+    updateUrlParams(activeCategory, searchQuery, 1, newTag);
+    fetchPosts(activeCategory, searchQuery, 1, newTag);
   };
 
   // Handle search
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     setCurrentPage(1);
-    updateUrlParams(activeCategory, searchQuery, 1);
-    fetchPosts(activeCategory, searchQuery, 1);
+    updateUrlParams(activeCategory, searchQuery, 1, activeTag);
+    fetchPosts(activeCategory, searchQuery, 1, activeTag);
   };
 
   // Handle search clear
   const handleClearSearch = () => {
     setSearchQuery("");
     setCurrentPage(1);
-    updateUrlParams(activeCategory, "", 1);
-    fetchPosts(activeCategory, "", 1);
+    updateUrlParams(activeCategory, "", 1, activeTag);
+    fetchPosts(activeCategory, "", 1, activeTag);
   };
 
   // Handle pagination
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
-    updateUrlParams(activeCategory, searchQuery, page);
-    fetchPosts(activeCategory, searchQuery, page);
+    updateUrlParams(activeCategory, searchQuery, page, activeTag);
+    fetchPosts(activeCategory, searchQuery, page, activeTag);
     // Scroll to top of posts section
     window.scrollTo({ top: 400, behavior: "smooth" });
   };
@@ -162,20 +193,25 @@ export function ResourcesContent({
     const category = searchParams.get("category") || "all";
     const search = searchParams.get("search") || "";
     const page = parseInt(searchParams.get("page") || "1");
+    const tag = searchParams.get("tag") || "";
 
-    if (category !== "all" || search || page > 1) {
+    if (category !== "all" || search || page > 1 || tag) {
       setActiveCategory(category);
       setSearchQuery(search);
       setCurrentPage(page);
-      fetchPosts(category, search, page);
+      setActiveTag(tag);
+      fetchPosts(category, search, page, tag);
     }
   }, [searchParams, fetchPosts]);
+
+  const hasActiveFilters = searchQuery || activeCategory !== "all" || activeTag;
+  const visibleTags = tags.filter((t) => t.postCount > 0);
 
   return (
     <section className="section-padding">
       <div className="container-wide">
         {/* Filters Row */}
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 mb-12">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 mb-6">
           {/* Category Tabs */}
           <div className="flex flex-wrap gap-2">
             <Button
@@ -234,9 +270,37 @@ export function ResourcesContent({
           </form>
         </div>
 
+        {/* Tag Filters */}
+        {visibleTags.length > 0 && (
+          <div className="flex flex-wrap items-center gap-2 mb-12">
+            <span className="text-sm text-muted-foreground mr-1">Tags:</span>
+            {visibleTags.map((tag) => (
+              <Badge
+                key={tag.id}
+                variant={activeTag === tag.slug ? "default" : "outline"}
+                className="cursor-pointer hover:bg-primary/10 transition-colors"
+                onClick={() => handleTagChange(tag.slug)}
+              >
+                {tag.name}
+              </Badge>
+            ))}
+            {activeTag && (
+              <button
+                onClick={() => handleTagChange(activeTag)}
+                className="text-xs text-muted-foreground hover:text-foreground transition-colors underline ml-1"
+              >
+                Clear tag
+              </button>
+            )}
+          </div>
+        )}
+
+        {/* No tags - keep original spacing */}
+        {visibleTags.length === 0 && <div className="mb-6" />}
+
         {/* Results Info */}
-        {(searchQuery || activeCategory !== "all") && (
-          <div className="mb-8 flex items-center gap-2 text-sm text-muted-foreground">
+        {hasActiveFilters && (
+          <div className="mb-8 flex items-center gap-2 text-sm text-muted-foreground flex-wrap">
             <span>
               Showing {posts.length} of {pagination.total} articles
             </span>
@@ -252,6 +316,14 @@ export function ResourcesContent({
               <Badge variant="secondary" className="gap-1">
                 {categories.find((c) => c.slug === activeCategory)?.name}
                 <button onClick={() => handleCategoryChange("all")}>
+                  <X className="h-3 w-3" />
+                </button>
+              </Badge>
+            )}
+            {activeTag && (
+              <Badge variant="secondary" className="gap-1">
+                {tags.find((t) => t.slug === activeTag)?.name}
+                <button onClick={() => handleTagChange(activeTag)}>
                   <X className="h-3 w-3" />
                 </button>
               </Badge>
@@ -276,6 +348,7 @@ export function ResourcesContent({
                   excerpt={post.excerpt}
                   featuredImage={post.featuredImage}
                   category={post.category}
+                  tags={post.tags}
                   author={post.author}
                   publishedAt={post.publishedAt}
                   readingTime={post.readingTime}
@@ -347,8 +420,12 @@ export function ResourcesContent({
             <Button
               variant="outline"
               onClick={() => {
-                handleClearSearch();
-                handleCategoryChange("all");
+                setSearchQuery("");
+                setActiveCategory("all");
+                setActiveTag("");
+                setCurrentPage(1);
+                updateUrlParams("all", "", 1, "");
+                fetchPosts("all", "", 1, "");
               }}
             >
               Clear Filters

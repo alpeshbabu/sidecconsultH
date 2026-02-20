@@ -10,17 +10,17 @@ export async function GET(request: NextRequest) {
     const limit = parseInt(searchParams.get("limit") || "12");
     const categorySlug = searchParams.get("category");
     const search = searchParams.get("search");
+    const sort = searchParams.get("sort") || "newest";
     const featured = searchParams.get("featured");
 
     // Calculate skip for pagination
     const skip = (page - 1) * limit;
 
     // Build where clause
-    const where: {
-      status: "PUBLISHED";
-      categoryId?: string;
-      OR?: Array<{ title: { contains: string; mode: "insensitive" } } | { excerpt: { contains: string; mode: "insensitive" } }>;
-    } = {
+    const tagSlug = searchParams.get("tag");
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const where: any = {
       status: "PUBLISHED",
     };
 
@@ -40,6 +40,11 @@ export async function GET(request: NextRequest) {
         { title: { contains: search, mode: "insensitive" } },
         { excerpt: { contains: search, mode: "insensitive" } },
       ];
+    }
+
+    // Filter by tag
+    if (tagSlug) {
+      where.tags = { some: { slug: tagSlug } };
     }
 
     // Get total count for pagination
@@ -62,9 +67,16 @@ export async function GET(request: NextRequest) {
             name: true,
           },
         },
+        tags: {
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+          },
+        },
       },
       orderBy: {
-        publishedAt: "desc",
+        publishedAt: sort === "oldest" ? "asc" : "desc",
       },
       skip,
       take: limit,

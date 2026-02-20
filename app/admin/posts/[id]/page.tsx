@@ -9,7 +9,7 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { id } = await params;
-  
+
   if (id === "new") {
     return { title: "New Post" };
   }
@@ -41,6 +41,13 @@ export default async function PostEditorPage({ params }: PageProps) {
             slug: true,
           },
         },
+        tags: {
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+          },
+        },
       },
     });
 
@@ -57,20 +64,31 @@ export default async function PostEditorPage({ params }: PageProps) {
     };
   }
 
-  // Fetch categories for dropdown
-  const categories = await prisma.category.findMany({
-    orderBy: { sortOrder: "asc" },
-    select: {
-      id: true,
-      name: true,
-      slug: true,
-    },
-  });
+  // Fetch categories and tags for dropdowns
+  const [categories, allTags] = await Promise.all([
+    prisma.category.findMany({
+      orderBy: { sortOrder: "asc" },
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+      },
+    }),
+    prisma.tag.findMany({
+      orderBy: { name: "asc" },
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+      },
+    }),
+  ]);
 
   return (
     <PostEditor
       post={post}
       categories={categories}
+      allTags={allTags}
       isNew={isNew}
     />
   );
