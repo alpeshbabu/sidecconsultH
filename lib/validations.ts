@@ -38,6 +38,43 @@ export const contactInquirySchema = z.object({
     .min(500, "Please provide more details (at least 500 characters)")
     .max(5000, "Message must be less than 5000 characters"),
 
+  // Service-specific optional fields
+  supplierAddress: z
+    .string()
+    .max(1000, "Address must be less than 1000 characters")
+    .optional()
+    .or(z.literal("")),
+
+  estimatedBudget: z
+    .string()
+    .max(200, "Budget must be less than 200 characters")
+    .optional()
+    .or(z.literal("")),
+
+  otherSites: z
+    .string()
+    .max(2000, "Other sites must be less than 2000 characters")
+    .optional()
+    .or(z.literal("")),
+
+  otherSiteLocations: z
+    .string()
+    .max(2000, "Site locations must be less than 2000 characters")
+    .optional()
+    .or(z.literal("")),
+
+  expectedDocuments: z
+    .string()
+    .max(3000, "Expected documents must be less than 3000 characters")
+    .optional()
+    .or(z.literal("")),
+
+  regulatoryStandards: z
+    .string()
+    .max(3000, "Regulatory standards must be less than 3000 characters")
+    .optional()
+    .or(z.literal("")),
+
   privacyAccepted: z
     .boolean()
     .refine((val) => val === true, {

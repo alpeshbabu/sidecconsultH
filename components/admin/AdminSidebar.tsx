@@ -13,6 +13,7 @@ import {
   Sparkles,
   Calendar,
   Mail,
+  Bot,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -52,6 +53,11 @@ const navItems: NavItem[] = [
     title: "Subscribers",
     href: "/admin/subscribers",
     icon: Mail,
+  },
+  {
+    title: "Chat Transcripts",
+    href: "/admin/chats",
+    icon: Bot,
   },
   {
     title: "Blog Posts",

@@ -200,6 +200,39 @@ export const trackCookieConsent = (consentType: "accept" | "reject" | "customize
   });
 };
 
+// Chatbot events
+export const trackChatbotOpen = (): void => {
+  event("chatbot_open", {
+    event_category: "engagement",
+    event_label: "chatbot",
+  });
+};
+
+export const trackChatbotMessage = (messageCount: number): void => {
+  event("chatbot_message", {
+    event_category: "engagement",
+    event_label: "chatbot",
+    message_count: messageCount,
+  });
+};
+
+export const trackChatbotConversion = (
+  convertedTo: "contact" | "schedule"
+): void => {
+  event("chatbot_conversion", {
+    event_category: "conversion",
+    event_label: convertedTo,
+  });
+};
+
+export const trackChatbotClose = (messageCount: number): void => {
+  event("chatbot_close", {
+    event_category: "engagement",
+    event_label: "chatbot",
+    message_count: messageCount,
+  });
+};
+
 // Helper to check if user has consented to analytics cookies
 export const hasAnalyticsConsent = (): boolean => {
   if (typeof window === "undefined") return false;

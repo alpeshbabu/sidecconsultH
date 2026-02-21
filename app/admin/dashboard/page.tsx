@@ -10,11 +10,20 @@ import {
   Plus,
   Mail,
   BarChart3,
+  Calendar,
+  Users,
+  Bot,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
 import { prisma } from "@/lib/db";
+import {
+  MonthlyActivityChart,
+  InquiryStatusChart,
+  ConversionFunnel,
+} from "@/components/admin/charts";
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -38,6 +47,25 @@ async function getDashboardData() {
       recentInquiries,
       recentPosts,
       serviceInterestsCounts,
+      // Appointment queries
+      totalAppointments,
+      appointmentsThisMonth,
+      // Subscriber queries
+      activeSubscribers,
+      newSubscribers,
+      // Chat queries
+      totalChats,
+      activeChats,
+      convertedChats,
+      chatsThisMonth,
+      // Inquiry status breakdown
+      inquiryStatusCounts,
+      respondedInquiries,
+      // Monthly time-series (raw SQL)
+      monthlyInquiriesRaw,
+      monthlyAppointmentsRaw,
+      monthlySubscribersRaw,
+      monthlyChatsRaw,
     ] = await Promise.all([
       // Total inquiries
       prisma.contactInquiry.count(),
@@ -100,6 +128,90 @@ async function getDashboardData() {
         _count: { serviceInterest: true },
         orderBy: { _count: { serviceInterest: "desc" } },
       }),
+      // Total appointments (CLIENT + ADMIN only, not BLOCKED)
+      prisma.appointment.count({
+        where: { bookingType: { in: ["CLIENT", "ADMIN"] } },
+      }),
+      // Appointments this month
+      prisma.appointment.count({
+        where: {
+          bookingType: { in: ["CLIENT", "ADMIN"] },
+          createdAt: { gte: thirtyDaysAgo },
+        },
+      }),
+      // Active subscribers
+      prisma.subscriber.count({
+        where: { isActive: true },
+      }),
+      // New subscribers this month
+      prisma.subscriber.count({
+        where: { subscribedAt: { gte: thirtyDaysAgo } },
+      }),
+      // Total chat conversations
+      prisma.chatConversation.count(),
+      // Active chats
+      prisma.chatConversation.count({
+        where: { status: "ACTIVE" },
+      }),
+      // Converted chats
+      prisma.chatConversation.count({
+        where: { status: "CONVERTED" },
+      }),
+      // Chats this month
+      prisma.chatConversation.count({
+        where: { createdAt: { gte: thirtyDaysAgo } },
+      }),
+      // Inquiry status breakdown
+      prisma.contactInquiry.groupBy({
+        by: ["status"],
+        _count: { status: true },
+      }),
+      // Responded inquiries (for conversion funnel)
+      prisma.contactInquiry.count({
+        where: { status: "RESPONDED" },
+      }),
+      // Monthly inquiries (6 months)
+      prisma.$queryRaw<Array<{ month: string; count: bigint }>>`
+        SELECT
+          TO_CHAR(DATE_TRUNC('month', "createdAt"), 'YYYY-MM') as month,
+          COUNT(*) as count
+        FROM contact_inquiries
+        WHERE "createdAt" >= NOW() - INTERVAL '6 months'
+        GROUP BY DATE_TRUNC('month', "createdAt")
+        ORDER BY month ASC
+      `,
+      // Monthly appointments (6 months)
+      prisma.$queryRaw<Array<{ month: string; count: bigint }>>`
+        SELECT
+          TO_CHAR(DATE_TRUNC('month', "createdAt"), 'YYYY-MM') as month,
+          COUNT(*) as count
+        FROM appointments
+        WHERE "createdAt" >= NOW() - INTERVAL '6 months'
+          AND "bookingType" IN ('CLIENT', 'ADMIN')
+        GROUP BY DATE_TRUNC('month', "createdAt")
+        ORDER BY month ASC
+      `,
+      // Monthly subscribers (6 months)
+      prisma.$queryRaw<Array<{ month: string; count: bigint }>>`
+        SELECT
+          TO_CHAR(DATE_TRUNC('month', "subscribedAt"), 'YYYY-MM') as month,
+          COUNT(*) as count
+        FROM subscribers
+        WHERE "subscribedAt" >= NOW() - INTERVAL '6 months'
+          AND "isActive" = true
+        GROUP BY DATE_TRUNC('month', "subscribedAt")
+        ORDER BY month ASC
+      `,
+      // Monthly chats (6 months)
+      prisma.$queryRaw<Array<{ month: string; count: bigint }>>`
+        SELECT
+          TO_CHAR(DATE_TRUNC('month', "createdAt"), 'YYYY-MM') as month,
+          COUNT(*) as count
+        FROM chat_conversations
+        WHERE "createdAt" >= NOW() - INTERVAL '6 months'
+        GROUP BY DATE_TRUNC('month', "createdAt")
+        ORDER BY month ASC
+      `,
     ]);
 
     // Calculate trend
@@ -113,6 +225,42 @@ async function getDashboardData() {
       count: item._count.serviceInterest,
     })).slice(0, 7);
 
+    // Format inquiry status for donut chart
+    const statusDisplayNames: Record<string, string> = {
+      NEW: "New",
+      IN_PROGRESS: "In Progress",
+      RESPONDED: "Responded",
+      ARCHIVED: "Archived",
+    };
+    const inquiryStatusBreakdown = inquiryStatusCounts.map((item) => ({
+      name: statusDisplayNames[item.status] || item.status,
+      value: item._count.status,
+    }));
+
+    // Build monthly activity time-series
+    const months: string[] = [];
+    for (let i = 5; i >= 0; i--) {
+      const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+      months.push(`${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`);
+    }
+
+    const toMap = (raw: Array<{ month: string; count: bigint }>) =>
+      Object.fromEntries(raw.map((r) => [r.month, Number(r.count)]));
+
+    const inquiryMap = toMap(monthlyInquiriesRaw);
+    const appointmentMap = toMap(monthlyAppointmentsRaw);
+    const subscriberMap = toMap(monthlySubscribersRaw);
+    const chatMap = toMap(monthlyChatsRaw);
+
+    const monthlyActivity = months.map((month) => ({
+      month,
+      label: new Date(month + "-01").toLocaleDateString("en-US", { month: "short" }),
+      inquiries: inquiryMap[month] || 0,
+      appointments: appointmentMap[month] || 0,
+      subscribers: subscriberMap[month] || 0,
+      chats: chatMap[month] || 0,
+    }));
+
     return {
       stats: {
         totalInquiries,
@@ -121,14 +269,24 @@ async function getDashboardData() {
         publishedPosts,
         draftPosts,
         inquiryTrend,
+        totalAppointments,
+        appointmentsThisMonth,
+        activeSubscribers,
+        newSubscribers,
+        totalChats,
+        activeChats,
+        convertedChats,
+        chatsThisMonth,
+        respondedInquiries,
       },
       recentInquiries,
       recentPosts,
       serviceInterests,
+      inquiryStatusBreakdown,
+      monthlyActivity,
     };
   } catch (error) {
     console.error("Error fetching dashboard data:", error);
-    // Return empty data on error
     return {
       stats: {
         totalInquiries: 0,
@@ -137,10 +295,21 @@ async function getDashboardData() {
         publishedPosts: 0,
         draftPosts: 0,
         inquiryTrend: 0,
+        totalAppointments: 0,
+        appointmentsThisMonth: 0,
+        activeSubscribers: 0,
+        newSubscribers: 0,
+        totalChats: 0,
+        activeChats: 0,
+        convertedChats: 0,
+        chatsThisMonth: 0,
+        respondedInquiries: 0,
       },
       recentInquiries: [],
       recentPosts: [],
       serviceInterests: [],
+      inquiryStatusBreakdown: [],
+      monthlyActivity: [],
     };
   }
 }
@@ -158,7 +327,7 @@ function formatRelativeTime(date: Date | string): string {
   if (diffMins < 60) return `${diffMins} min ago`;
   if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? "s" : ""} ago`;
   if (diffDays < 7) return `${diffDays} day${diffDays > 1 ? "s" : ""} ago`;
-  
+
   return dateObj.toLocaleDateString("en-US", {
     month: "short",
     day: "numeric",
@@ -190,12 +359,23 @@ const serviceDisplayNames: Record<string, string> = {
 
 export default async function AdminDashboardPage() {
   const data = await getDashboardData();
-  const { stats, recentInquiries, recentPosts, serviceInterests } = data;
+  const {
+    stats,
+    recentInquiries,
+    recentPosts,
+    serviceInterests,
+    inquiryStatusBreakdown,
+    monthlyActivity,
+  } = data;
 
-  // Calculate max for chart scaling
-  const maxServiceCount = serviceInterests.length > 0 
-    ? Math.max(...serviceInterests.map(s => s.count)) 
+  // Calculate max for service chart scaling
+  const maxServiceCount = serviceInterests.length > 0
+    ? Math.max(...serviceInterests.map(s => s.count))
     : 1;
+
+  const chatConversionRate = stats.totalChats > 0
+    ? Math.round((stats.convertedChats / stats.totalChats) * 100)
+    : 0;
 
   return (
     <div className="space-y-6">
@@ -219,7 +399,7 @@ export default async function AdminDashboardPage() {
         </div>
       </div>
 
-      {/* Stats Grid */}
+      {/* Stats Grid - 2 rows of 4 */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {/* Total Inquiries */}
         <Card>
@@ -297,9 +477,97 @@ export default async function AdminDashboardPage() {
             </p>
           </CardContent>
         </Card>
+
+        {/* Appointments */}
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Appointments
+            </CardTitle>
+            <Calendar className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.totalAppointments}</div>
+            <p className="text-xs text-muted-foreground mt-1">
+              {stats.appointmentsThisMonth} this month
+            </p>
+          </CardContent>
+        </Card>
+
+        {/* Active Subscribers */}
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Subscribers
+            </CardTitle>
+            <Users className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.activeSubscribers}</div>
+            <p className="text-xs text-muted-foreground mt-1">
+              +{stats.newSubscribers} this month
+            </p>
+          </CardContent>
+        </Card>
+
+        {/* Chat Sessions */}
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Chat Sessions
+            </CardTitle>
+            <Bot className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.totalChats}</div>
+            <p className="text-xs text-muted-foreground mt-1">
+              {stats.activeChats} active now
+            </p>
+          </CardContent>
+        </Card>
+
+        {/* Chat Conversions */}
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Chat Conversions
+            </CardTitle>
+            <ArrowRight className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.convertedChats}</div>
+            <p className="text-xs text-muted-foreground mt-1">
+              {chatConversionRate}% conversion rate
+            </p>
+          </CardContent>
+        </Card>
       </div>
 
-      {/* Main Content Grid */}
+      {/* Monthly Activity Chart */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg">Monthly Activity</CardTitle>
+          <CardDescription>
+            Inquiries, appointments, subscribers, and chats over the last 6 months
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          {monthlyActivity.length > 0 &&
+          monthlyActivity.some(
+            (m) => m.inquiries + m.appointments + m.subscribers + m.chats > 0
+          ) ? (
+            <MonthlyActivityChart data={monthlyActivity} />
+          ) : (
+            <div className="flex items-center justify-center h-[300px] text-muted-foreground">
+              <p className="text-sm">
+                No activity data yet. Charts will appear as data accumulates.
+              </p>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Recent Inquiries + Inquiry Status */}
       <div className="grid gap-6 lg:grid-cols-3">
         {/* Recent Inquiries - Takes 2 columns */}
         <Card className="lg:col-span-2">
@@ -337,7 +605,7 @@ export default async function AdminDashboardPage() {
                     <div className="flex items-center gap-3 ml-4">
                       <Badge
                         variant={
-                          inquiry.status === "NEW" ? "destructive" : 
+                          inquiry.status === "NEW" ? "destructive" :
                           inquiry.status === "IN_PROGRESS" ? "default" : "secondary"
                         }
                         className="text-xs"
@@ -361,7 +629,36 @@ export default async function AdminDashboardPage() {
           </CardContent>
         </Card>
 
-        {/* Service Interests Chart */}
+        {/* Inquiry Status Donut Chart */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-lg">Inquiry Status</CardTitle>
+            <CardDescription>Breakdown by current status</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <InquiryStatusChart data={inquiryStatusBreakdown} />
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Conversion Funnel + Top Services + Chat Engagement */}
+      <div className="grid gap-6 lg:grid-cols-3">
+        {/* Conversion Funnel */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-lg">Conversion Funnel</CardTitle>
+            <CardDescription>From inquiry to appointment</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ConversionFunnel
+              totalInquiries={stats.totalInquiries}
+              respondedInquiries={stats.respondedInquiries}
+              totalAppointments={stats.totalAppointments}
+            />
+          </CardContent>
+        </Card>
+
+        {/* Top Services */}
         <Card>
           <CardHeader>
             <div className="flex items-center gap-2">
@@ -373,7 +670,7 @@ export default async function AdminDashboardPage() {
           <CardContent>
             {serviceInterests.length > 0 ? (
               <div className="space-y-3">
-                {serviceInterests.map((item, index) => (
+                {serviceInterests.map((item) => (
                   <div key={item.service} className="space-y-1">
                     <div className="flex items-center justify-between text-sm">
                       <span className="truncate flex-1">
@@ -394,6 +691,52 @@ export default async function AdminDashboardPage() {
               <div className="text-center py-8 text-muted-foreground">
                 <BarChart3 className="h-10 w-10 mx-auto mb-2 opacity-50" />
                 <p className="text-sm">No data yet</p>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Chat Engagement */}
+        <Card>
+          <CardHeader>
+            <div className="flex items-center gap-2">
+              <Bot className="h-5 w-5 text-muted-foreground" />
+              <CardTitle className="text-lg">Chat Engagement</CardTitle>
+            </div>
+            <CardDescription>AI chatbot performance</CardDescription>
+          </CardHeader>
+          <CardContent>
+            {stats.totalChats > 0 ? (
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground">Total Sessions</span>
+                  <span className="font-bold">{stats.totalChats}</span>
+                </div>
+                <Separator />
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground">Active Now</span>
+                  <span className="font-bold text-green-600">{stats.activeChats}</span>
+                </div>
+                <Separator />
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground">Converted</span>
+                  <span className="font-bold">{stats.convertedChats}</span>
+                </div>
+                <Separator />
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground">Conversion Rate</span>
+                  <span className="font-bold">{chatConversionRate}%</span>
+                </div>
+                <Separator />
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground">This Month</span>
+                  <span className="font-bold">{stats.chatsThisMonth}</span>
+                </div>
+              </div>
+            ) : (
+              <div className="text-center py-8 text-muted-foreground">
+                <Bot className="h-10 w-10 mx-auto mb-2 opacity-50" />
+                <p className="text-sm">No chat data yet</p>
               </div>
             )}
           </CardContent>
@@ -425,7 +768,7 @@ export default async function AdminDashboardPage() {
                   <div className="flex items-start justify-between gap-2 mb-2">
                     <Badge
                       variant={
-                        post.status === "PUBLISHED" ? "default" : 
+                        post.status === "PUBLISHED" ? "default" :
                         post.status === "DRAFT" ? "secondary" : "outline"
                       }
                       className="text-xs"
@@ -484,8 +827,8 @@ export default async function AdminDashboardPage() {
                   <span>View Inquiries</span>
                 </div>
                 {stats.unreadInquiries > 0 && (
-                  <Badge 
-                    variant="destructive" 
+                  <Badge
+                    variant="destructive"
                     className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0 flex items-center justify-center"
                   >
                     {stats.unreadInquiries}

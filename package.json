@@ -27,6 +27,8 @@
     "seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
+    "@ai-sdk/openai": "^3.0.30",
+    "@ai-sdk/react": "^3.0.99",
     "@hookform/resolvers": "^5.2.2",
     "@prisma/client": "^7.2.0",
     "@prisma/extension-accelerate": "^3.0.1",
@@ -39,6 +41,7 @@
     "@radix-ui/react-separator": "^1.1.8",
     "@radix-ui/react-slot": "^1.2.4",
     "@tailwindcss/typography": "^0.5.19",
+    "ai": "^6.0.97",
     "bcryptjs": "^3.0.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -51,6 +54,7 @@
     "react-dom": "19.2.3",
     "react-hook-form": "^7.71.0",
     "react-markdown": "^10.1.0",
+    "recharts": "^3.7.0",
     "remark-gfm": "^4.0.1",
     "resend": "^6.9.2",
     "sonner": "^2.0.7",

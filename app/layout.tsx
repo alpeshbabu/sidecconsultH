@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
 import { WebVitalsReporter, GoogleAnalytics, CookieConsent } from "@/components/shared";
+import { ChatbotWidget } from "@/components/chatbot";
 import { SessionProvider, ThemeProvider } from "@/components/providers";
 import { createOrganizationSchema, getJsonLd } from "@/lib/structured-data";
 import "./globals.css";
@@ -109,6 +110,7 @@ export default function RootLayout({
             <WebVitalsReporter />
             <CookieConsent />
             {children}
+            <ChatbotWidget />
             <Toaster position="top-right" richColors closeButton />
           </SessionProvider>
         </ThemeProvider>

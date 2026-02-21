@@ -59,6 +59,8 @@ import { MainLayout } from "@/components/layout";
 import {
   SERVICE_INTEREST_OPTIONS,
   PROJECT_TIMELINE_OPTIONS,
+  SERVICE_SPECIFIC_FIELDS,
+  type ServiceFieldConfig,
 } from "@/lib/constants";
 import {
   contactInquirySchema,
@@ -118,6 +120,12 @@ export default function ContactPage() {
       serviceInterest: "",
       projectTimeline: "",
       message: "",
+      supplierAddress: "",
+      estimatedBudget: "",
+      otherSites: "",
+      otherSiteLocations: "",
+      expectedDocuments: "",
+      regulatoryStandards: "",
       privacyAccepted: false,
     },
   });
@@ -179,6 +187,9 @@ export default function ContactPage() {
     }
   }
 
+  const selectedService = form.watch("serviceInterest");
+  const serviceFields: ServiceFieldConfig[] =
+    SERVICE_SPECIFIC_FIELDS[selectedService] || [];
   const messageLength = form.watch("message")?.length || 0;
 
   return (
@@ -443,6 +454,61 @@ export default function ContactPage() {
                               )}
                             />
                           </div>
+
+                          {/* Service-Specific Fields */}
+                          {serviceFields.length > 0 && (
+                            <div className="rounded-lg border border-primary/20 bg-primary/5 p-4 space-y-4">
+                              <div className="flex items-center gap-2">
+                                <Sparkles className="h-4 w-4 text-primary" />
+                                <h4 className="text-sm font-semibold text-primary">
+                                  Help Us Understand Your{" "}
+                                  {SERVICE_INTEREST_OPTIONS.find(
+                                    (o) => o.value === selectedService
+                                  )?.label || "Project"}{" "}
+                                  Needs
+                                </h4>
+                              </div>
+                              <p className="text-xs text-muted-foreground">
+                                These optional fields help us prepare a more
+                                relevant response for your specific service area.
+                              </p>
+                              <div className="grid gap-4">
+                                {serviceFields.map((fieldConfig) => (
+                                  <FormField
+                                    key={fieldConfig.key}
+                                    control={form.control}
+                                    name={fieldConfig.key}
+                                    render={({ field }) => (
+                                      <FormItem>
+                                        <FormLabel>{fieldConfig.label}</FormLabel>
+                                        <FormControl>
+                                          {fieldConfig.type === "textarea" ? (
+                                            <Textarea
+                                              placeholder={fieldConfig.placeholder}
+                                              className="min-h-[80px] resize-none bg-background"
+                                              {...field}
+                                            />
+                                          ) : (
+                                            <Input
+                                              placeholder={fieldConfig.placeholder}
+                                              className="bg-background"
+                                              {...field}
+                                            />
+                                          )}
+                                        </FormControl>
+                                        {fieldConfig.description && (
+                                          <FormDescription>
+                                            {fieldConfig.description}
+                                          </FormDescription>
+                                        )}
+                                        <FormMessage />
+                                      </FormItem>
+                                    )}
+                                  />
+                                ))}
+                              </div>
+                            </div>
+                          )}
 
                           <FormField
                             control={form.control}

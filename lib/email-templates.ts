@@ -6,6 +6,12 @@ interface ContactInquiryData {
   serviceInterest: string;
   projectTimeline?: string | null;
   message: string;
+  supplierAddress?: string | null;
+  estimatedBudget?: string | null;
+  otherSites?: string | null;
+  otherSiteLocations?: string | null;
+  expectedDocuments?: string | null;
+  regulatoryStandards?: string | null;
 }
 
 interface AppointmentData {
@@ -192,6 +198,12 @@ function contactInquiryDetailsBlock(inquiry: ContactInquiryData): string {
   if (inquiry.projectTimeline) rows.push({ label: "Timeline", value: inquiry.projectTimeline });
   if (inquiry.phone) rows.push({ label: "Phone", value: inquiry.phone });
   if (inquiry.companyName) rows.push({ label: "Company", value: inquiry.companyName });
+  if (inquiry.estimatedBudget) rows.push({ label: "Budget", value: inquiry.estimatedBudget });
+  if (inquiry.regulatoryStandards) rows.push({ label: "Regulatory Standards", value: inquiry.regulatoryStandards });
+  if (inquiry.expectedDocuments) rows.push({ label: "Expected Documents", value: inquiry.expectedDocuments });
+  if (inquiry.supplierAddress) rows.push({ label: "Supplier Address", value: inquiry.supplierAddress });
+  if (inquiry.otherSites) rows.push({ label: "Other Sites", value: inquiry.otherSites });
+  if (inquiry.otherSiteLocations) rows.push({ label: "Site Locations", value: inquiry.otherSiteLocations });
   rows.push({ label: "Message", value: inquiry.message });
 
   return `<table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f9fafb;border-radius:6px;padding:16px;margin:16px 0;">
@@ -224,6 +236,12 @@ export function contactInquiryAdminNotificationEmail(inquiry: ContactInquiryData
   if (inquiry.projectTimeline) rows.push({ label: "Timeline", value: inquiry.projectTimeline });
   if (inquiry.phone) rows.push({ label: "Phone", value: inquiry.phone });
   if (inquiry.companyName) rows.push({ label: "Company", value: inquiry.companyName });
+  if (inquiry.estimatedBudget) rows.push({ label: "Budget", value: inquiry.estimatedBudget });
+  if (inquiry.regulatoryStandards) rows.push({ label: "Regulatory Standards", value: inquiry.regulatoryStandards });
+  if (inquiry.expectedDocuments) rows.push({ label: "Expected Documents", value: inquiry.expectedDocuments });
+  if (inquiry.supplierAddress) rows.push({ label: "Supplier Address", value: inquiry.supplierAddress });
+  if (inquiry.otherSites) rows.push({ label: "Other Sites", value: inquiry.otherSites });
+  if (inquiry.otherSiteLocations) rows.push({ label: "Site Locations", value: inquiry.otherSiteLocations });
   rows.push({ label: "Message", value: inquiry.message });
 
   const detailsBlock = `<table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f9fafb;border-radius:6px;padding:16px;margin:16px 0;">
@@ -244,6 +262,21 @@ export function contactInquiryAdminNotificationEmail(inquiry: ContactInquiryData
 }
 
 // --- Newsletter Templates ---
+
+export function newsletterAdminNotificationEmail(email: string, isReactivation: boolean = false) {
+  const action = isReactivation ? "reactivated their subscription" : "subscribed to the newsletter";
+
+  return {
+    subject: `New Newsletter Subscriber: ${email}`,
+    html: emailWrapper(`
+      <h2 style="margin:0 0 16px;color:#111827;font-size:22px;">New Newsletter Subscriber</h2>
+      <p style="margin:0 0 16px;color:#374151;font-size:15px;line-height:1.6;"><strong>${email}</strong> has ${action}.</p>
+      <p style="margin:24px 0 0;text-align:center;">
+        <a href="${SITE_URL}/admin/subscribers" style="display:inline-block;background-color:${PRIMARY_COLOR};color:#ffffff;padding:12px 24px;border-radius:6px;text-decoration:none;font-size:14px;font-weight:600;">View Subscribers</a>
+      </p>
+    `),
+  };
+}
 
 export function newsletterWelcomeEmail(email: string) {
   return {

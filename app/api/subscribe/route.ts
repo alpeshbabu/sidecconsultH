@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { z } from "zod";
 import { sendEmail } from "@/lib/email";
-import { newsletterWelcomeEmail } from "@/lib/email-templates";
+import { newsletterWelcomeEmail, newsletterAdminNotificationEmail } from "@/lib/email-templates";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 
 const subscribeSchema = z.object({
@@ -62,6 +62,17 @@ export async function POST(request: NextRequest) {
         },
       });
 
+      // Notify admin of reactivation (fire-and-forget)
+      const adminEmail = process.env.ADMIN_NOTIFICATION_EMAIL;
+      if (adminEmail) {
+        const adminNotif = newsletterAdminNotificationEmail(normalizedEmail, true);
+        sendEmail({
+          to: adminEmail,
+          subject: adminNotif.subject,
+          html: adminNotif.html,
+        }).catch((err) => console.error("Failed to send admin subscriber notification:", err));
+      }
+
       return NextResponse.json({
         success: true,
         message: "Welcome back! Your subscription has been reactivated.",
@@ -82,6 +93,17 @@ export async function POST(request: NextRequest) {
       subject: welcome.subject,
       html: welcome.html,
     }).catch((err) => console.error("Failed to send newsletter welcome:", err));
+
+    // Notify admin of new subscriber (fire-and-forget)
+    const adminEmail = process.env.ADMIN_NOTIFICATION_EMAIL;
+    if (adminEmail) {
+      const adminNotif = newsletterAdminNotificationEmail(normalizedEmail);
+      sendEmail({
+        to: adminEmail,
+        subject: adminNotif.subject,
+        html: adminNotif.html,
+      }).catch((err) => console.error("Failed to send admin subscriber notification:", err));
+    }
 
     return NextResponse.json({
       success: true,

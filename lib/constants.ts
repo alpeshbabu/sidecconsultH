@@ -107,6 +107,105 @@ export const SERVICE_INTEREST_OPTIONS = [
   { value: "general", label: "General Inquiry" },
 ] as const;
 
+// Service-Specific Form Fields Configuration
+// Maps each service to the additional fields shown on the contact form
+export type ServiceFieldKey =
+  | "supplierAddress"
+  | "estimatedBudget"
+  | "otherSites"
+  | "otherSiteLocations"
+  | "expectedDocuments"
+  | "regulatoryStandards";
+
+export interface ServiceFieldConfig {
+  key: ServiceFieldKey;
+  label: string;
+  placeholder: string;
+  type: "input" | "textarea";
+  description?: string;
+}
+
+const FIELD_DEFINITIONS: Record<ServiceFieldKey, ServiceFieldConfig> = {
+  estimatedBudget: {
+    key: "estimatedBudget",
+    label: "Estimated Budget Range",
+    placeholder: "e.g., $50K–$100K, $100K–$500K, or TBD",
+    type: "input",
+  },
+  regulatoryStandards: {
+    key: "regulatoryStandards",
+    label: "Applicable Regulatory Standards",
+    placeholder: "e.g., ISO 13485, FDA 21 CFR 820, EU MDR, ISO 14971...",
+    type: "textarea",
+    description: "List all standards or regulations relevant to your project",
+  },
+  expectedDocuments: {
+    key: "expectedDocuments",
+    label: "Expected Deliverables / Documents",
+    placeholder: "e.g., Design History File, Process Validation Protocols, FMEA, Control Plans...",
+    type: "textarea",
+    description: "What documentation or deliverables do you anticipate needing?",
+  },
+  supplierAddress: {
+    key: "supplierAddress",
+    label: "Supplier / Facility Address",
+    placeholder: "Address of the supplier or facility to be assessed",
+    type: "textarea",
+    description: "If applicable, provide the location of the supplier or manufacturing facility",
+  },
+  otherSites: {
+    key: "otherSites",
+    label: "Other Manufacturing Sites",
+    placeholder: "List any other manufacturing or production sites involved",
+    type: "textarea",
+    description: "Include any additional sites that may be part of this project scope",
+  },
+  otherSiteLocations: {
+    key: "otherSiteLocations",
+    label: "Site Locations / Regions",
+    placeholder: "e.g., Tijuana MX, Shenzhen CN, Cork IE, Minneapolis MN...",
+    type: "textarea",
+    description: "Geographic locations of facilities or sites involved",
+  },
+};
+
+export const SERVICE_SPECIFIC_FIELDS: Record<string, ServiceFieldConfig[]> = {
+  "manufacturing-engineering": [
+    FIELD_DEFINITIONS.estimatedBudget,
+    FIELD_DEFINITIONS.otherSites,
+    FIELD_DEFINITIONS.otherSiteLocations,
+  ],
+  "quality-regulatory": [
+    FIELD_DEFINITIONS.regulatoryStandards,
+    FIELD_DEFINITIONS.expectedDocuments,
+    FIELD_DEFINITIONS.estimatedBudget,
+  ],
+  "injection-molding": [
+    FIELD_DEFINITIONS.estimatedBudget,
+    FIELD_DEFINITIONS.otherSites,
+  ],
+  "equipment-maintenance": [
+    FIELD_DEFINITIONS.estimatedBudget,
+    FIELD_DEFINITIONS.otherSites,
+    FIELD_DEFINITIONS.otherSiteLocations,
+  ],
+  "facility-design": [
+    FIELD_DEFINITIONS.estimatedBudget,
+    FIELD_DEFINITIONS.otherSites,
+    FIELD_DEFINITIONS.otherSiteLocations,
+  ],
+  "supplier-development": [
+    FIELD_DEFINITIONS.supplierAddress,
+    FIELD_DEFINITIONS.estimatedBudget,
+    FIELD_DEFINITIONS.otherSites,
+  ],
+  "strategic-advisory": [
+    FIELD_DEFINITIONS.estimatedBudget,
+    FIELD_DEFINITIONS.regulatoryStandards,
+  ],
+  general: [],
+};
+
 export const PROJECT_TIMELINE_OPTIONS = [
   { value: "immediate", label: "Immediate (ASAP)" },
   { value: "1-3-months", label: "1-3 Months" },
