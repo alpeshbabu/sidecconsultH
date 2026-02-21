@@ -8,12 +8,20 @@ import {
   Bell,
   LogOut,
   Menu,
+  X,
   Search,
   User,
   ChevronDown,
   Settings,
   Moon,
   Sun,
+  LayoutDashboard,
+  MessageSquare,
+  FileText,
+  FolderOpen,
+  Sparkles,
+  Calendar,
+  Mail,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -33,7 +41,20 @@ import { useTheme } from "next-themes";
 interface AdminTopBarProps {
   sidebarCollapsed: boolean;
   onMenuClick: () => void;
+  isMobileMenuOpen: boolean;
 }
+
+// Mobile nav items
+const mobileNavItems = [
+  { title: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
+  { title: "Inquiries", href: "/admin/inquiries", icon: MessageSquare },
+  { title: "Appointments", href: "/admin/appointments", icon: Calendar },
+  { title: "Subscribers", href: "/admin/subscribers", icon: Mail },
+  { title: "Blog Posts", href: "/admin/posts", icon: FileText },
+  { title: "Categories", href: "/admin/categories", icon: FolderOpen },
+  { title: "Services", href: "/admin/services", icon: Sparkles },
+  { title: "Settings", href: "/admin/settings", icon: Settings },
+];
 
 interface InquiryNotification {
   id: string;
@@ -80,6 +101,7 @@ function formatRelativeTime(date: string): string {
 export function AdminTopBar({
   sidebarCollapsed,
   onMenuClick,
+  isMobileMenuOpen,
 }: AdminTopBarProps) {
   const pathname = usePathname();
   const router = useRouter();
@@ -161,6 +183,7 @@ export function AdminTopBar({
   };
 
   return (
+    <>
     <header
       className={cn(
         "fixed top-0 z-30 h-16 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 transition-all duration-300",
@@ -179,7 +202,11 @@ export function AdminTopBar({
             className="lg:hidden"
             onClick={onMenuClick}
           >
-            <Menu className="h-5 w-5" />
+            {isMobileMenuOpen ? (
+              <X className="h-5 w-5" />
+            ) : (
+              <Menu className="h-5 w-5" />
+            )}
           </Button>
 
           {/* Page Title */}
@@ -329,6 +356,49 @@ export function AdminTopBar({
         </div>
       </div>
     </header>
+
+    {/* Mobile Nav Dropdown */}
+    {isMobileMenuOpen && (
+      <>
+        <div
+          className="fixed inset-0 z-20 bg-black/40 lg:hidden"
+          onClick={onMenuClick}
+        />
+        <div className="fixed top-16 left-0 right-0 z-25 border-b bg-background shadow-lg lg:hidden animate-in slide-in-from-top-2 duration-200">
+          <nav className="grid grid-cols-2 gap-1 p-3">
+            {mobileNavItems.map((item) => {
+              const isActive =
+                pathname === item.href || pathname.startsWith(`${item.href}/`);
+              const Icon = item.icon;
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={onMenuClick}
+                  className={cn(
+                    "flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-medium transition-colors",
+                    isActive
+                      ? "bg-primary text-primary-foreground"
+                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                  )}
+                >
+                  <Icon className="h-4 w-4 shrink-0" />
+                  <span>{item.title}</span>
+                </Link>
+              );
+            })}
+          </nav>
+          <div className="border-t px-3 py-3">
+            <Link href="/" target="_blank" onClick={onMenuClick}>
+              <Button variant="outline" className="w-full text-xs" size="sm">
+                View Website
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </>
+    )}
+    </>
   );
 }
 

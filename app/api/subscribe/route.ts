@@ -3,6 +3,7 @@ import { prisma } from "@/lib/db";
 import { z } from "zod";
 import { sendEmail } from "@/lib/email";
 import { newsletterWelcomeEmail } from "@/lib/email-templates";
+import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 
 const subscribeSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -11,6 +12,20 @@ const subscribeSchema = z.object({
 // POST /api/subscribe - Subscribe to newsletter
 export async function POST(request: NextRequest) {
   try {
+    // Rate limit: 3 requests per 15 minutes per IP
+    const ip = getClientIp(request);
+    const rateLimit = await checkRateLimit({
+      key: `subscribe:${ip}`,
+      limit: 3,
+      windowMs: 15 * 60 * 1000,
+    });
+    if (!rateLimit.success) {
+      return NextResponse.json(
+        { success: false, error: "Too many requests. Please try again later." },
+        { status: 429 }
+      );
+    }
+
     const body = await request.json();
     const parsed = subscribeSchema.safeParse(body);
 

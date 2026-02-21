@@ -6,6 +6,7 @@ import {
   bookingConfirmationEmail,
   adminNotificationEmail,
 } from "@/lib/email-templates";
+import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 
 const bookingSchema = z.object({
   date: z.string().min(10), // YYYY-MM-DD
@@ -21,6 +22,20 @@ const bookingSchema = z.object({
 
 export async function POST(request: NextRequest) {
   try {
+    // Rate limit: 5 requests per 15 minutes per IP
+    const ip = getClientIp(request);
+    const rateLimit = await checkRateLimit({
+      key: `booking:${ip}`,
+      limit: 5,
+      windowMs: 15 * 60 * 1000,
+    });
+    if (!rateLimit.success) {
+      return NextResponse.json(
+        { success: false, error: "Too many requests. Please try again later." },
+        { status: 429 }
+      );
+    }
+
     const body = await request.json();
     const validation = bookingSchema.safeParse(body);
 

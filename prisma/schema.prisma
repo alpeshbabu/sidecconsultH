@@ -245,6 +245,16 @@ model Tag {
   @@map("tags")
 }
 
+/// Rate limit tracking for public API endpoints
+model RateLimitEntry {
+  id        String   @id @default(cuid())
+  key       String
+  createdAt DateTime @default(now())
+
+  @@index([key, createdAt])
+  @@map("rate_limit_entries")
+}
+
 /// Newsletter subscriber
 model Subscriber {
   id            String    @id @default(cuid())

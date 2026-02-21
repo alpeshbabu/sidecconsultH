@@ -6,9 +6,24 @@ import {
   contactInquiryConfirmationEmail,
   contactInquiryAdminNotificationEmail,
 } from "@/lib/email-templates";
+import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 
 export async function POST(request: NextRequest) {
   try {
+    // Rate limit: 3 requests per 15 minutes per IP
+    const ip = getClientIp(request);
+    const rateLimit = await checkRateLimit({
+      key: `contact:${ip}`,
+      limit: 3,
+      windowMs: 15 * 60 * 1000,
+    });
+    if (!rateLimit.success) {
+      return NextResponse.json(
+        { success: false, error: "Too many requests. Please try again later." },
+        { status: 429 }
+      );
+    }
+
     // Parse the request body
     const body = await request.json();
 
