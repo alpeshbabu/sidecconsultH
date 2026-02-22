@@ -84,20 +84,17 @@ export function Header() {
     return pathname.startsWith(href);
   };
 
-  // Only apply scroll-based styles after mounting to avoid hydration mismatch
-  const scrolledStyles = isMounted && isScrolled;
-
   return (
     <header
-      suppressHydrationWarning
       className={cn(
         "sticky top-0 z-50 w-full transition-all duration-300",
-        scrolledStyles
+        isMounted && isScrolled
           ? "bg-background/95 backdrop-blur-md shadow-sm border-b"
           : "bg-background/80 backdrop-blur-sm"
       )}
+      suppressHydrationWarning
     >
-      <div className="container-wide" suppressHydrationWarning>
+      <div className="container-wide">
         <div className="flex h-16 items-center justify-between lg:h-20">
           {/* Logo */}
           <Link href="/" className="flex items-center group">

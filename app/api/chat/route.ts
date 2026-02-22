@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import { openai } from "@ai-sdk/openai";
-import { streamText } from "ai";
+import { streamText, convertToModelMessages } from "ai";
 import { prisma } from "@/lib/db";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 import { CHATBOT_SYSTEM_PROMPT } from "@/lib/chatbot-context";
@@ -22,9 +22,16 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { messages, conversationId, sessionId, pageUrl } = await request.json();
+    const body = await request.json();
+    const { messages, conversationId, pageUrl } = body;
+    const sessionId = body.sessionId || `server_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
 
-    if (!messages || !Array.isArray(messages) || !sessionId) {
+    if (!messages || !Array.isArray(messages)) {
+      console.error("Chat validation failed:", {
+        hasMessages: !!messages,
+        isArray: Array.isArray(messages),
+        bodyKeys: Object.keys(body),
+      });
       return new Response(
         JSON.stringify({ error: "Invalid request" }),
         { status: 400, headers: { "Content-Type": "application/json" } }
@@ -52,16 +59,15 @@ export async function POST(request: NextRequest) {
     // Save the latest user message
     const lastUserMessage = messages[messages.length - 1];
     if (lastUserMessage?.role === "user") {
-      // Extract text content from parts array or content string
-      const userContent =
-        typeof lastUserMessage.content === "string"
+      // Extract text content from parts array (AI SDK v6 UIMessage format)
+      const userContent = Array.isArray(lastUserMessage.parts)
+        ? lastUserMessage.parts
+            .filter((p: { type: string }) => p.type === "text")
+            .map((p: { text: string }) => p.text)
+            .join("")
+        : typeof lastUserMessage.content === "string"
           ? lastUserMessage.content
-          : Array.isArray(lastUserMessage.parts)
-            ? lastUserMessage.parts
-                .filter((p: { type: string }) => p.type === "text")
-                .map((p: { text: string }) => p.text)
-                .join("")
-            : "";
+          : "";
 
       if (userContent) {
         await prisma.chatMessage.create({
@@ -74,10 +80,13 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    // Convert UIMessages (parts format) to ModelMessages (content format) for streamText
+    const modelMessages = await convertToModelMessages(messages);
+
     const result = streamText({
       model: openai("gpt-4o-mini"),
       system: CHATBOT_SYSTEM_PROMPT,
-      messages,
+      messages: modelMessages,
       maxOutputTokens: 500,
       temperature: 0.7,
       onFinish: async ({ text }) => {

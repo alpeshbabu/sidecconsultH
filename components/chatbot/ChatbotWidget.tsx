@@ -20,22 +20,20 @@ function generateSessionId() {
 export function ChatbotWidget() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
-  const [sessionId, setSessionId] = useState<string>("");
-  const [conversationId, setConversationId] = useState<string | null>(null);
-  const conversationIdRef = useRef<string | null>(null);
-
-  // Don't render on admin pages
-  const isAdminPage = pathname?.startsWith("/admin");
-
-  // Initialize session ID from localStorage
-  useEffect(() => {
+  const [sessionId, setSessionId] = useState<string>(() => {
+    if (typeof window === "undefined") return "";
     let id = localStorage.getItem("sidec_chat_session");
     if (!id) {
       id = generateSessionId();
       localStorage.setItem("sidec_chat_session", id);
     }
-    setSessionId(id);
-  }, []);
+    return id;
+  });
+  const [conversationId, setConversationId] = useState<string | null>(null);
+  const conversationIdRef = useRef<string | null>(null);
+
+  // Don't render on admin pages
+  const isAdminPage = pathname?.startsWith("/admin");
 
   // Create transport with custom fetch to intercept conversation ID header
   const transport = useMemo(
