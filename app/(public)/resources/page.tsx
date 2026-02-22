@@ -5,6 +5,7 @@ import {
   ArrowRight,
   BookOpen,
   FileText,
+  Rss,
   Sparkles,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -34,6 +35,9 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: "/resources",
+    types: {
+      "application/rss+xml": "/feed.xml",
+    },
   },
 };
 
@@ -146,6 +150,14 @@ export default async function ResourcesPage() {
               Practical guides, industry insights, and best practices from 25+
               years of medical device manufacturing experience.
             </p>
+            <div className="mt-6">
+              <Link href="/feed.xml" target="_blank">
+                <Button variant="outline" size="sm">
+                  <Rss className="h-4 w-4 mr-2" />
+                  RSS Feed
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </section>
