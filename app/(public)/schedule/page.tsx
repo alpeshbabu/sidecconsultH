@@ -3,12 +3,9 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import {
-  Calendar,
   CheckCircle,
-  Clock,
   ChevronLeft,
   ChevronRight,
-  Mail,
   MessageSquare,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -24,7 +21,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
 import { SERVICE_INTEREST_OPTIONS } from "@/lib/constants";
 
 interface Slot {
@@ -32,12 +28,32 @@ interface Slot {
   startAt: string;
   endAt: string;
   isBooked: boolean;
-  localTime?: string; // Pre-formatted time in business timezone
+  localTime?: string; // Pre-formatted time in the business timezone
 }
 
-// Format time - use localTime if available (from API), otherwise format in user's timezone
+interface SlotSettings {
+  timezone: string;
+  timezoneLabel: string;
+  timezoneAbbreviation?: string;
+}
+
+// Slot times are authoritative in the business timezone (sent pre-formatted by the API).
 const formatTimeLabel = (slot: Slot) =>
   slot.localTime || new Date(slot.startAt).toLocaleTimeString(undefined, { timeStyle: "short" });
+
+// The same instant rendered on the visitor's own clock — shown when their
+// timezone differs from the business timezone so there's no ambiguity.
+const formatVisitorTime = (slot: Slot) => {
+  const date = new Date(slot.startAt);
+  const time = date.toLocaleTimeString(undefined, { timeStyle: "short" });
+  const abbr = new Intl.DateTimeFormat(undefined, {
+    hour: "numeric",
+    timeZoneName: "short",
+  })
+    .formatToParts(date)
+    .find((p) => p.type === "timeZoneName")?.value;
+  return abbr ? `${time} ${abbr}` : time;
+};
 
 const getMonthLabel = (value: Date) =>
   value.toLocaleDateString(undefined, { month: "long", year: "numeric" });
@@ -72,6 +88,7 @@ export default function SchedulePage() {
   const [selectedDate, setSelectedDate] = useState(() => toLocalDateKey(new Date()));
   const [calendarMonth, setCalendarMonth] = useState(() => new Date());
   const [slots, setSlots] = useState<Slot[]>([]);
+  const [slotSettings, setSlotSettings] = useState<SlotSettings | null>(null);
   const [selectedSlot, setSelectedSlot] = useState<Slot | null>(null);
   const [isLoadingSlots, setIsLoadingSlots] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -106,6 +123,7 @@ export default function SchedulePage() {
         const data = await response.json();
         if (data.success) {
           setSlots(data.data.slots || []);
+          if (data.data.settings) setSlotSettings(data.data.settings);
         }
       } catch (error) {
         console.error("Error fetching slots:", error);
@@ -121,18 +139,39 @@ export default function SchedulePage() {
   const availableSlots = useMemo(() => slots.filter((s) => !s.isBooked), [slots]);
   const bookedSlots = useMemo(() => slots.filter((s) => s.isBooked), [slots]);
 
+  // Show the visitor's local equivalent only when their timezone differs from
+  // the business timezone the slots are expressed in.
+  const showVisitorTime = useMemo(
+    () => Boolean(slotSettings && slotSettings.timezone !== timeZone),
+    [slotSettings, timeZone]
+  );
+  const businessTzLabel = slotSettings
+    ? `${slotSettings.timezoneLabel}${
+        slotSettings.timezoneAbbreviation
+          ? ` (${slotSettings.timezoneAbbreviation})`
+          : ""
+      }`
+    : "the business time zone";
+
   const submitBooking = async () => {
     if (!selectedSlot) {
       toast.error("Please select an available time slot.");
       return;
     }
-    if (!formData.name.trim() || !formData.email.trim()) {
-      toast.error("Name and email are required.");
+
+    // Trim everything up front — the server validates the raw values, so a stray
+    // space in the email (or a 1-character name) would otherwise be rejected.
+    const name = formData.name.trim();
+    const email = formData.email.trim();
+
+    if (name.length < 2) {
+      toast.error("Please enter your full name (at least 2 characters).");
       return;
     }
-
-    const slotTime = new Date(selectedSlot.startAt);
-    const time = `${slotTime.getHours().toString().padStart(2, "0")}:${slotTime.getMinutes().toString().padStart(2, "0")}`;
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      toast.error("Please enter a valid email address.");
+      return;
+    }
 
     setIsSubmitting(true);
     try {
@@ -140,16 +179,34 @@ export default function SchedulePage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          // Send the canonical UTC instants from the slot itself so validation
+          // never depends on the visitor's browser timezone.
+          startAt: selectedSlot.startAt,
+          endAt: selectedSlot.endAt,
           date: selectedDate,
-          time,
-          ...formData,
+          name,
+          email,
+          phone: formData.phone.trim() || undefined,
+          companyName: formData.companyName.trim() || undefined,
+          serviceInterest: formData.serviceInterest || undefined,
+          notes: formData.notes.trim() || undefined,
           timeZone,
         }),
       });
 
       const result = await response.json();
       if (!response.ok) {
-        throw new Error(result.error || "Failed to book appointment");
+        // Surface per-field validation errors instead of a generic message.
+        const fieldErrors = result.details
+          ? Object.values(result.details as Record<string, string[]>)
+              .flat()
+              .filter(Boolean)
+          : [];
+        throw new Error(
+          fieldErrors.length
+            ? fieldErrors.join(" ")
+            : result.error || "Failed to book appointment"
+        );
       }
 
       setIsSubmitted(true);
@@ -182,21 +239,16 @@ export default function SchedulePage() {
   return (
     <MainLayout>
       <section className="relative overflow-hidden">
-        <div className="absolute inset-0 -z-10">
-          <div className="absolute inset-0 gradient-hero" />
-          <div className="absolute left-1/2 top-0 -translate-x-1/2 w-[900px] h-[900px] rounded-full bg-primary/5 blur-3xl" />
+        <div className="absolute inset-0 -z-10" aria-hidden>
+          <div className="grid-blueprint absolute inset-0 opacity-70" />
+          <div className="absolute inset-x-0 top-0 h-px bg-signal/40" />
         </div>
         <div className="container-wide py-16 md:py-24">
           <div className="mx-auto max-w-3xl text-center">
-            <Badge
-              variant="outline"
-              className="mb-6 px-4 py-1.5 border-primary/30 bg-primary/5"
-            >
-              <Calendar className="h-3.5 w-3.5 mr-2 text-primary" />
-              Schedule a Consultation
-            </Badge>
-            <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
-              Book a Time That Works for You
+            <p className="eyebrow mb-5 justify-center">Schedule a Consultation</p>
+            <h1 className="font-display text-4xl font-bold tracking-tight text-balance sm:text-5xl lg:text-6xl">
+              Book a time that{" "}
+              <span className="text-signal">works for you</span>
             </h1>
             <p className="mt-6 text-lg text-muted-foreground md:text-xl">
               Select an available time slot and share a few details so we can
@@ -206,26 +258,26 @@ export default function SchedulePage() {
         </div>
       </section>
 
-      <section className="section-padding">
+      <section className="section-padding hairline-t">
         <div className="container-wide">
           <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
             {/* Calendar & Slots */}
-            <Card>
+            <Card className="card-technical rounded-none">
               <CardHeader>
-                <CardTitle>Choose a Time Slot</CardTitle>
+                <CardTitle className="font-display">Choose a Time Slot</CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
                 {/* Calendar */}
                 <div>
-                  <p className="text-xs font-semibold uppercase text-muted-foreground mb-2">
+                  <p className="font-mono text-xs uppercase tracking-[0.1em] text-muted-foreground mb-2">
                     Pick a date
                   </p>
-                  <div className="rounded-lg border bg-card p-4">
+                  <div className="rounded-sm border border-hairline bg-card p-4">
                     <div className="flex items-center justify-between mb-4">
                       <Button variant="ghost" size="sm" onClick={prevMonth}>
                         <ChevronLeft className="h-4 w-4" />
                       </Button>
-                      <p className="text-sm font-semibold">
+                      <p className="font-mono text-sm font-medium tracking-wide">
                         {getMonthLabel(calendarMonth)}
                       </p>
                       <Button variant="ghost" size="sm" onClick={nextMonth}>
@@ -233,7 +285,7 @@ export default function SchedulePage() {
                       </Button>
                     </div>
 
-                    <div className="grid grid-cols-7 gap-1 text-xs text-muted-foreground mb-2">
+                    <div className="grid grid-cols-7 gap-1 font-mono text-[10px] uppercase tracking-[0.1em] text-muted-foreground mb-2">
                       {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map(
                         (day) => (
                           <div key={day} className="text-center py-1">
@@ -259,14 +311,14 @@ export default function SchedulePage() {
                             type="button"
                             disabled={isPast}
                             onClick={() => setSelectedDate(dateKey)}
-                            className={`h-10 rounded-md text-sm font-medium transition-colors ${
+                            className={`h-10 rounded-sm border border-hairline font-mono text-xs transition-colors ${
                               isSelected
-                                ? "bg-primary text-primary-foreground"
+                                ? "border-signal bg-signal text-signal-foreground"
                                 : isToday
-                                ? "bg-primary/10 text-primary"
+                                ? "border-signal/40 bg-signal/10 text-foreground"
                                 : isPast
-                                ? "text-muted-foreground/40 cursor-not-allowed"
-                                : "hover:bg-muted"
+                                ? "border-transparent text-muted-foreground/40 cursor-not-allowed"
+                                : "hover:border-signal/60"
                             }`}
                           >
                             {day.getDate()}
@@ -279,11 +331,16 @@ export default function SchedulePage() {
 
                 {/* Time Slots */}
                 <div>
-                  <p className="text-xs font-semibold uppercase text-muted-foreground mb-2">
-                    Pick a time
-                  </p>
+                  <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
+                    <p className="font-mono text-xs uppercase tracking-[0.1em] text-muted-foreground">
+                      Pick a time
+                    </p>
+                    <span className="rounded-sm border border-signal/40 bg-signal/10 px-2 py-1 font-mono text-[10px] uppercase tracking-[0.1em] text-foreground">
+                      Times in {businessTzLabel}
+                    </span>
+                  </div>
                   {isLoadingSlots ? (
-                    <div className="h-32 rounded-lg bg-muted animate-pulse" />
+                    <div className="h-32 rounded-sm bg-muted animate-pulse" />
                   ) : slots.length === 0 ? (
                     <p className="text-sm text-muted-foreground py-4">
                       No availability for this date.
@@ -301,12 +358,12 @@ export default function SchedulePage() {
                               type="button"
                               disabled={isBooked}
                               onClick={() => setSelectedSlot(slot)}
-                              className={`flex items-center justify-center rounded-lg border px-3 py-2.5 text-sm font-medium transition-colors ${
+                              className={`flex items-center justify-center rounded-sm border border-hairline px-3 py-2.5 font-mono text-xs transition-colors ${
                                 isBooked
                                   ? "bg-muted text-muted-foreground/50 cursor-not-allowed line-through"
                                   : isSelected
-                                  ? "border-primary bg-primary text-primary-foreground"
-                                  : "hover:bg-muted"
+                                  ? "border-signal bg-signal text-signal-foreground"
+                                  : "hover:border-signal/60"
                               }`}
                             >
                               {formatTimeLabel(slot)}
@@ -314,42 +371,47 @@ export default function SchedulePage() {
                           );
                         })}
                       </div>
-                      <div className="mt-3 flex items-center gap-4 text-xs text-muted-foreground">
-                        <span className="flex items-center gap-1">
-                          <span className="h-2 w-2 rounded-full bg-primary" />
+                      <div className="mt-3 flex items-center gap-4 font-mono text-[10px] uppercase tracking-[0.1em] text-muted-foreground">
+                        <span className="flex items-center gap-1.5">
+                          <span className="h-2 w-2 rounded-full bg-signal" />
                           Available: {availableSlots.length}
                         </span>
-                        <span className="flex items-center gap-1">
+                        <span className="flex items-center gap-1.5">
                           <span className="h-2 w-2 rounded-full bg-muted-foreground/30" />
                           Booked: {bookedSlots.length}
                         </span>
                       </div>
                     </>
                   )}
-                  <p className="mt-2 text-xs text-muted-foreground">
-                    Time zone: {timeZone}
-                  </p>
+                  {showVisitorTime && (
+                    <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.1em] text-muted-foreground">
+                      Your time zone is {timeZone} — your local time is shown once
+                      you select a slot.
+                    </p>
+                  )}
                 </div>
               </CardContent>
             </Card>
 
             {/* Booking Form */}
-            <Card>
+            <Card className="card-technical rounded-none">
               <CardHeader>
-                <CardTitle>Your Details</CardTitle>
+                <CardTitle className="font-display">Your Details</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 {isSubmitted ? (
-                  <div className="rounded-lg border border-green-200 bg-green-50 p-6 text-center">
-                    <CheckCircle className="mx-auto h-12 w-12 text-green-600" />
-                    <h3 className="mt-4 text-lg font-semibold text-green-900">
+                  <div className="rounded-sm border border-hairline bg-signal/5 p-6 text-center">
+                    <div className="mx-auto flex h-12 w-12 items-center justify-center border border-hairline text-signal">
+                      <CheckCircle className="h-6 w-6" />
+                    </div>
+                    <h3 className="mt-4 font-display text-lg font-semibold">
                       Appointment Requested!
                     </h3>
-                    <p className="mt-2 text-sm text-green-700">
+                    <p className="mt-2 text-sm text-muted-foreground">
                       We'll send a confirmation email shortly.
                     </p>
                     <Button
-                      className="mt-4"
+                      className="mt-4 rounded-sm border-hairline font-mono text-xs uppercase tracking-[0.12em]"
                       variant="outline"
                       onClick={() => {
                         setIsSubmitted(false);
@@ -370,20 +432,27 @@ export default function SchedulePage() {
                 ) : (
                   <>
                     {selectedSlot && (
-                      <div className="rounded-lg border border-primary/30 bg-primary/5 p-3 text-sm">
+                      <div className="rounded-sm border border-signal/40 bg-signal/10 p-3 text-sm">
                         <p className="font-medium">
                           Selected:{" "}
                           {new Date(selectedSlot.startAt).toLocaleDateString(
                             undefined,
                             { dateStyle: "full" }
                           )}{" "}
-                          at {formatTimeLabel(selectedSlot)}
+                          at {formatTimeLabel(selectedSlot)} {businessTzLabel}
                         </p>
+                        {showVisitorTime && (
+                          <p className="mt-1 text-xs text-muted-foreground">
+                            That&apos;s {formatVisitorTime(selectedSlot)} in your
+                            time zone ({timeZone}).
+                          </p>
+                        )}
                       </div>
                     )}
 
                     <Input
                       placeholder="Full Name *"
+                      className="rounded-sm border-hairline focus-visible:ring-signal"
                       value={formData.name}
                       onChange={(e) =>
                         setFormData((prev) => ({
@@ -395,6 +464,7 @@ export default function SchedulePage() {
                     <Input
                       type="email"
                       placeholder="Email Address *"
+                      className="rounded-sm border-hairline focus-visible:ring-signal"
                       value={formData.email}
                       onChange={(e) =>
                         setFormData((prev) => ({
@@ -405,6 +475,7 @@ export default function SchedulePage() {
                     />
                     <Input
                       placeholder="Phone Number"
+                      className="rounded-sm border-hairline focus-visible:ring-signal"
                       value={formData.phone}
                       onChange={(e) =>
                         setFormData((prev) => ({
@@ -415,6 +486,7 @@ export default function SchedulePage() {
                     />
                     <Input
                       placeholder="Company Name"
+                      className="rounded-sm border-hairline focus-visible:ring-signal"
                       value={formData.companyName}
                       onChange={(e) =>
                         setFormData((prev) => ({
@@ -432,7 +504,7 @@ export default function SchedulePage() {
                         }))
                       }
                     >
-                      <SelectTrigger>
+                      <SelectTrigger className="rounded-sm border-hairline focus-visible:ring-signal">
                         <SelectValue placeholder="Service Interest" />
                       </SelectTrigger>
                       <SelectContent>
@@ -445,6 +517,7 @@ export default function SchedulePage() {
                     </Select>
                     <Textarea
                       placeholder="Tell us about your project or questions..."
+                      className="rounded-sm border-hairline focus-visible:ring-signal"
                       value={formData.notes}
                       onChange={(e) =>
                         setFormData((prev) => ({
@@ -456,6 +529,7 @@ export default function SchedulePage() {
                     />
                     <Button
                       className="w-full"
+                      variant="technical"
                       size="lg"
                       onClick={submitBooking}
                       disabled={isSubmitting || !selectedSlot}
@@ -473,12 +547,17 @@ export default function SchedulePage() {
             <p className="text-muted-foreground mb-4">
               Prefer to submit an inquiry instead?
             </p>
-            <Link href="/contact">
-              <Button variant="outline" size="lg">
+            <Button
+              asChild
+              variant="outline"
+              size="lg"
+              className="rounded-sm border-hairline font-mono text-xs uppercase tracking-[0.12em]"
+            >
+              <Link href="/contact">
                 <MessageSquare className="mr-2 h-4 w-4" />
                 Submit an Inquiry
-              </Button>
-            </Link>
+              </Link>
+            </Button>
           </div>
         </div>
       </section>

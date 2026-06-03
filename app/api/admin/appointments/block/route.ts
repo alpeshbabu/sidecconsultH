@@ -4,6 +4,7 @@ import { auth } from "@/lib/auth";
 import { z } from "zod";
 import { sendEmail } from "@/lib/email";
 import { appointmentConfirmedEmail } from "@/lib/email-templates";
+import { DEFAULT_TIMEZONE, zonedWallTimeToUtc } from "@/lib/timezone";
 
 const blockSlotSchema = z.object({
   date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Invalid date format"),
@@ -25,21 +26,6 @@ const bulkBlockSchema = z.object({
   endTime: z.string().regex(/^\d{2}:\d{2}$/),
   reason: z.string().optional(),
 });
-
-// Default business timezone
-const DEFAULT_TIMEZONE = "America/New_York";
-
-function getTimezoneOffsetHours(timezone: string, year: number, month: number, day: number): number {
-  const date = new Date(Date.UTC(year, month - 1, day, 12, 0, 0));
-  const utcFormatter = new Intl.DateTimeFormat("en-US", { timeZone: "UTC", hour: "numeric", hour12: false });
-  const tzFormatter = new Intl.DateTimeFormat("en-US", { timeZone: timezone, hour: "numeric", hour12: false });
-  const utcHour = parseInt(utcFormatter.format(date), 10);
-  const tzHour = parseInt(tzFormatter.format(date), 10);
-  let offset = utcHour - tzHour;
-  if (offset < -12) offset += 24;
-  if (offset > 12) offset -= 24;
-  return offset;
-}
 
 // POST /api/admin/appointments/block - Block a single slot or book on behalf of client
 export async function POST(request: NextRequest) {
@@ -77,10 +63,9 @@ export async function POST(request: NextRequest) {
       endMin = endMinutes % 60;
     }
 
-    // Convert to UTC
-    const offsetHours = getTimezoneOffsetHours(timezone, year, month, day);
-    const bookedAt = new Date(Date.UTC(year, month - 1, day, startHour + offsetHours, startMin, 0, 0));
-    const bookedEndAt = new Date(Date.UTC(year, month - 1, day, endHour + offsetHours, endMin, 0, 0));
+    // Convert business wall-clock times to canonical UTC (DST-safe).
+    const bookedAt = zonedWallTimeToUtc(year, month, day, startHour, startMin, timezone);
+    const bookedEndAt = zonedWallTimeToUtc(year, month, day, endHour, endMin, timezone);
 
     // Check if slot is already booked
     const existing = await prisma.appointment.findFirst({
@@ -167,7 +152,6 @@ export async function PUT(request: NextRequest) {
       const month = d.getMonth() + 1;
       const day = d.getDate();
       const dateKey = `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
-      const offsetHours = getTimezoneOffsetHours(timezone, year, month, day);
 
       // Generate slots for this day
       let currentMinutes = startHour * 60 + startMin;
@@ -180,8 +164,8 @@ export async function PUT(request: NextRequest) {
         const slotEndHour = Math.floor(slotEndMinutes / 60);
         const slotEndMin = slotEndMinutes % 60;
 
-        const bookedAt = new Date(Date.UTC(year, month - 1, day, slotStartHour + offsetHours, slotStartMin, 0, 0));
-        const bookedEndAt = new Date(Date.UTC(year, month - 1, day, slotEndHour + offsetHours, slotEndMin, 0, 0));
+        const bookedAt = zonedWallTimeToUtc(year, month, day, slotStartHour, slotStartMin, timezone);
+        const bookedEndAt = zonedWallTimeToUtc(year, month, day, slotEndHour, slotEndMin, timezone);
 
         // Check if slot is already booked
         const existing = await prisma.appointment.findFirst({

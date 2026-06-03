@@ -38,6 +38,10 @@ export default async function AdminLayout({ children }: AdminLayoutProps) {
     if (!session?.user) {
       redirect("/admin/login");
     }
+    // CLIENT users belong in the portal, not the admin area.
+    if (session.user.role === "CLIENT") {
+      redirect("/portal");
+    }
   }
 
   return <ClientAdminLayout>{children}</ClientAdminLayout>;

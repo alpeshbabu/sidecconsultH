@@ -5,7 +5,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Search, X, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
 import { BlogPostCard } from "@/components/blog";
 
 interface Category {
@@ -214,32 +213,38 @@ export function ResourcesContent({
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 mb-6">
           {/* Category Tabs */}
           <div className="flex flex-wrap gap-2">
-            <Button
-              variant={activeCategory === "all" ? "default" : "outline"}
-              size="sm"
+            <button
+              type="button"
               onClick={() => handleCategoryChange("all")}
-              className="rounded-full"
+              className={`inline-flex items-center gap-2 rounded-sm border px-3 py-1.5 font-mono text-xs uppercase tracking-[0.1em] transition-colors ${
+                activeCategory === "all"
+                  ? "border-signal bg-signal/10 text-foreground"
+                  : "border-hairline text-muted-foreground hover:border-signal/60 hover:text-foreground"
+              }`}
             >
               All
-              <Badge variant="secondary" className="ml-2 rounded-full">
+              <span className="font-mono text-[10px] text-muted-foreground">
                 {totalPosts}
-              </Badge>
-            </Button>
+              </span>
+            </button>
             {categories.map((category) => (
-              <Button
+              <button
                 key={category.id}
-                variant={activeCategory === category.slug ? "default" : "outline"}
-                size="sm"
+                type="button"
                 onClick={() => handleCategoryChange(category.slug)}
-                className="rounded-full"
+                className={`inline-flex items-center gap-2 rounded-sm border px-3 py-1.5 font-mono text-xs uppercase tracking-[0.1em] transition-colors ${
+                  activeCategory === category.slug
+                    ? "border-signal bg-signal/10 text-foreground"
+                    : "border-hairline text-muted-foreground hover:border-signal/60 hover:text-foreground"
+                }`}
               >
                 {category.name}
                 {category.postCount > 0 && (
-                  <Badge variant="secondary" className="ml-2 rounded-full">
+                  <span className="font-mono text-[10px] text-muted-foreground">
                     {category.postCount}
-                  </Badge>
+                  </span>
                 )}
-              </Button>
+              </button>
             ))}
           </div>
 
@@ -252,7 +257,7 @@ export function ResourcesContent({
                 placeholder="Search articles..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 pr-10"
+                className="rounded-sm border-hairline pl-10 pr-10 focus-visible:ring-signal"
               />
               {searchQuery && (
                 <button
@@ -264,7 +269,11 @@ export function ResourcesContent({
                 </button>
               )}
             </div>
-            <Button type="submit" variant="outline">
+            <Button
+              type="submit"
+              variant="outline"
+              className="rounded-sm border-hairline font-mono text-xs uppercase tracking-[0.12em]"
+            >
               Search
             </Button>
           </form>
@@ -273,21 +282,27 @@ export function ResourcesContent({
         {/* Tag Filters */}
         {visibleTags.length > 0 && (
           <div className="flex flex-wrap items-center gap-2 mb-12">
-            <span className="text-sm text-muted-foreground mr-1">Tags:</span>
+            <span className="mr-1 font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
+              Tags:
+            </span>
             {visibleTags.map((tag) => (
-              <Badge
+              <button
                 key={tag.id}
-                variant={activeTag === tag.slug ? "default" : "outline"}
-                className="cursor-pointer hover:bg-primary/10 transition-colors"
+                type="button"
                 onClick={() => handleTagChange(tag.slug)}
+                className={`rounded-sm border px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.1em] transition-colors ${
+                  activeTag === tag.slug
+                    ? "border-signal bg-signal/10 text-foreground"
+                    : "border-hairline text-muted-foreground hover:border-signal/60 hover:text-foreground"
+                }`}
               >
                 {tag.name}
-              </Badge>
+              </button>
             ))}
             {activeTag && (
               <button
                 onClick={() => handleTagChange(activeTag)}
-                className="text-xs text-muted-foreground hover:text-foreground transition-colors underline ml-1"
+                className="ml-1 font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground underline transition-colors hover:text-foreground"
               >
                 Clear tag
               </button>
@@ -300,33 +315,33 @@ export function ResourcesContent({
 
         {/* Results Info */}
         {hasActiveFilters && (
-          <div className="mb-8 flex items-center gap-2 text-sm text-muted-foreground flex-wrap">
+          <div className="mb-8 flex flex-wrap items-center gap-2 font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
             <span>
               Showing {posts.length} of {pagination.total} articles
             </span>
             {searchQuery && (
-              <Badge variant="secondary" className="gap-1">
+              <span className="inline-flex items-center gap-1 rounded-sm border border-hairline px-2 py-0.5 text-foreground">
                 &quot;{searchQuery}&quot;
                 <button onClick={handleClearSearch}>
                   <X className="h-3 w-3" />
                 </button>
-              </Badge>
+              </span>
             )}
             {activeCategory !== "all" && (
-              <Badge variant="secondary" className="gap-1">
+              <span className="inline-flex items-center gap-1 rounded-sm border border-hairline px-2 py-0.5 text-foreground">
                 {categories.find((c) => c.slug === activeCategory)?.name}
                 <button onClick={() => handleCategoryChange("all")}>
                   <X className="h-3 w-3" />
                 </button>
-              </Badge>
+              </span>
             )}
             {activeTag && (
-              <Badge variant="secondary" className="gap-1">
+              <span className="inline-flex items-center gap-1 rounded-sm border border-hairline px-2 py-0.5 text-foreground">
                 {tags.find((t) => t.slug === activeTag)?.name}
                 <button onClick={() => handleTagChange(activeTag)}>
                   <X className="h-3 w-3" />
                 </button>
-              </Badge>
+              </span>
             )}
           </div>
         )}
@@ -364,6 +379,7 @@ export function ResourcesContent({
                   size="icon"
                   onClick={() => handlePageChange(currentPage - 1)}
                   disabled={currentPage === 1}
+                  className="rounded-sm border-hairline hover:border-signal/60"
                 >
                   <ChevronLeft className="h-4 w-4" />
                 </Button>
@@ -386,12 +402,17 @@ export function ResourcesContent({
                       return (
                         <div key={page} className="flex items-center gap-1">
                           {showEllipsis && (
-                            <span className="px-2 text-muted-foreground">...</span>
+                            <span className="px-2 font-mono text-xs text-muted-foreground">...</span>
                           )}
                           <Button
-                            variant={currentPage === page ? "default" : "outline"}
+                            variant="outline"
                             size="icon"
                             onClick={() => handlePageChange(page)}
+                            className={`rounded-sm border font-mono text-xs ${
+                              currentPage === page
+                                ? "border-signal bg-signal/10 text-foreground"
+                                : "border-hairline text-muted-foreground hover:border-signal/60 hover:text-foreground"
+                            }`}
                           >
                             {page}
                           </Button>
@@ -405,6 +426,7 @@ export function ResourcesContent({
                   size="icon"
                   onClick={() => handlePageChange(currentPage + 1)}
                   disabled={currentPage === pagination.totalPages}
+                  className="rounded-sm border-hairline hover:border-signal/60"
                 >
                   <ChevronRight className="h-4 w-4" />
                 </Button>
@@ -413,12 +435,13 @@ export function ResourcesContent({
           </>
         ) : (
           /* No Results */
-          <div className="text-center py-12">
-            <p className="text-lg text-muted-foreground mb-4">
+          <div className="border border-hairline px-6 py-16 text-center">
+            <p className="mb-6 font-mono text-xs uppercase tracking-[0.14em] text-muted-foreground">
               No articles found matching your criteria.
             </p>
             <Button
               variant="outline"
+              className="rounded-sm border-hairline font-mono text-xs uppercase tracking-[0.12em]"
               onClick={() => {
                 setSearchQuery("");
                 setActiveCategory("all");

@@ -12,14 +12,6 @@ import {
   ExternalLink,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import {
   Select,
   SelectContent,
@@ -57,10 +49,13 @@ interface Pagination {
   hasMore: boolean;
 }
 
+const statusChipBase =
+  "inline-flex items-center rounded-sm px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.1em]";
+
 const statusColors: Record<string, string> = {
-  ACTIVE: "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400",
-  CLOSED: "bg-gray-100 text-gray-800 dark:bg-gray-800/50 dark:text-gray-400",
-  CONVERTED: "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400",
+  ACTIVE: "bg-emerald-500/10 text-emerald-600 border border-emerald-500/30",
+  CLOSED: "bg-muted-foreground/10 text-muted-foreground border border-muted-foreground/30",
+  CONVERTED: "bg-primary/10 text-primary border border-primary/30",
 };
 
 export function ChatsContent() {
@@ -145,7 +140,10 @@ export function ChatsContent() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Chat Transcripts</h1>
+          <p className="font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">
+            AI Chatbot
+          </p>
+          <h1 className="font-display text-2xl tracking-tight">Chat Transcripts</h1>
           <p className="text-sm text-muted-foreground">
             View AI chatbot conversations
           </p>
@@ -155,7 +153,12 @@ export function ChatsContent() {
       {/* Filters */}
       <div className="flex items-center gap-4">
         <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="w-[160px]">
+          <SelectTrigger
+            className={cn(
+              "w-[160px] rounded-sm border-hairline focus-visible:ring-signal hover:border-signal/60",
+              statusFilter !== "all" && "border-signal bg-signal/10 text-foreground"
+            )}
+          >
             <SelectValue placeholder="Filter by status" />
           </SelectTrigger>
           <SelectContent>
@@ -166,61 +169,63 @@ export function ChatsContent() {
           </SelectContent>
         </Select>
         {pagination && (
-          <span className="text-sm text-muted-foreground">
+          <span className="font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">
             {pagination.total} conversation{pagination.total !== 1 ? "s" : ""}
           </span>
         )}
       </div>
 
       {/* Conversations Table */}
-      <Card>
-        <CardContent className="p-0">
-          {isLoading ? (
-            <div className="flex items-center justify-center py-16">
-              <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
-            </div>
-          ) : conversations.length === 0 ? (
-            <div className="text-center py-16 text-muted-foreground">
-              <Bot className="h-10 w-10 mx-auto mb-3 opacity-50" />
-              <p>No conversations yet</p>
-            </div>
-          ) : (
-            <div className="divide-y">
-              {conversations.map((conv) => (
-                <button
-                  key={conv.id}
-                  onClick={() => openTranscript(conv.id)}
-                  className="w-full flex items-center gap-4 px-6 py-4 text-left hover:bg-muted/50 transition-colors"
-                >
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-1">
-                      <Badge
-                        variant="secondary"
-                        className={cn("text-xs", statusColors[conv.status])}
+      <div className="border border-hairline">
+        {isLoading ? (
+          <div className="flex items-center justify-center py-16">
+            <Loader2 className="h-6 w-6 animate-spin text-signal" />
+          </div>
+        ) : conversations.length === 0 ? (
+          <div className="text-center py-16">
+            <Bot className="h-10 w-10 mx-auto mb-3 text-signal opacity-60" />
+            <p className="font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">
+              No conversations yet
+            </p>
+          </div>
+        ) : (
+          <div>
+            {conversations.map((conv) => (
+              <button
+                key={conv.id}
+                onClick={() => openTranscript(conv.id)}
+                className="w-full flex items-center gap-4 px-6 py-4 text-left hairline-b hover:bg-muted/40 transition-colors"
+              >
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className={cn(statusChipBase, statusColors[conv.status])}>
+                      {conv.status}
+                    </span>
+                    {conv.convertedTo && (
+                      <span
+                        className={cn(
+                          statusChipBase,
+                          "border border-hairline text-muted-foreground"
+                        )}
                       >
-                        {conv.status}
-                      </Badge>
-                      {conv.convertedTo && (
-                        <Badge variant="outline" className="text-xs">
-                          <ExternalLink className="h-3 w-3 mr-1" />
-                          {conv.convertedTo}
-                        </Badge>
-                      )}
-                    </div>
-                    <p className="text-sm text-muted-foreground truncate">
-                      {conv.pageUrl || "Unknown page"} &middot;{" "}
-                      {conv.messageCount} message{conv.messageCount !== 1 ? "s" : ""}
-                    </p>
+                        <ExternalLink className="h-3 w-3 mr-1" />
+                        {conv.convertedTo}
+                      </span>
+                    )}
                   </div>
-                  <span className="text-xs text-muted-foreground whitespace-nowrap">
-                    {formatDate(conv.createdAt)}
-                  </span>
-                </button>
-              ))}
-            </div>
-          )}
-        </CardContent>
-      </Card>
+                  <p className="text-sm text-muted-foreground truncate">
+                    {conv.pageUrl || "Unknown page"} &middot;{" "}
+                    {conv.messageCount} message{conv.messageCount !== 1 ? "s" : ""}
+                  </p>
+                </div>
+                <span className="font-mono text-xs text-muted-foreground whitespace-nowrap">
+                  {formatDate(conv.createdAt)}
+                </span>
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
 
       {/* Pagination */}
       {pagination && pagination.totalPages > 1 && (
@@ -228,17 +233,19 @@ export function ChatsContent() {
           <Button
             variant="outline"
             size="sm"
+            className="rounded-sm border-hairline hover:border-signal/60 hover:text-signal"
             disabled={pagination.page <= 1}
             onClick={() => fetchConversations(pagination.page - 1)}
           >
             <ChevronLeft className="h-4 w-4" />
           </Button>
-          <span className="text-sm text-muted-foreground">
+          <span className="font-mono text-xs tracking-[0.12em] text-signal">
             Page {pagination.page} of {pagination.totalPages}
           </span>
           <Button
             variant="outline"
             size="sm"
+            className="rounded-sm border-hairline hover:border-signal/60 hover:text-signal"
             disabled={!pagination.hasMore}
             onClick={() => fetchConversations(pagination.page + 1)}
           >
@@ -250,16 +257,16 @@ export function ChatsContent() {
       {/* Transcript Dialog (modal overlay) */}
       {(selectedChat || isLoadingDetail) && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <Card className="w-full max-w-2xl max-h-[80vh] flex flex-col m-4">
-            <CardHeader className="flex-row items-center justify-between space-y-0 pb-3 shrink-0">
+          <div className="card-technical rounded-sm w-full max-w-2xl max-h-[80vh] flex flex-col m-4">
+            <div className="flex items-center justify-between gap-4 p-6 pb-3 shrink-0 hairline-b">
               <div>
-                <CardTitle className="text-lg">Chat Transcript</CardTitle>
+                <h2 className="font-display text-lg tracking-tight">Chat Transcript</h2>
                 {selectedChat && (
-                  <CardDescription>
+                  <p className="mt-1 font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">
                     {formatDate(selectedChat.createdAt)} &middot;{" "}
                     {selectedChat.messageCount} messages
-                    {selectedChat.pageUrl && ` &middot; ${selectedChat.pageUrl}`}
-                  </CardDescription>
+                    {selectedChat.pageUrl && ` · ${selectedChat.pageUrl}`}
+                  </p>
                 )}
               </div>
               <div className="flex items-center gap-1">
@@ -267,6 +274,7 @@ export function ChatsContent() {
                   <Button
                     variant="ghost"
                     size="icon-sm"
+                    className="rounded-sm hover:text-signal"
                     onClick={() => deleteConversation(selectedChat.id)}
                     title="Delete conversation"
                   >
@@ -276,19 +284,20 @@ export function ChatsContent() {
                 <Button
                   variant="ghost"
                   size="icon-sm"
+                  className="rounded-sm hover:text-signal"
                   onClick={() => setSelectedChat(null)}
                 >
                   <X className="h-4 w-4" />
                 </Button>
               </div>
-            </CardHeader>
-            <CardContent className="flex-1 overflow-y-auto space-y-4 pb-6">
+            </div>
+            <div className="flex-1 overflow-y-auto space-y-4 p-6 pt-4">
               {isLoadingDetail ? (
                 <div className="flex justify-center py-8">
-                  <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+                  <Loader2 className="h-6 w-6 animate-spin text-signal" />
                 </div>
               ) : selectedChat?.messages?.length === 0 ? (
-                <p className="text-center text-muted-foreground py-8">
+                <p className="text-center font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground py-8">
                   No messages in this conversation
                 </p>
               ) : (
@@ -302,10 +311,10 @@ export function ChatsContent() {
                   >
                     <div
                       className={cn(
-                        "flex h-7 w-7 shrink-0 items-center justify-center rounded-full",
+                        "flex h-7 w-7 shrink-0 items-center justify-center rounded-sm border",
                         msg.role === "assistant"
-                          ? "bg-primary text-primary-foreground"
-                          : "bg-muted text-muted-foreground"
+                          ? "border-hairline bg-muted/40 text-foreground"
+                          : "border-signal/30 bg-signal/10 text-signal"
                       )}
                     >
                       {msg.role === "assistant" ? (
@@ -316,19 +325,25 @@ export function ChatsContent() {
                     </div>
                     <div
                       className={cn(
-                        "max-w-[80%] rounded-2xl px-3 py-2 text-sm whitespace-pre-wrap",
+                        "max-w-[80%] rounded-sm border px-3 py-2 text-sm whitespace-pre-wrap",
                         msg.role === "assistant"
-                          ? "rounded-tl-sm bg-muted"
-                          : "rounded-tr-sm bg-primary text-primary-foreground"
+                          ? "border-hairline bg-muted/40"
+                          : "border-signal/30 bg-signal/10"
                       )}
                     >
+                      <p className="mb-1 font-mono text-[10px] uppercase tracking-[0.1em] text-muted-foreground">
+                        {msg.role === "assistant" ? "Assistant" : "User"}
+                        <span className="ml-2 text-muted-foreground/70">
+                          {formatDate(msg.createdAt)}
+                        </span>
+                      </p>
                       {msg.content}
                     </div>
                   </div>
                 ))
               )}
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </div>
       )}
     </div>

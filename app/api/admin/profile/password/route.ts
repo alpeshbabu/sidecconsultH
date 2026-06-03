@@ -39,7 +39,7 @@ export async function PUT(request: NextRequest) {
       where: { email: session.user.email },
     });
 
-    if (!user) {
+    if (!user || !user.passwordHash) {
       return NextResponse.json(
         { error: "User not found" },
         { status: 404 }

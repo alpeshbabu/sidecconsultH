@@ -43,51 +43,55 @@ export function NewsletterForm() {
   };
 
   return (
-    <div className="mt-12 p-8 rounded-2xl bg-gradient-to-r from-primary/10 via-accent/5 to-primary/10 border text-center">
-      <div className="flex justify-center mb-4">
-        <div className="p-3 rounded-full bg-primary/10">
-          <Mail className="h-6 w-6 text-primary" />
-        </div>
+    <div className="surface-ink relative mt-12 overflow-hidden border border-hairline p-8 md:p-10">
+      <div className="grid-blueprint absolute inset-0 opacity-50" aria-hidden />
+      <div className="relative mx-auto max-w-md text-center">
+        <p className="eyebrow-plain mb-4 text-signal">
+          <span aria-hidden>// </span>Newsletter
+        </p>
+        <h3 className="font-display text-2xl font-semibold text-ink-foreground">
+          Stay Updated on Industry Trends
+        </h3>
+        <p className="mx-auto mt-3 max-w-md text-ink-muted">
+          Subscribe for the latest insights on medical device manufacturing and
+          regulatory updates.
+        </p>
+
+        {message?.type === "success" ? (
+          <div className="mt-6 flex items-center justify-center gap-2 font-mono text-sm text-signal">
+            <CheckCircle className="h-5 w-5" />
+            <span>{message.text}</span>
+          </div>
+        ) : (
+          <form
+            onSubmit={handleSubmit}
+            className="mt-6 flex flex-col justify-center gap-3 sm:flex-row"
+          >
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter your email"
+              disabled={isLoading}
+              className="flex h-11 w-full rounded-sm border border-white/20 bg-white/5 px-4 py-2 text-sm text-ink-foreground placeholder:text-ink-muted focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-signal disabled:opacity-50"
+            />
+            <Button type="submit" variant="signal" disabled={isLoading} className="h-11 shrink-0">
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Subscribing
+                </>
+              ) : (
+                "Subscribe"
+              )}
+            </Button>
+          </form>
+        )}
+
+        {message?.type === "error" && (
+          <p className="mt-3 font-mono text-sm text-destructive">{message.text}</p>
+        )}
       </div>
-      <h3 className="text-xl font-semibold mb-2">
-        Stay Updated on Industry Trends
-      </h3>
-      <p className="text-muted-foreground mb-6 max-w-md mx-auto">
-        Subscribe to our newsletter for the latest insights on medical
-        device manufacturing and regulatory updates.
-      </p>
-      
-      {message?.type === "success" ? (
-        <div className="flex items-center justify-center gap-2 text-green-600 dark:text-green-400">
-          <CheckCircle className="h-5 w-5" />
-          <span>{message.text}</span>
-        </div>
-      ) : (
-        <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 justify-center max-w-md mx-auto">
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Enter your email"
-            disabled={isLoading}
-            className="flex h-11 w-full rounded-lg border border-input bg-background px-4 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50"
-          />
-          <Button type="submit" disabled={isLoading} className="shrink-0">
-            {isLoading ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Subscribing...
-              </>
-            ) : (
-              "Subscribe"
-            )}
-          </Button>
-        </form>
-      )}
-      
-      {message?.type === "error" && (
-        <p className="mt-3 text-sm text-red-600 dark:text-red-400">{message.text}</p>
-      )}
     </div>
   );
 }

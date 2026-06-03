@@ -24,7 +24,6 @@ import {
   Rocket,
   Send,
   Shield,
-  Sparkles,
   Users,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -44,7 +43,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import {
   Form,
@@ -196,23 +194,17 @@ export default function ContactPage() {
     <MainLayout>
       {/* Hero Section */}
       <section className="relative overflow-hidden">
-        <div className="absolute inset-0 -z-10">
-          <div className="absolute inset-0 gradient-hero" />
-          <div className="absolute left-1/2 top-0 -translate-x-1/2 w-[1000px] h-[1000px] rounded-full bg-primary/5 blur-3xl" />
+        <div className="absolute inset-0 -z-10" aria-hidden>
+          <div className="grid-blueprint absolute inset-0 opacity-70" />
+          <div className="absolute inset-x-0 top-0 h-px bg-signal/40" />
         </div>
 
         <div className="container-wide py-16 md:py-24">
           <div className="mx-auto max-w-3xl text-center">
-            <Badge
-              variant="outline"
-              className="mb-6 px-4 py-1.5 border-primary/30 bg-primary/5"
-            >
-              <Sparkles className="h-3.5 w-3.5 mr-2 text-primary" />
-              Start the Conversation
-            </Badge>
-            <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
+            <p className="eyebrow mb-5 justify-center">Start the Conversation</p>
+            <h1 className="font-display text-4xl font-bold tracking-tight text-balance sm:text-5xl lg:text-6xl">
               Let&apos;s Understand{" "}
-              <span className="text-gradient">Your Needs</span>
+              <span className="text-signal">Your Needs</span>
             </h1>
             <p className="mt-6 text-lg text-muted-foreground md:text-xl">
               Every great partnership starts with understanding. Share your
@@ -224,7 +216,7 @@ export default function ContactPage() {
       </section>
 
       {/* Process Steps */}
-      <section className="border-y bg-muted/30 py-12">
+      <section className="hairline-t hairline-b bg-muted/20 py-12">
         <div className="container-wide">
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
             {processSteps.map((step, index) => {
@@ -234,14 +226,14 @@ export default function ContactPage() {
                   key={index}
                   className="relative flex flex-col items-center text-center lg:items-start lg:text-left xl:items-center xl:text-center"
                 >
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center border border-hairline text-primary">
                     <IconComponent className="h-5 w-5" />
                   </div>
                   <div className="mt-3">
-                    <div className="mb-1 text-xs font-medium text-primary">
-                      Step {index + 1}
+                    <div className="mb-1 font-mono text-[10px] uppercase tracking-[0.18em] text-signal">
+                      Step {String(index + 1).padStart(2, "0")}
                     </div>
-                    <h3 className="font-semibold text-sm">{step.title}</h3>
+                    <h3 className="font-display font-semibold text-sm">{step.title}</h3>
                     <p className="mt-1 text-xs text-muted-foreground">
                       {step.description}
                     </p>
@@ -261,15 +253,16 @@ export default function ContactPage() {
             <div className="lg:col-span-2">
               {isSubmitted ? (
                 // Success State
-                <Card className="border-green-200 bg-green-50/50">
+                <Card className="card-technical rounded-none">
                   <CardContent className="flex flex-col items-center py-16 text-center">
-                    <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-green-100 text-green-600">
+                    <div className="mb-6 flex h-20 w-20 items-center justify-center border border-hairline text-signal">
                       <CheckCircle className="h-10 w-10" />
                     </div>
-                    <h2 className="text-2xl font-bold text-green-900">
+                    <p className="eyebrow mb-3 justify-center text-signal">Inquiry Received</p>
+                    <h2 className="font-display text-2xl font-bold tracking-tight">
                       Thank You for Reaching Out!
                     </h2>
-                    <p className="mt-4 max-w-md text-green-700">
+                    <p className="mt-4 max-w-md text-muted-foreground">
                       Your inquiry has been received. We&apos;ll review your
                       information and get back to you within{" "}
                       <strong>24-48 hours</strong> to schedule a discovery call.
@@ -281,20 +274,21 @@ export default function ContactPage() {
                           form.reset();
                         }}
                         variant="outline"
+                        className="rounded-sm border-hairline font-mono text-xs uppercase tracking-[0.12em]"
                       >
                         Submit Another Inquiry
                       </Button>
-                      <Link href="/">
-                        <Button>Return to Homepage</Button>
-                      </Link>
+                      <Button asChild variant="technical">
+                        <Link href="/">Return to Homepage</Link>
+                      </Button>
                     </div>
                   </CardContent>
                 </Card>
               ) : (
                 // Form
-                <Card>
+                <Card className="card-technical rounded-none">
                   <CardHeader>
-                    <CardTitle className="text-2xl">
+                    <CardTitle className="font-display text-2xl tracking-tight">
                       Tell Us About Your Project
                     </CardTitle>
                     <CardDescription>
@@ -311,7 +305,7 @@ export default function ContactPage() {
                       >
                         {/* Contact Information */}
                         <div className="space-y-4">
-                          <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+                          <h3 className="font-display text-sm font-semibold text-muted-foreground uppercase tracking-wide">
                             Contact Information
                           </h3>
                           <div className="grid gap-4 sm:grid-cols-2">
@@ -320,9 +314,9 @@ export default function ContactPage() {
                               name="name"
                               render={({ field }) => (
                                 <FormItem>
-                                  <FormLabel>Full Name *</FormLabel>
+                                  <FormLabel className="font-mono text-xs uppercase tracking-[0.1em] text-muted-foreground">Full Name *</FormLabel>
                                   <FormControl>
-                                    <Input placeholder="John Smith" {...field} />
+                                    <Input placeholder="John Smith" className="rounded-sm focus-visible:ring-signal" {...field} />
                                   </FormControl>
                                   <FormMessage />
                                 </FormItem>
@@ -333,11 +327,12 @@ export default function ContactPage() {
                               name="email"
                               render={({ field }) => (
                                 <FormItem>
-                                  <FormLabel>Email Address *</FormLabel>
+                                  <FormLabel className="font-mono text-xs uppercase tracking-[0.1em] text-muted-foreground">Email Address *</FormLabel>
                                   <FormControl>
                                     <Input
                                       type="email"
                                       placeholder="john@company.com"
+                                      className="rounded-sm focus-visible:ring-signal"
                                       {...field}
                                     />
                                   </FormControl>
@@ -350,11 +345,12 @@ export default function ContactPage() {
                               name="phone"
                               render={({ field }) => (
                                 <FormItem>
-                                  <FormLabel>Phone Number</FormLabel>
+                                  <FormLabel className="font-mono text-xs uppercase tracking-[0.1em] text-muted-foreground">Phone Number</FormLabel>
                                   <FormControl>
                                     <Input
                                       type="tel"
                                       placeholder="+1 (555) 123-4567"
+                                      className="rounded-sm focus-visible:ring-signal"
                                       {...field}
                                     />
                                   </FormControl>
@@ -368,10 +364,11 @@ export default function ContactPage() {
                               name="companyName"
                               render={({ field }) => (
                                 <FormItem>
-                                  <FormLabel>Company Name</FormLabel>
+                                  <FormLabel className="font-mono text-xs uppercase tracking-[0.1em] text-muted-foreground">Company Name</FormLabel>
                                   <FormControl>
                                     <Input
                                       placeholder="Acme Medical Devices"
+                                      className="rounded-sm focus-visible:ring-signal"
                                       {...field}
                                     />
                                   </FormControl>
@@ -387,7 +384,7 @@ export default function ContactPage() {
 
                         {/* Project Details */}
                         <div className="space-y-4">
-                          <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+                          <h3 className="font-display text-sm font-semibold text-muted-foreground uppercase tracking-wide">
                             Project Details
                           </h3>
                           <div className="grid gap-4 sm:grid-cols-2">
@@ -396,7 +393,7 @@ export default function ContactPage() {
                               name="serviceInterest"
                               render={({ field }) => (
                                 <FormItem>
-                                  <FormLabel>
+                                  <FormLabel className="font-mono text-xs uppercase tracking-[0.1em] text-muted-foreground">
                                     Service Area of Interest *
                                   </FormLabel>
                                   <Select
@@ -404,7 +401,7 @@ export default function ContactPage() {
                                     defaultValue={field.value}
                                   >
                                     <FormControl>
-                                      <SelectTrigger>
+                                      <SelectTrigger className="rounded-sm focus-visible:ring-signal">
                                         <SelectValue placeholder="Select a service area" />
                                       </SelectTrigger>
                                     </FormControl>
@@ -428,13 +425,13 @@ export default function ContactPage() {
                               name="projectTimeline"
                               render={({ field }) => (
                                 <FormItem>
-                                  <FormLabel>Project Timeline *</FormLabel>
+                                  <FormLabel className="font-mono text-xs uppercase tracking-[0.1em] text-muted-foreground">Project Timeline *</FormLabel>
                                   <Select
                                     onValueChange={field.onChange}
                                     defaultValue={field.value}
                                   >
                                     <FormControl>
-                                      <SelectTrigger>
+                                      <SelectTrigger className="rounded-sm focus-visible:ring-signal">
                                         <SelectValue placeholder="When do you need help?" />
                                       </SelectTrigger>
                                     </FormControl>
@@ -457,10 +454,10 @@ export default function ContactPage() {
 
                           {/* Service-Specific Fields */}
                           {serviceFields.length > 0 && (
-                            <div className="rounded-lg border border-primary/20 bg-primary/5 p-4 space-y-4">
+                            <div className="border border-hairline bg-muted/20 p-4 space-y-4">
                               <div className="flex items-center gap-2">
-                                <Sparkles className="h-4 w-4 text-primary" />
-                                <h4 className="text-sm font-semibold text-primary">
+                                <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-signal" aria-hidden>// </span>
+                                <h4 className="font-display text-sm font-semibold">
                                   Help Us Understand Your{" "}
                                   {SERVICE_INTEREST_OPTIONS.find(
                                     (o) => o.value === selectedService
@@ -480,18 +477,18 @@ export default function ContactPage() {
                                     name={fieldConfig.key}
                                     render={({ field }) => (
                                       <FormItem>
-                                        <FormLabel>{fieldConfig.label}</FormLabel>
+                                        <FormLabel className="font-mono text-xs uppercase tracking-[0.1em] text-muted-foreground">{fieldConfig.label}</FormLabel>
                                         <FormControl>
                                           {fieldConfig.type === "textarea" ? (
                                             <Textarea
                                               placeholder={fieldConfig.placeholder}
-                                              className="min-h-[80px] resize-none bg-background"
+                                              className="min-h-[80px] resize-none rounded-sm bg-background focus-visible:ring-signal"
                                               {...field}
                                             />
                                           ) : (
                                             <Input
                                               placeholder={fieldConfig.placeholder}
-                                              className="bg-background"
+                                              className="rounded-sm bg-background focus-visible:ring-signal"
                                               {...field}
                                             />
                                           )}
@@ -515,13 +512,13 @@ export default function ContactPage() {
                             name="message"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel>
+                                <FormLabel className="font-mono text-xs uppercase tracking-[0.1em] text-muted-foreground">
                                   Tell Us About Your Challenge *
                                 </FormLabel>
                                 <FormControl>
                                   <Textarea
                                     placeholder="Please describe your current situation, challenges you're facing, and what you hope to achieve. The more context you provide, the better we can understand your needs."
-                                    className="min-h-[150px] resize-none"
+                                    className="min-h-[150px] resize-none rounded-sm focus-visible:ring-signal"
                                     {...field}
                                   />
                                 </FormControl>
@@ -556,7 +553,7 @@ export default function ContactPage() {
                                     type="checkbox"
                                     checked={field.value}
                                     onChange={field.onChange}
-                                    className="mt-1 h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+                                    className="mt-1 h-4 w-4 rounded-sm border-hairline text-signal focus-visible:ring-signal"
                                   />
                                 </FormControl>
                                 <div className="space-y-1 leading-none">
@@ -579,8 +576,9 @@ export default function ContactPage() {
 
                           <Button
                             type="submit"
+                            variant="technical"
                             size="lg"
-                            className="w-full btn-glow"
+                            className="w-full"
                             disabled={isSubmitting}
                           >
                             {isSubmitting ? (
@@ -610,16 +608,16 @@ export default function ContactPage() {
             {/* Sidebar */}
             <div className="space-y-6">
               {/* What to Expect */}
-              <Card>
+              <Card className="card-technical rounded-none">
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-lg">
-                    <Calendar className="h-5 w-5 text-primary" />
+                  <CardTitle className="flex items-center gap-2 font-display text-lg">
+                    <Calendar className="h-5 w-5 text-signal" />
                     What to Expect
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="flex items-start gap-3">
-                    <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">
+                    <div className="flex h-6 w-6 shrink-0 items-center justify-center border border-hairline font-mono text-xs font-bold text-primary">
                       1
                     </div>
                     <div>
@@ -630,7 +628,7 @@ export default function ContactPage() {
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
-                    <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">
+                    <div className="flex h-6 w-6 shrink-0 items-center justify-center border border-hairline font-mono text-xs font-bold text-primary">
                       2
                     </div>
                     <div>
@@ -641,7 +639,7 @@ export default function ContactPage() {
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
-                    <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">
+                    <div className="flex h-6 w-6 shrink-0 items-center justify-center border border-hairline font-mono text-xs font-bold text-primary">
                       3
                     </div>
                     <div>
@@ -655,10 +653,10 @@ export default function ContactPage() {
               </Card>
 
               {/* Schedule Directly */}
-              <Card className="border-primary/30 bg-gradient-to-br from-primary/5 to-transparent">
+              <Card className="card-technical rounded-none">
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-lg">
-                    <Calendar className="h-5 w-5 text-primary" />
+                  <CardTitle className="flex items-center gap-2 font-display text-lg">
+                    <Calendar className="h-5 w-5 text-signal" />
                     Schedule Directly
                   </CardTitle>
                   <CardDescription>
@@ -667,13 +665,13 @@ export default function ContactPage() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <Link href="/schedule" className="block">
-                    <Button className="w-full btn-glow">
+                  <Button asChild variant="technical" className="w-full">
+                    <Link href="/schedule">
                       <Calendar className="mr-2 h-4 w-4" />
                       Book a Discovery Call
                       <ArrowRight className="ml-2 h-4 w-4" />
-                    </Button>
-                  </Link>
+                    </Link>
+                  </Button>
                   <p className="mt-3 text-center text-xs text-muted-foreground">
                     30-minute free consultation • No obligation
                   </p>
@@ -681,9 +679,9 @@ export default function ContactPage() {
               </Card>
 
               {/* Direct Contact */}
-              <Card>
+              <Card className="card-technical rounded-none">
                 <CardHeader>
-                  <CardTitle className="text-lg">
+                  <CardTitle className="font-display text-lg">
                     Prefer Direct Contact?
                   </CardTitle>
                   <CardDescription>
@@ -693,9 +691,9 @@ export default function ContactPage() {
                 <CardContent className="space-y-4">
                   <a
                     href="mailto:contact@sidecconsulting.com"
-                    className="flex items-center gap-3 rounded-lg border p-3 transition-colors hover:bg-muted"
+                    className="flex items-center gap-3 border border-hairline p-3 transition-colors hover:bg-muted/40"
                   >
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">
+                    <div className="flex h-10 w-10 items-center justify-center border border-hairline text-primary">
                       <Mail className="h-5 w-5" />
                     </div>
                     <div>
@@ -709,16 +707,16 @@ export default function ContactPage() {
               </Card>
 
               {/* IP Protection Guarantee */}
-              <Card className="border-green-200 bg-green-50/50">
+              <Card className="card-technical rounded-none">
                 <CardContent className="flex items-center gap-4 p-6">
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-green-600 text-white">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center border border-hairline text-signal">
                     <Shield className="h-6 w-6" />
                   </div>
                   <div>
-                    <p className="font-semibold text-green-900">
+                    <p className="font-display font-semibold">
                       Complete Privacy Guaranteed
                     </p>
-                    <p className="text-sm text-green-700">
+                    <p className="text-sm text-muted-foreground">
                       Protect your intellectual property with confidence. Your
                       information is always kept strictly confidential.
                     </p>
@@ -727,14 +725,15 @@ export default function ContactPage() {
               </Card>
 
               {/* Response Time */}
-              <Card className="border-primary/20 bg-primary/5">
-                <CardContent className="flex items-center gap-4 p-6">
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
+              <Card className="surface-ink relative overflow-hidden rounded-none border-0">
+                <div className="grid-dots absolute inset-0 opacity-50" aria-hidden />
+                <CardContent className="relative flex items-center gap-4 p-6">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center border border-white/15 text-signal">
                     <Clock className="h-6 w-6" />
                   </div>
                   <div>
-                    <p className="font-semibold">Quick Response Guaranteed</p>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="font-display font-semibold text-ink-foreground">Quick Response Guaranteed</p>
+                    <p className="text-sm text-ink-muted">
                       We respond to all inquiries within 24-48 business hours
                     </p>
                   </div>
@@ -746,14 +745,12 @@ export default function ContactPage() {
       </section>
 
       {/* FAQ Section */}
-      <section className="section-padding bg-muted/30">
+      <section className="section-padding hairline-t bg-muted/20">
         <div className="container-wide">
           <div className="mx-auto max-w-3xl">
             <div className="text-center">
-              <Badge variant="outline" className="mb-4">
-                FAQ
-              </Badge>
-              <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">
+              <p className="eyebrow mb-5 justify-center">FAQ</p>
+              <h2 className="font-display text-2xl font-bold tracking-tight sm:text-3xl">
                 Common Questions
               </h2>
               <p className="mt-2 text-muted-foreground">
@@ -785,9 +782,9 @@ export default function ContactPage() {
                     "Yes! We work with startups bringing their first medical device to market, mid-size manufacturers scaling operations, and large enterprises optimizing global supply chains. Our approach is tailored to your specific needs and resources.",
                 },
               ].map((faq, index) => (
-                <Card key={index} className="card-hover">
+                <Card key={index} className="card-technical rounded-none">
                   <CardHeader className="pb-2">
-                    <CardTitle className="text-base font-semibold">
+                    <CardTitle className="font-display text-base font-semibold">
                       {faq.question}
                     </CardTitle>
                   </CardHeader>

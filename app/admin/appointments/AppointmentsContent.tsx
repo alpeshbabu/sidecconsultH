@@ -14,7 +14,6 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -32,7 +31,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
 import {
   Dialog,
   DialogContent,
@@ -43,6 +41,7 @@ import {
   DialogClose,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
+import { cn } from "@/lib/utils";
 
 interface Appointment {
   id: string;
@@ -76,16 +75,40 @@ interface Slot {
 }
 
 const statusStyles = {
-  REQUESTED: { label: "Requested", color: "secondary" as const, icon: Clock },
-  CONFIRMED: { label: "Confirmed", color: "default" as const, icon: CheckCircle },
-  CANCELLED: { label: "Cancelled", color: "destructive" as const, icon: XCircle },
+  REQUESTED: {
+    label: "Requested",
+    icon: Clock,
+    chip: "bg-amber-500/10 text-amber-600 border border-amber-500/30",
+  },
+  CONFIRMED: {
+    label: "Confirmed",
+    icon: CheckCircle,
+    chip: "bg-emerald-500/10 text-emerald-600 border border-emerald-500/30",
+  },
+  CANCELLED: {
+    label: "Cancelled",
+    icon: XCircle,
+    chip: "bg-destructive/10 text-destructive border border-destructive/30",
+  },
 };
 
 const bookingTypeStyles = {
-  CLIENT: { label: "Client", color: "default" as const },
-  ADMIN: { label: "Admin Booking", color: "secondary" as const },
-  BLOCKED: { label: "Blocked", color: "destructive" as const },
+  CLIENT: {
+    label: "Client",
+    chip: "bg-primary/10 text-primary border border-primary/30",
+  },
+  ADMIN: {
+    label: "Admin Booking",
+    chip: "bg-muted-foreground/10 text-muted-foreground border border-muted-foreground/30",
+  },
+  BLOCKED: {
+    label: "Blocked",
+    chip: "bg-destructive/10 text-destructive border border-destructive/30",
+  },
 };
+
+const chipBase =
+  "inline-flex items-center rounded-sm px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.1em]";
 
 const formatDateTime = (value: string) =>
   new Date(value).toLocaleString(undefined, {
@@ -103,7 +126,7 @@ export function AppointmentsContent() {
     startTime: "08:00",
     endTime: "17:00",
     slotDurationMinutes: 30,
-    timezone: "America/New_York",
+    timezone: "America/Los_Angeles",
   });
   const [isSavingSettings, setIsSavingSettings] = useState(false);
   const [statusFilter, setStatusFilter] = useState("all");
@@ -145,7 +168,7 @@ export function AppointmentsContent() {
           startTime: data.data.startTime,
           endTime: data.data.endTime,
           slotDurationMinutes: data.data.slotDurationMinutes,
-          timezone: data.data.timezone || "America/New_York",
+          timezone: data.data.timezone || "America/Los_Angeles",
         });
       }
     } catch (error) {
@@ -295,7 +318,7 @@ export function AppointmentsContent() {
       
       // Format in business timezone
       const timeFormatter = new Intl.DateTimeFormat("en-GB", {
-        timeZone: settings.timezone || "America/New_York",
+        timeZone: settings.timezone || "America/Los_Angeles",
         hour: "2-digit",
         minute: "2-digit",
         hour12: false,
@@ -365,7 +388,10 @@ export function AppointmentsContent() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Appointments</h1>
+          <p className="font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">
+            Scheduling
+          </p>
+          <h1 className="font-display text-2xl tracking-tight">Appointments</h1>
           <p className="text-muted-foreground">
             Manage availability settings, block slots, and view booked appointments
           </p>
@@ -373,21 +399,23 @@ export function AppointmentsContent() {
       </div>
 
       {/* Availability Settings */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Clock className="h-5 w-5" />
+      <div className="card-technical rounded-none">
+        <div className="flex flex-col space-y-1.5 p-6">
+          <h2 className="flex items-center gap-2 font-display text-lg tracking-tight">
+            <span className="flex h-7 w-7 items-center justify-center border border-hairline text-primary">
+              <Clock className="h-4 w-4" />
+            </span>
             Availability Settings
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
+          </h2>
+        </div>
+        <div className="p-6 pt-0">
           <p className="text-sm text-muted-foreground mb-4">
             Set your daily availability. These settings apply to every day.
             Clients can book any slot within this time range.
           </p>
           <div className="grid gap-4 sm:grid-cols-4">
             <div>
-              <Label htmlFor="startTime">Start Time</Label>
+              <Label htmlFor="startTime" className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Start Time</Label>
               <Input
                 id="startTime"
                 type="time"
@@ -398,10 +426,11 @@ export function AppointmentsContent() {
                     startTime: e.target.value,
                   }))
                 }
+              className="rounded-sm border-hairline focus-visible:ring-signal hover:border-signal/60"
               />
             </div>
             <div>
-              <Label htmlFor="endTime">End Time</Label>
+              <Label htmlFor="endTime" className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">End Time</Label>
               <Input
                 id="endTime"
                 type="time"
@@ -412,10 +441,11 @@ export function AppointmentsContent() {
                     endTime: e.target.value,
                   }))
                 }
+              className="rounded-sm border-hairline focus-visible:ring-signal hover:border-signal/60"
               />
             </div>
             <div>
-              <Label htmlFor="duration">Slot Duration (minutes)</Label>
+              <Label htmlFor="duration" className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Slot Duration (minutes)</Label>
               <Select
                 value={settings.slotDurationMinutes.toString()}
                 onValueChange={(value) =>
@@ -425,7 +455,7 @@ export function AppointmentsContent() {
                   }))
                 }
               >
-                <SelectTrigger id="duration">
+                <SelectTrigger id="duration" className="rounded-sm border-hairline focus-visible:ring-signal hover:border-signal/60">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -439,114 +469,121 @@ export function AppointmentsContent() {
               </Select>
             </div>
             <div className="flex items-end">
-              <Button onClick={saveSettings} disabled={isSavingSettings}>
+              <Button variant="technical" onClick={saveSettings} disabled={isSavingSettings}>
                 <Save className="mr-2 h-4 w-4" />
                 {isSavingSettings ? "Saving..." : "Save Settings"}
               </Button>
             </div>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
       {/* Block/Book Slots Section */}
-      <Card>
-        <CardHeader>
+      <div className="card-technical rounded-none">
+        <div className="flex flex-col space-y-1.5 p-6">
           <div className="flex items-center justify-between flex-wrap gap-4">
-            <CardTitle className="flex items-center gap-2">
-              <CalendarPlus className="h-5 w-5" />
+            <h2 className="flex items-center gap-2 font-display text-lg tracking-tight">
+              <span className="flex h-7 w-7 items-center justify-center border border-hairline text-primary">
+                <CalendarPlus className="h-4 w-4" />
+              </span>
               Block or Book Slots
-            </CardTitle>
+            </h2>
             <Dialog open={bulkBlockDialogOpen} onOpenChange={setBulkBlockDialogOpen}>
               <DialogTrigger asChild>
-                <Button variant="outline">
+                <Button variant="outline" className="rounded-sm border-hairline font-mono text-xs uppercase tracking-[0.12em] hover:border-signal/60 hover:text-signal">
                   <Ban className="mr-2 h-4 w-4" />
                   Bulk Block
                 </Button>
               </DialogTrigger>
-              <DialogContent>
+              <DialogContent className="rounded-sm border-hairline">
                 <DialogHeader>
-                  <DialogTitle>Bulk Block Slots</DialogTitle>
+                  <DialogTitle className="font-display tracking-tight">Bulk Block Slots</DialogTitle>
                 </DialogHeader>
                 <div className="space-y-4 py-4">
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <Label>Start Date</Label>
+                      <Label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Start Date</Label>
                       <Input
                         type="date"
                         value={bulkBlockForm.startDate}
                         onChange={(e) => setBulkBlockForm((prev) => ({ ...prev, startDate: e.target.value }))}
+                      className="rounded-sm border-hairline focus-visible:ring-signal hover:border-signal/60"
                       />
                     </div>
                     <div>
-                      <Label>End Date</Label>
+                      <Label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">End Date</Label>
                       <Input
                         type="date"
                         value={bulkBlockForm.endDate}
                         onChange={(e) => setBulkBlockForm((prev) => ({ ...prev, endDate: e.target.value }))}
+                      className="rounded-sm border-hairline focus-visible:ring-signal hover:border-signal/60"
                       />
                     </div>
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <Label>Start Time</Label>
+                      <Label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Start Time</Label>
                       <Input
                         type="time"
                         value={bulkBlockForm.startTime}
                         onChange={(e) => setBulkBlockForm((prev) => ({ ...prev, startTime: e.target.value }))}
+                      className="rounded-sm border-hairline focus-visible:ring-signal hover:border-signal/60"
                       />
                     </div>
                     <div>
-                      <Label>End Time</Label>
+                      <Label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">End Time</Label>
                       <Input
                         type="time"
                         value={bulkBlockForm.endTime}
                         onChange={(e) => setBulkBlockForm((prev) => ({ ...prev, endTime: e.target.value }))}
+                      className="rounded-sm border-hairline focus-visible:ring-signal hover:border-signal/60"
                       />
                     </div>
                   </div>
                   <div>
-                    <Label>Reason (Optional)</Label>
+                    <Label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Reason (Optional)</Label>
                     <Input
                       value={bulkBlockForm.reason}
                       onChange={(e) => setBulkBlockForm((prev) => ({ ...prev, reason: e.target.value }))}
                       placeholder="e.g., Holiday, Vacation, etc."
+                    className="rounded-sm border-hairline focus-visible:ring-signal hover:border-signal/60"
                     />
                   </div>
                 </div>
                 <DialogFooter>
                   <DialogClose asChild>
-                    <Button variant="outline">Cancel</Button>
+                    <Button variant="outline" className="rounded-sm border-hairline font-mono text-xs uppercase tracking-[0.12em] hover:border-signal/60 hover:text-signal">Cancel</Button>
                   </DialogClose>
-                  <Button onClick={handleBulkBlock} disabled={isSubmitting}>
+                  <Button variant="technical" onClick={handleBulkBlock} disabled={isSubmitting}>
                     {isSubmitting ? "Blocking..." : "Block Slots"}
                   </Button>
                 </DialogFooter>
               </DialogContent>
             </Dialog>
           </div>
-        </CardHeader>
-        <CardContent>
+        </div>
+        <div className="p-6 pt-0">
           <div className="space-y-4">
             <div className="flex items-center gap-4 flex-wrap">
               <div>
-                <Label htmlFor="selectDate">Select Date</Label>
+                <Label htmlFor="selectDate" className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Select Date</Label>
                 <Input
                   id="selectDate"
                   type="date"
                   value={selectedDate}
                   onChange={(e) => setSelectedDate(e.target.value)}
-                  className="w-48"
+                  className="w-48 rounded-sm border-hairline focus-visible:ring-signal hover:border-signal/60"
                 />
               </div>
-              <div className="text-sm text-muted-foreground pt-6">
-                Timezone: {settings.timezone || "America/New_York"}
+              <div className="font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground pt-6">
+                Timezone: {settings.timezone || "America/Los_Angeles"}
               </div>
             </div>
 
             {isLoadingSlots ? (
-              <div className="h-32 rounded-lg bg-muted animate-pulse" />
+              <div className="h-32 border border-hairline bg-muted/20 animate-pulse" />
             ) : slots.length === 0 ? (
-              <p className="text-sm text-muted-foreground text-center py-8">
+              <p className="font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground text-center py-8">
                 No slots available for this date (check your settings).
               </p>
             ) : (
@@ -556,11 +593,12 @@ export function AppointmentsContent() {
                     key={slot.id}
                     onClick={() => !slot.isBooked && openBlockDialog(slot)}
                     disabled={slot.isBooked}
-                    className={`p-2 text-sm rounded-md border transition-colors ${
+                    className={cn(
+                      "p-2 font-mono text-xs rounded-sm border transition-colors",
                       slot.isBooked
-                        ? "bg-muted text-muted-foreground cursor-not-allowed border-muted"
-                        : "bg-background hover:bg-primary hover:text-primary-foreground border-input hover:border-primary cursor-pointer"
-                    }`}
+                        ? "bg-muted/40 text-muted-foreground cursor-not-allowed border-hairline"
+                        : "bg-background border-hairline hover:border-signal hover:bg-signal/10 hover:text-foreground cursor-pointer"
+                    )}
                   >
                     {slot.localTime || new Date(slot.startAt).toLocaleTimeString([], { timeStyle: "short" })}
                   </button>
@@ -572,27 +610,27 @@ export function AppointmentsContent() {
               Grayed out slots are already booked.
             </p>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
       {/* Block/Book Dialog */}
       <Dialog open={blockDialogOpen} onOpenChange={setBlockDialogOpen}>
-        <DialogContent className="max-w-md">
+        <DialogContent className="max-w-md rounded-sm border-hairline">
           <DialogHeader>
-            <DialogTitle>
+            <DialogTitle className="font-display tracking-tight">
               {selectedSlot?.localTime} on {selectedDate}
             </DialogTitle>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div>
-              <Label>Action Type</Label>
+              <Label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Action Type</Label>
               <Select
                 value={blockForm.bookingType}
                 onValueChange={(value: "BLOCKED" | "ADMIN") =>
                   setBlockForm((prev) => ({ ...prev, bookingType: value }))
                 }
               >
-                <SelectTrigger>
+                <SelectTrigger className="rounded-sm border-hairline focus-visible:ring-signal hover:border-signal/60">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -614,55 +652,61 @@ export function AppointmentsContent() {
 
             {blockForm.bookingType === "BLOCKED" ? (
               <div>
-                <Label>Reason (Optional)</Label>
+                <Label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Reason (Optional)</Label>
                 <Input
                   value={blockForm.reason}
                   onChange={(e) => setBlockForm((prev) => ({ ...prev, reason: e.target.value }))}
                   placeholder="e.g., Personal time, Lunch break"
+                className="rounded-sm border-hairline focus-visible:ring-signal hover:border-signal/60"
                 />
               </div>
             ) : (
               <>
                 <div>
-                  <Label>Client Name *</Label>
+                  <Label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Client Name *</Label>
                   <Input
                     value={blockForm.clientName}
                     onChange={(e) => setBlockForm((prev) => ({ ...prev, clientName: e.target.value }))}
                     placeholder="Enter client name"
+                  className="rounded-sm border-hairline focus-visible:ring-signal hover:border-signal/60"
                   />
                 </div>
                 <div>
-                  <Label>Client Email *</Label>
+                  <Label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Client Email *</Label>
                   <Input
                     type="email"
                     value={blockForm.clientEmail}
                     onChange={(e) => setBlockForm((prev) => ({ ...prev, clientEmail: e.target.value }))}
                     placeholder="client@example.com"
+                  className="rounded-sm border-hairline focus-visible:ring-signal hover:border-signal/60"
                   />
                 </div>
                 <div>
-                  <Label>Client Phone</Label>
+                  <Label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Client Phone</Label>
                   <Input
                     value={blockForm.clientPhone}
                     onChange={(e) => setBlockForm((prev) => ({ ...prev, clientPhone: e.target.value }))}
                     placeholder="(optional)"
+                  className="rounded-sm border-hairline focus-visible:ring-signal hover:border-signal/60"
                   />
                 </div>
                 <div>
-                  <Label>Service Interest</Label>
+                  <Label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Service Interest</Label>
                   <Input
                     value={blockForm.serviceInterest}
                     onChange={(e) => setBlockForm((prev) => ({ ...prev, serviceInterest: e.target.value }))}
                     placeholder="(optional)"
+                  className="rounded-sm border-hairline focus-visible:ring-signal hover:border-signal/60"
                   />
                 </div>
                 <div>
-                  <Label>Notes</Label>
+                  <Label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Notes</Label>
                   <Textarea
                     value={blockForm.reason}
                     onChange={(e) => setBlockForm((prev) => ({ ...prev, reason: e.target.value }))}
                     placeholder="Additional notes..."
                     rows={2}
+                    className="rounded-sm border-hairline focus-visible:ring-signal"
                   />
                 </div>
               </>
@@ -670,9 +714,9 @@ export function AppointmentsContent() {
           </div>
           <DialogFooter>
             <DialogClose asChild>
-              <Button variant="outline">Cancel</Button>
+              <Button variant="outline" className="rounded-sm border-hairline font-mono text-xs uppercase tracking-[0.12em] hover:border-signal/60 hover:text-signal">Cancel</Button>
             </DialogClose>
-            <Button onClick={handleBlockSubmit} disabled={isSubmitting}>
+            <Button variant="technical" onClick={handleBlockSubmit} disabled={isSubmitting}>
               {isSubmitting ? "Saving..." : blockForm.bookingType === "BLOCKED" ? "Block Slot" : "Book Appointment"}
             </Button>
           </DialogFooter>
@@ -680,15 +724,20 @@ export function AppointmentsContent() {
       </Dialog>
 
       {/* Appointments List */}
-      <Card>
-        <CardHeader>
+      <div className="card-technical rounded-none">
+        <div className="flex flex-col space-y-1.5 p-6">
           <div className="flex items-center justify-between flex-wrap gap-4">
-            <CardTitle className="flex items-center gap-2">
-              <Calendar className="h-5 w-5" />
+            <h2 className="flex items-center gap-2 font-display text-lg tracking-tight">
+              <span className="flex h-7 w-7 items-center justify-center border border-hairline text-primary">
+                <Calendar className="h-4 w-4" />
+              </span>
               Booked Appointments & Blocked Slots
-            </CardTitle>
+            </h2>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-40">
+              <SelectTrigger className={cn(
+                "w-40 rounded-sm border-hairline focus-visible:ring-signal hover:border-signal/60",
+                statusFilter !== "all" && "border-signal bg-signal/10 text-foreground"
+              )}>
                 <SelectValue placeholder="Filter by status" />
               </SelectTrigger>
               <SelectContent>
@@ -699,26 +748,26 @@ export function AppointmentsContent() {
               </SelectContent>
             </Select>
           </div>
-        </CardHeader>
-        <CardContent>
+        </div>
+        <div className="p-6 pt-0">
           {isLoading ? (
-            <div className="h-40 rounded-lg bg-muted animate-pulse" />
+            <div className="h-40 border border-hairline bg-muted/20 animate-pulse" />
           ) : appointments.length === 0 ? (
-            <p className="text-sm text-muted-foreground text-center py-8">
+            <p className="font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground text-center py-8">
               No appointments or blocked slots found.
             </p>
           ) : (
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto border border-hairline">
               <Table>
                 <TableHeader>
-                  <TableRow>
-                    <TableHead>Date & Time</TableHead>
-                    <TableHead>Type</TableHead>
-                    <TableHead>Name</TableHead>
-                    <TableHead>Email</TableHead>
-                    <TableHead>Service</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
+                  <TableRow className="hairline-b hover:bg-transparent">
+                    <TableHead className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Date & Time</TableHead>
+                    <TableHead className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Type</TableHead>
+                    <TableHead className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Name</TableHead>
+                    <TableHead className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Email</TableHead>
+                    <TableHead className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Service</TableHead>
+                    <TableHead className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Status</TableHead>
+                    <TableHead className="text-right font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -727,7 +776,7 @@ export function AppointmentsContent() {
                     const bookingType = appointment.bookingType || "CLIENT";
                     const isBlocked = bookingType === "BLOCKED";
                     return (
-                      <TableRow key={appointment.id}>
+                      <TableRow key={appointment.id} className="hairline-b hover:bg-muted/40">
                         <TableCell>
                           <div className="font-medium">
                             {formatDateTime(appointment.bookedAt)}
@@ -739,9 +788,9 @@ export function AppointmentsContent() {
                           )}
                         </TableCell>
                         <TableCell>
-                          <Badge variant={bookingTypeStyles[bookingType].color}>
+                          <span className={cn(chipBase, bookingTypeStyles[bookingType].chip)}>
                             {bookingTypeStyles[bookingType].label}
-                          </Badge>
+                          </span>
                         </TableCell>
                         <TableCell>
                           {isBlocked ? (
@@ -781,10 +830,10 @@ export function AppointmentsContent() {
                           )}
                         </TableCell>
                         <TableCell>
-                          <Badge variant={statusStyles[appointment.status].color}>
+                          <span className={cn(chipBase, statusStyles[appointment.status].chip)}>
                             <StatusIcon className="mr-1 h-3 w-3" />
                             {statusStyles[appointment.status].label}
-                          </Badge>
+                          </span>
                         </TableCell>
                         <TableCell className="text-right">
                           <div className="flex justify-end gap-2">
@@ -792,6 +841,7 @@ export function AppointmentsContent() {
                               <Button
                                 size="sm"
                                 variant="outline"
+                                className="rounded-sm border-hairline hover:border-signal/60 hover:text-signal"
                                 onClick={() =>
                                   updateStatus(appointment.id, "CONFIRMED")
                                 }
@@ -804,6 +854,7 @@ export function AppointmentsContent() {
                               <Button
                                 size="sm"
                                 variant="outline"
+                                className="rounded-sm border-hairline hover:border-signal/60 hover:text-signal"
                                 onClick={() =>
                                   updateStatus(appointment.id, "CANCELLED")
                                 }
@@ -815,6 +866,7 @@ export function AppointmentsContent() {
                             <Button
                               size="sm"
                               variant="ghost"
+                              className="rounded-sm hover:text-signal"
                               onClick={() => deleteAppointment(appointment.id)}
                               title={isBlocked ? "Unblock" : "Delete"}
                             >
@@ -829,8 +881,8 @@ export function AppointmentsContent() {
               </Table>
             </div>
           )}
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 }

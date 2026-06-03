@@ -27,6 +27,13 @@ interface UserProfile {
   lastLoginAt: string | null;
 }
 
+const SECTION_TITLE = "font-display tracking-tight flex items-center gap-2";
+const FIELD_LABEL =
+  "font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground";
+const ICON_BOX =
+  "flex h-8 w-8 shrink-0 items-center justify-center border border-hairline text-primary";
+const INPUT_CLS = "rounded-sm border-hairline focus-visible:ring-signal";
+
 export function ProfileContent() {
   const { data: session, update } = useSession();
   const [loading, setLoading] = useState(true);
@@ -111,7 +118,7 @@ export function ProfileContent() {
 
       const updatedProfile = await response.json();
       setProfile(updatedProfile);
-      
+
       // Update session if email changed
       if (updatedProfile.email !== session?.user?.email) {
         await update({
@@ -200,7 +207,9 @@ export function ProfileContent() {
     return (
       <div className="flex items-center justify-center h-96">
         <div className="text-center">
-          <div className="text-lg font-medium">Loading profile...</div>
+          <div className="font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">
+            Loading profile...
+          </div>
         </div>
       </div>
     );
@@ -210,7 +219,10 @@ export function ProfileContent() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Profile Settings</h1>
+        <p className="eyebrow mb-2">Account</p>
+        <h1 className="font-display text-3xl font-bold tracking-tight">
+          Profile Settings
+        </h1>
         <p className="text-muted-foreground mt-1">
           Manage your account information and security settings
         </p>
@@ -218,10 +230,12 @@ export function ProfileContent() {
 
       <div className="grid gap-6 md:grid-cols-2">
         {/* Account Information */}
-        <Card>
+        <Card className="card-technical rounded-none">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <User className="h-5 w-5" />
+            <CardTitle className={SECTION_TITLE}>
+              <span className={ICON_BOX}>
+                <User className="h-4 w-4" />
+              </span>
               Account Information
             </CardTitle>
             <CardDescription>
@@ -230,33 +244,29 @@ export function ProfileContent() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label className="text-sm font-medium text-muted-foreground">
-                User ID
-              </Label>
-              <div className="text-sm font-mono bg-muted px-3 py-2 rounded-md">
+              <Label className={FIELD_LABEL}>User ID</Label>
+              <div className="text-sm font-mono bg-muted/20 px-3 py-2 rounded-sm border border-hairline">
                 {profile?.id}
               </div>
             </div>
 
             <div className="space-y-2">
-              <Label className="text-sm font-medium text-muted-foreground">
-                Role
-              </Label>
+              <Label className={FIELD_LABEL}>Role</Label>
               <div>
                 <Badge
                   variant="default"
-                  className="bg-primary/10 text-primary border-primary/20"
+                  className="rounded-sm bg-signal/10 text-foreground border-signal/30 font-mono text-xs uppercase tracking-[0.12em]"
                 >
-                  <Shield className="h-3 w-3 mr-1" />
+                  <Shield className="h-3 w-3 mr-1 text-signal" />
                   {profile?.role}
                 </Badge>
               </div>
             </div>
 
-            <Separator />
+            <Separator className="hairline-t border-0" />
 
             <div className="space-y-2">
-              <Label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+              <Label className={`${FIELD_LABEL} flex items-center gap-2`}>
                 <Calendar className="h-4 w-4" />
                 Account Created
               </Label>
@@ -264,7 +274,7 @@ export function ProfileContent() {
             </div>
 
             <div className="space-y-2">
-              <Label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+              <Label className={`${FIELD_LABEL} flex items-center gap-2`}>
                 <Calendar className="h-4 w-4" />
                 Last Updated
               </Label>
@@ -272,7 +282,7 @@ export function ProfileContent() {
             </div>
 
             <div className="space-y-2">
-              <Label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+              <Label className={`${FIELD_LABEL} flex items-center gap-2`}>
                 <Calendar className="h-4 w-4" />
                 Last Login
               </Label>
@@ -282,10 +292,12 @@ export function ProfileContent() {
         </Card>
 
         {/* Edit Profile */}
-        <Card>
+        <Card className="card-technical rounded-none">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Mail className="h-5 w-5" />
+            <CardTitle className={SECTION_TITLE}>
+              <span className={ICON_BOX}>
+                <Mail className="h-4 w-4" />
+              </span>
               Edit Profile
             </CardTitle>
             <CardDescription>
@@ -295,7 +307,9 @@ export function ProfileContent() {
           <CardContent>
             <form onSubmit={handleUpdateProfile} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="name">Full Name *</Label>
+                <Label htmlFor="name" className={FIELD_LABEL}>
+                  Full Name *
+                </Label>
                 <Input
                   id="name"
                   type="text"
@@ -305,11 +319,14 @@ export function ProfileContent() {
                   }
                   placeholder="Enter your full name"
                   required
+                  className={INPUT_CLS}
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="email">Email Address *</Label>
+                <Label htmlFor="email" className={FIELD_LABEL}>
+                  Email Address *
+                </Label>
                 <Input
                   id="email"
                   type="email"
@@ -319,13 +336,19 @@ export function ProfileContent() {
                   }
                   placeholder="Enter your email"
                   required
+                  className={INPUT_CLS}
                 />
                 <p className="text-xs text-muted-foreground">
                   Changing your email will require you to log in again
                 </p>
               </div>
 
-              <Button type="submit" disabled={saving} className="w-full">
+              <Button
+                type="submit"
+                variant="technical"
+                disabled={saving}
+                className="w-full"
+              >
                 <Save className="mr-2 h-4 w-4" />
                 {saving ? "Saving..." : "Save Changes"}
               </Button>
@@ -335,10 +358,12 @@ export function ProfileContent() {
       </div>
 
       {/* Change Password */}
-      <Card>
+      <Card className="card-technical rounded-none">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Lock className="h-5 w-5" />
+          <CardTitle className={SECTION_TITLE}>
+            <span className={ICON_BOX}>
+              <Lock className="h-4 w-4" />
+            </span>
             Change Password
           </CardTitle>
           <CardDescription>
@@ -348,7 +373,9 @@ export function ProfileContent() {
         <CardContent>
           <form onSubmit={handleChangePassword} className="space-y-4 max-w-md">
             <div className="space-y-2">
-              <Label htmlFor="currentPassword">Current Password *</Label>
+              <Label htmlFor="currentPassword" className={FIELD_LABEL}>
+                Current Password *
+              </Label>
               <div className="relative">
                 <Input
                   id="currentPassword"
@@ -362,12 +389,13 @@ export function ProfileContent() {
                   }
                   placeholder="Enter current password"
                   required
+                  className={INPUT_CLS}
                 />
                 <Button
                   type="button"
                   variant="ghost"
                   size="sm"
-                  className="absolute right-0 top-0 h-full px-3"
+                  className="absolute right-0 top-0 h-full px-3 rounded-sm hover:text-signal"
                   onClick={() =>
                     setShowPasswords({
                       ...showPasswords,
@@ -385,7 +413,9 @@ export function ProfileContent() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="newPassword">New Password *</Label>
+              <Label htmlFor="newPassword" className={FIELD_LABEL}>
+                New Password *
+              </Label>
               <div className="relative">
                 <Input
                   id="newPassword"
@@ -400,12 +430,13 @@ export function ProfileContent() {
                   placeholder="Enter new password"
                   required
                   minLength={8}
+                  className={INPUT_CLS}
                 />
                 <Button
                   type="button"
                   variant="ghost"
                   size="sm"
-                  className="absolute right-0 top-0 h-full px-3"
+                  className="absolute right-0 top-0 h-full px-3 rounded-sm hover:text-signal"
                   onClick={() =>
                     setShowPasswords({
                       ...showPasswords,
@@ -426,7 +457,9 @@ export function ProfileContent() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="confirmPassword">Confirm New Password *</Label>
+              <Label htmlFor="confirmPassword" className={FIELD_LABEL}>
+                Confirm New Password *
+              </Label>
               <div className="relative">
                 <Input
                   id="confirmPassword"
@@ -441,12 +474,13 @@ export function ProfileContent() {
                   placeholder="Confirm new password"
                   required
                   minLength={8}
+                  className={INPUT_CLS}
                 />
                 <Button
                   type="button"
                   variant="ghost"
                   size="sm"
-                  className="absolute right-0 top-0 h-full px-3"
+                  className="absolute right-0 top-0 h-full px-3 rounded-sm hover:text-signal"
                   onClick={() =>
                     setShowPasswords({
                       ...showPasswords,
@@ -463,7 +497,11 @@ export function ProfileContent() {
               </div>
             </div>
 
-            <Button type="submit" disabled={changingPassword}>
+            <Button
+              type="submit"
+              variant="technical"
+              disabled={changingPassword}
+            >
               <Lock className="mr-2 h-4 w-4" />
               {changingPassword ? "Changing..." : "Change Password"}
             </Button>

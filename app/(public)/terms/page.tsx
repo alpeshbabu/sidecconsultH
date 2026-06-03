@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowLeft, FileText, Sparkles } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { MainLayout } from "@/components/layout";
 
 export const metadata: Metadata = {
@@ -19,29 +18,29 @@ export default function TermsPage() {
     <MainLayout>
       {/* Hero Section */}
       <section className="relative overflow-hidden border-b">
-        <div className="absolute inset-0 -z-10">
-          <div className="absolute inset-0 gradient-hero" />
+        <div className="absolute inset-0 -z-10" aria-hidden>
+          <div className="grid-blueprint absolute inset-0 opacity-60" />
+          <div className="absolute inset-x-0 top-0 h-px bg-signal/40" />
         </div>
 
         <div className="container-wide py-16 md:py-20">
           <div className="mx-auto max-w-3xl">
-            <Link href="/">
-              <Button variant="ghost" size="sm" className="mb-6">
+            <Button
+              asChild
+              variant="outline"
+              size="sm"
+              className="mb-6 rounded-sm border-hairline font-mono text-xs uppercase tracking-[0.12em]"
+            >
+              <Link href="/">
                 <ArrowLeft className="mr-2 h-4 w-4" />
                 Back to Home
-              </Button>
-            </Link>
-            <Badge
-              variant="outline"
-              className="mb-4 px-4 py-1.5 border-primary/30 bg-primary/5"
-            >
-              <FileText className="h-3.5 w-3.5 mr-2 text-primary" />
-              Legal
-            </Badge>
-            <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
+              </Link>
+            </Button>
+            <p className="eyebrow mb-5">Terms</p>
+            <h1 className="font-display text-4xl font-bold tracking-tight text-balance sm:text-5xl">
               Terms of Service
             </h1>
-            <p className="mt-4 text-lg text-muted-foreground">
+            <p className="mt-4 font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">
               Last updated: January 2026
             </p>
           </div>
@@ -51,7 +50,7 @@ export default function TermsPage() {
       {/* Content */}
       <section className="section-padding">
         <div className="container-wide">
-          <div className="mx-auto max-w-3xl prose prose-gray dark:prose-invert">
+          <div className="mx-auto max-w-3xl prose prose-gray dark:prose-invert prose-headings:font-display">
             <h2>1. Acceptance of Terms</h2>
             <p>
               By accessing and using this website, you accept and agree to be

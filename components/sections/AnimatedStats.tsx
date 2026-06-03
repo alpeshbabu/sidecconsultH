@@ -48,7 +48,7 @@ function AnimatedNumber({ value, prefix = "", suffix = "" }: { value: string; pr
       return;
     }
 
-    const duration = 2000;
+    const duration = 1600;
     const steps = 60;
     const stepDuration = duration / steps;
     let currentStep = 0;
@@ -70,25 +70,43 @@ function AnimatedNumber({ value, prefix = "", suffix = "" }: { value: string; pr
   }, [isVisible, numericPart, textPart, value]);
 
   return (
-    <div ref={ref} className="text-2xl font-bold text-primary md:text-4xl lg:text-5xl tabular-nums">
-      {prefix}{displayValue}{suffix}
+    <div
+      ref={ref}
+      className="font-display text-4xl font-bold leading-none tracking-tight tabular-nums text-foreground md:text-5xl lg:text-6xl"
+    >
+      {prefix}
+      {displayValue}
+      {suffix}
     </div>
   );
 }
 
 export function AnimatedStats({ stats, className }: AnimatedStatsProps) {
   return (
-    <section className={cn("border-y bg-muted/30", className)}>
-      <div className="container-wide py-16 md:py-20">
-        <div className="grid grid-cols-2 gap-8 md:grid-cols-4 md:gap-12">
+    <section className={cn("hairline-t hairline-b bg-muted/20", className)}>
+      <div className="container-wide py-14 md:py-16">
+        <div className="grid grid-cols-2 md:grid-cols-4">
           {stats.map((stat, index) => (
             <div
               key={index}
-              className="text-center"
-              style={{ animationDelay: `${index * 100}ms` }}
+              className={cn(
+                "group relative px-4 py-6 md:px-8",
+                // hairline column dividers (skip first in each visual row)
+                index % 2 !== 0 && "hairline-l",
+                index !== 0 && "md:hairline-l",
+                index === 2 && "max-md:hairline-t",
+                index === 3 && "max-md:hairline-t"
+              )}
             >
+              {/* measurement tick + index */}
+              <div className="mb-4 flex items-center gap-2">
+                <span className="h-3 w-px bg-signal" />
+                <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+              </div>
               <AnimatedNumber value={stat.value} />
-              <div className="mt-2 text-xs font-medium text-muted-foreground md:text-sm">
+              <div className="mt-3 font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
                 {stat.label}
               </div>
             </div>

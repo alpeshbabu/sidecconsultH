@@ -4,7 +4,6 @@ import { useEffect, useState, useCallback } from "react";
 import { Mail, Trash2, RefreshCw, Download, UserCheck, UserX } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
   TableBody,
@@ -20,7 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 
 interface Subscriber {
   id: string;
@@ -35,6 +34,9 @@ const formatDate = (value: string) =>
   new Date(value).toLocaleDateString(undefined, {
     dateStyle: "medium",
   });
+
+const statusChipBase =
+  "inline-flex items-center rounded-sm px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.1em]";
 
 export function SubscribersContent() {
   const [subscribers, setSubscribers] = useState<Subscriber[]>([]);
@@ -132,11 +134,11 @@ export function SubscribersContent() {
       s.isActive ? "Active" : "Inactive",
       formatDate(s.subscribedAt),
     ]);
-    
+
     const csvContent = [headers, ...rows]
       .map((row) => row.map((cell) => `"${cell}"`).join(","))
       .join("\n");
-    
+
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
@@ -150,12 +152,19 @@ export function SubscribersContent() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Newsletter Subscribers</h1>
+          <p className="font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">
+            Newsletter
+          </p>
+          <h1 className="font-display text-2xl tracking-tight">Subscribers</h1>
           <p className="text-muted-foreground">
             Manage your newsletter subscribers
           </p>
         </div>
-        <Button variant="outline" onClick={exportToCSV} disabled={subscribers.length === 0}>
+        <Button
+          variant="technical"
+          onClick={exportToCSV}
+          disabled={subscribers.length === 0}
+        >
           <Download className="mr-2 h-4 w-4" />
           Export CSV
         </Button>
@@ -163,97 +172,103 @@ export function SubscribersContent() {
 
       {/* Stats */}
       <div className="grid gap-4 sm:grid-cols-3">
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Total Subscribers
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{total}</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Active
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-green-600">{activeCount}</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Unsubscribed
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-muted-foreground">
-              {total - activeCount}
-            </div>
-          </CardContent>
-        </Card>
+        <div className="card-technical rounded-none p-6">
+          <p className="font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">
+            Total Subscribers
+          </p>
+          <div className="mt-2 font-display text-2xl tracking-tight">{total}</div>
+        </div>
+        <div className="card-technical rounded-none p-6">
+          <p className="font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">
+            Active
+          </p>
+          <div className="mt-2 font-display text-2xl tracking-tight text-emerald-600">
+            {activeCount}
+          </div>
+        </div>
+        <div className="card-technical rounded-none p-6">
+          <p className="font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">
+            Unsubscribed
+          </p>
+          <div className="mt-2 font-display text-2xl tracking-tight text-muted-foreground">
+            {total - activeCount}
+          </div>
+        </div>
       </div>
 
       {/* Subscribers List */}
-      <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between flex-wrap gap-4">
-            <CardTitle className="flex items-center gap-2">
-              <Mail className="h-5 w-5" />
-              Subscribers
-            </CardTitle>
-            <div className="flex items-center gap-2">
-              <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger className="w-32">
-                  <SelectValue placeholder="Filter" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All</SelectItem>
-                  <SelectItem value="active">Active</SelectItem>
-                  <SelectItem value="inactive">Inactive</SelectItem>
-                </SelectContent>
-              </Select>
-              <Button variant="ghost" size="icon" onClick={fetchSubscribers}>
-                <RefreshCw className="h-4 w-4" />
-              </Button>
-            </div>
+      <div className="border border-hairline">
+        <div className="flex items-center justify-between flex-wrap gap-4 p-4 hairline-b">
+          <div className="flex h-8 w-8 items-center justify-center rounded-sm border border-hairline text-signal">
+            <Mail className="h-4 w-4" />
           </div>
-        </CardHeader>
-        <CardContent>
+          <h2 className="mr-auto font-display text-lg tracking-tight">Subscribers</h2>
+          <div className="flex items-center gap-2">
+            <Select value={statusFilter} onValueChange={setStatusFilter}>
+              <SelectTrigger
+                className={cn(
+                  "w-32 rounded-sm border-hairline focus-visible:ring-signal hover:border-signal/60",
+                  statusFilter !== "all" && "border-signal bg-signal/10 text-foreground"
+                )}
+              >
+                <SelectValue placeholder="Filter" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All</SelectItem>
+                <SelectItem value="active">Active</SelectItem>
+                <SelectItem value="inactive">Inactive</SelectItem>
+              </SelectContent>
+            </Select>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="rounded-sm hover:text-signal"
+              onClick={fetchSubscribers}
+            >
+              <RefreshCw className={cn("h-4 w-4", isLoading && "animate-spin")} />
+            </Button>
+          </div>
+        </div>
+        <div>
           {isLoading ? (
-            <div className="h-40 rounded-lg bg-muted animate-pulse" />
+            <div className="h-40 bg-muted animate-pulse" />
           ) : subscribers.length === 0 ? (
-            <p className="text-sm text-muted-foreground text-center py-8">
-              No subscribers found.
-            </p>
+            <div className="py-12 text-center">
+              <Mail className="h-10 w-10 mx-auto mb-2 text-signal opacity-60" />
+              <p className="font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">
+                No subscribers found
+              </p>
+            </div>
           ) : (
             <div className="overflow-x-auto">
               <Table>
                 <TableHeader>
-                  <TableRow>
-                    <TableHead>Email</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Subscribed</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
+                  <TableRow className="hairline-b hover:bg-transparent">
+                    <TableHead className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Email</TableHead>
+                    <TableHead className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Status</TableHead>
+                    <TableHead className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Subscribed</TableHead>
+                    <TableHead className="text-right font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {subscribers.map((subscriber) => (
-                    <TableRow key={subscriber.id}>
+                    <TableRow key={subscriber.id} className="hairline-b hover:bg-muted/40">
                       <TableCell className="font-medium">
                         {subscriber.email}
                       </TableCell>
                       <TableCell>
-                        <Badge
-                          variant={subscriber.isActive ? "default" : "secondary"}
+                        <span
+                          className={cn(
+                            statusChipBase,
+                            subscriber.isActive
+                              ? "bg-emerald-500/10 text-emerald-600 border border-emerald-500/30"
+                              : "bg-muted-foreground/10 text-muted-foreground border border-muted-foreground/30"
+                          )}
                         >
-                          {subscriber.isActive ? "Active" : "Inactive"}
-                        </Badge>
+                          {subscriber.isActive ? "Subscribed" : "Unsubscribed"}
+                        </span>
                       </TableCell>
-                      <TableCell>
+                      <TableCell className="font-mono text-xs text-muted-foreground">
                         {formatDate(subscriber.subscribedAt)}
                       </TableCell>
                       <TableCell className="text-right">
@@ -262,6 +277,7 @@ export function SubscribersContent() {
                             <Button
                               size="sm"
                               variant="outline"
+                              className="rounded-sm border-hairline hover:border-signal/60 hover:text-signal"
                               onClick={() => handleUnsubscribe(subscriber.id)}
                               title="Unsubscribe"
                             >
@@ -271,6 +287,7 @@ export function SubscribersContent() {
                             <Button
                               size="sm"
                               variant="outline"
+                              className="rounded-sm border-hairline hover:border-signal/60 hover:text-signal"
                               onClick={() => handleReactivate(subscriber.id)}
                               title="Reactivate"
                             >
@@ -280,6 +297,7 @@ export function SubscribersContent() {
                           <Button
                             size="sm"
                             variant="ghost"
+                            className="rounded-sm hover:text-signal"
                             onClick={() => handleDelete(subscriber.id)}
                             title="Delete permanently"
                           >
@@ -293,8 +311,8 @@ export function SubscribersContent() {
               </Table>
             </div>
           )}
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 }

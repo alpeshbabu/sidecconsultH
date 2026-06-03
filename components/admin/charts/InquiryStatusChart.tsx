@@ -12,8 +12,8 @@ interface InquiryStatusChartProps {
 }
 
 const STATUS_COLORS: Record<string, string> = {
-  New: "var(--color-chart-5)",
-  "In Progress": "var(--color-chart-1)",
+  New: "var(--color-signal)",
+  "In Progress": "var(--color-primary)",
   Responded: "var(--color-chart-4)",
   Archived: "var(--color-muted-foreground)",
 };
@@ -21,7 +21,7 @@ const STATUS_COLORS: Record<string, string> = {
 export function InquiryStatusChart({ data }: InquiryStatusChartProps) {
   if (data.length === 0 || data.every((d) => d.value === 0)) {
     return (
-      <div className="flex items-center justify-center h-[200px] text-muted-foreground text-sm">
+      <div className="flex items-center justify-center h-[200px] font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">
         No inquiry data yet
       </div>
     );
@@ -52,10 +52,11 @@ export function InquiryStatusChart({ data }: InquiryStatusChartProps) {
         <Tooltip
           contentStyle={{
             backgroundColor: "var(--color-card)",
-            border: "1px solid var(--color-border)",
-            borderRadius: "8px",
+            border: "1px solid var(--color-hairline)",
+            borderRadius: "0px",
             color: "var(--color-card-foreground)",
             fontSize: "12px",
+            fontFamily: "var(--font-mono)",
           }}
         />
         <Legend wrapperStyle={{ fontSize: "12px" }} />

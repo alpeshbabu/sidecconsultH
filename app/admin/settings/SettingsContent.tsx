@@ -7,8 +7,6 @@ import {
   Shield,
   Database,
   Palette,
-  Mail,
-  Globe,
   Save,
   Download,
   Trash2,
@@ -39,20 +37,18 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-
-// Common US timezones
-const TIMEZONES = [
-  { value: "America/New_York", label: "Eastern Time (ET)" },
-  { value: "America/Chicago", label: "Central Time (CT)" },
-  { value: "America/Denver", label: "Mountain Time (MT)" },
-  { value: "America/Los_Angeles", label: "Pacific Time (PT)" },
-  { value: "America/Phoenix", label: "Arizona (MST)" },
-  { value: "America/Anchorage", label: "Alaska Time (AKT)" },
-  { value: "Pacific/Honolulu", label: "Hawaii Time (HST)" },
-  { value: "UTC", label: "UTC" },
-];
+import { US_TIMEZONES as TIMEZONES, DEFAULT_TIMEZONE } from "@/lib/timezone";
 
 type Tab = "general" | "notifications" | "security" | "data" | "appearance";
+
+const SECTION_TITLE = "font-display tracking-tight flex items-center gap-2";
+const FIELD_LABEL =
+  "font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground";
+const ICON_BOX =
+  "flex h-8 w-8 shrink-0 items-center justify-center border border-hairline text-primary";
+const INPUT_CLS = "rounded-sm border-hairline focus-visible:ring-signal";
+const CHECKBOX_CLS =
+  "h-4 w-4 rounded-sm border-hairline accent-[var(--signal)]";
 
 export function SettingsContent() {
   const [activeTab, setActiveTab] = useState<Tab>("general");
@@ -70,7 +66,7 @@ export function SettingsContent() {
   const [changingPassword, setChangingPassword] = useState(false);
 
   // Timezone state
-  const [timezone, setTimezone] = useState("America/New_York");
+  const [timezone, setTimezone] = useState(DEFAULT_TIMEZONE);
   const [savingTimezone, setSavingTimezone] = useState(false);
 
   // General Settings
@@ -271,7 +267,10 @@ export function SettingsContent() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Settings</h1>
+        <p className="eyebrow mb-2">Settings</p>
+        <h1 className="font-display text-3xl font-bold tracking-tight">
+          Settings
+        </h1>
         <p className="text-muted-foreground mt-1">
           Manage your application settings and preferences
         </p>
@@ -287,13 +286,17 @@ export function SettingsContent() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium rounded-lg transition-colors ${
+                  className={`w-full flex items-center gap-3 px-4 py-2.5 font-mono text-xs uppercase tracking-[0.12em] rounded-sm border transition-colors ${
                     activeTab === tab.id
-                      ? "bg-primary text-primary-foreground"
-                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                      ? "border-signal/40 bg-signal/10 text-foreground"
+                      : "border-transparent text-muted-foreground hover:bg-muted/20 hover:text-foreground"
                   }`}
                 >
-                  <Icon className="h-5 w-5 shrink-0" />
+                  <Icon
+                    className={`h-4 w-4 shrink-0 ${
+                      activeTab === tab.id ? "text-signal" : ""
+                    }`}
+                  />
                   {tab.label}
                 </button>
               );
@@ -306,10 +309,12 @@ export function SettingsContent() {
           {/* General Settings */}
           {activeTab === "general" && (
             <>
-            <Card>
+            <Card className="card-technical rounded-none">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Settings className="h-5 w-5" />
+                <CardTitle className={SECTION_TITLE}>
+                  <span className={ICON_BOX}>
+                    <Settings className="h-4 w-4" />
+                  </span>
                   General Settings
                 </CardTitle>
                 <CardDescription>
@@ -319,7 +324,9 @@ export function SettingsContent() {
               <CardContent className="space-y-6">
                 <div className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="siteName">Site Name</Label>
+                    <Label htmlFor="siteName" className={FIELD_LABEL}>
+                      Site Name
+                    </Label>
                     <Input
                       id="siteName"
                       value={generalSettings.siteName}
@@ -330,11 +337,14 @@ export function SettingsContent() {
                         })
                       }
                       placeholder="Enter site name"
+                      className={INPUT_CLS}
                     />
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="siteEmail">Admin Email</Label>
+                    <Label htmlFor="siteEmail" className={FIELD_LABEL}>
+                      Admin Email
+                    </Label>
                     <Input
                       id="siteEmail"
                       type="email"
@@ -346,11 +356,14 @@ export function SettingsContent() {
                         })
                       }
                       placeholder="admin@example.com"
+                      className={INPUT_CLS}
                     />
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="contactEmail">Contact Email</Label>
+                    <Label htmlFor="contactEmail" className={FIELD_LABEL}>
+                      Contact Email
+                    </Label>
                     <Input
                       id="contactEmail"
                       type="email"
@@ -362,6 +375,7 @@ export function SettingsContent() {
                         })
                       }
                       placeholder="contact@example.com"
+                      className={INPUT_CLS}
                     />
                     <p className="text-xs text-muted-foreground">
                       Email address shown on contact forms
@@ -369,7 +383,9 @@ export function SettingsContent() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="siteUrl">Site URL</Label>
+                    <Label htmlFor="siteUrl" className={FIELD_LABEL}>
+                      Site URL
+                    </Label>
                     <Input
                       id="siteUrl"
                       type="url"
@@ -381,13 +397,18 @@ export function SettingsContent() {
                         })
                       }
                       placeholder="https://example.com"
+                      className={INPUT_CLS}
                     />
                   </div>
                 </div>
 
-                <Separator />
+                <Separator className="hairline-t border-0" />
 
-                <Button onClick={handleSaveGeneral} disabled={saving}>
+                <Button
+                  variant="technical"
+                  onClick={handleSaveGeneral}
+                  disabled={saving}
+                >
                   <Save className="mr-2 h-4 w-4" />
                   {saving ? "Saving..." : "Save Changes"}
                 </Button>
@@ -395,10 +416,12 @@ export function SettingsContent() {
             </Card>
 
             {/* Timezone Settings */}
-            <Card>
+            <Card className="card-technical rounded-none">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Clock className="h-5 w-5" />
+                <CardTitle className={SECTION_TITLE}>
+                  <span className={ICON_BOX}>
+                    <Clock className="h-4 w-4" />
+                  </span>
                   Business Timezone
                 </CardTitle>
                 <CardDescription>
@@ -408,7 +431,9 @@ export function SettingsContent() {
               <CardContent className="space-y-6">
                 <div className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="timezone">Default Timezone</Label>
+                    <Label htmlFor="timezone" className={FIELD_LABEL}>
+                      Default Timezone
+                    </Label>
                     {loadingTimezone ? (
                       <div className="flex items-center gap-2 text-sm text-muted-foreground">
                         <Loader2 className="h-4 w-4 animate-spin" />
@@ -416,7 +441,7 @@ export function SettingsContent() {
                       </div>
                     ) : (
                       <Select value={timezone} onValueChange={setTimezone}>
-                        <SelectTrigger>
+                        <SelectTrigger className={INPUT_CLS}>
                           <SelectValue placeholder="Select timezone" />
                         </SelectTrigger>
                         <SelectContent>
@@ -434,9 +459,13 @@ export function SettingsContent() {
                   </div>
                 </div>
 
-                <Separator />
+                <Separator className="hairline-t border-0" />
 
-                <Button onClick={handleSaveTimezone} disabled={savingTimezone || loadingTimezone}>
+                <Button
+                  variant="technical"
+                  onClick={handleSaveTimezone}
+                  disabled={savingTimezone || loadingTimezone}
+                >
                   {savingTimezone ? (
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   ) : (
@@ -451,10 +480,12 @@ export function SettingsContent() {
 
           {/* Notification Settings */}
           {activeTab === "notifications" && (
-            <Card>
+            <Card className="card-technical rounded-none">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Bell className="h-5 w-5" />
+                <CardTitle className={SECTION_TITLE}>
+                  <span className={ICON_BOX}>
+                    <Bell className="h-4 w-4" />
+                  </span>
                   Notification Settings
                 </CardTitle>
                 <CardDescription>
@@ -465,7 +496,9 @@ export function SettingsContent() {
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <div className="space-y-0.5">
-                      <Label>New Inquiry Notifications</Label>
+                      <Label className={FIELD_LABEL}>
+                        New Inquiry Notifications
+                      </Label>
                       <p className="text-sm text-muted-foreground">
                         Get notified when someone submits a contact inquiry
                       </p>
@@ -479,15 +512,15 @@ export function SettingsContent() {
                           emailOnNewInquiry: e.target.checked,
                         })
                       }
-                      className="h-4 w-4 rounded"
+                      className={CHECKBOX_CLS}
                     />
                   </div>
 
-                  <Separator />
+                  <Separator className="hairline-t border-0" />
 
                   <div className="flex items-center justify-between">
                     <div className="space-y-0.5">
-                      <Label>New Post Notifications</Label>
+                      <Label className={FIELD_LABEL}>New Post Notifications</Label>
                       <p className="text-sm text-muted-foreground">
                         Get notified when a new blog post is published
                       </p>
@@ -501,15 +534,15 @@ export function SettingsContent() {
                           emailOnNewPost: e.target.checked,
                         })
                       }
-                      className="h-4 w-4 rounded"
+                      className={CHECKBOX_CLS}
                     />
                   </div>
 
-                  <Separator />
+                  <Separator className="hairline-t border-0" />
 
                   <div className="flex items-center justify-between">
                     <div className="space-y-0.5">
-                      <Label>Daily Digest</Label>
+                      <Label className={FIELD_LABEL}>Daily Digest</Label>
                       <p className="text-sm text-muted-foreground">
                         Receive a daily summary of activity
                       </p>
@@ -523,15 +556,15 @@ export function SettingsContent() {
                           dailyDigest: e.target.checked,
                         })
                       }
-                      className="h-4 w-4 rounded"
+                      className={CHECKBOX_CLS}
                     />
                   </div>
 
-                  <Separator />
+                  <Separator className="hairline-t border-0" />
 
                   <div className="flex items-center justify-between">
                     <div className="space-y-0.5">
-                      <Label>Weekly Report</Label>
+                      <Label className={FIELD_LABEL}>Weekly Report</Label>
                       <p className="text-sm text-muted-foreground">
                         Receive a weekly analytics report
                       </p>
@@ -545,14 +578,18 @@ export function SettingsContent() {
                           weeklyReport: e.target.checked,
                         })
                       }
-                      className="h-4 w-4 rounded"
+                      className={CHECKBOX_CLS}
                     />
                   </div>
                 </div>
 
-                <Separator />
+                <Separator className="hairline-t border-0" />
 
-                <Button onClick={handleSaveNotifications} disabled={saving}>
+                <Button
+                  variant="technical"
+                  onClick={handleSaveNotifications}
+                  disabled={saving}
+                >
                   <Save className="mr-2 h-4 w-4" />
                   {saving ? "Saving..." : "Save Changes"}
                 </Button>
@@ -564,10 +601,12 @@ export function SettingsContent() {
           {activeTab === "security" && (
             <>
             {/* Password Change Card */}
-            <Card>
+            <Card className="card-technical rounded-none">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Shield className="h-5 w-5" />
+                <CardTitle className={SECTION_TITLE}>
+                  <span className={ICON_BOX}>
+                    <Shield className="h-4 w-4" />
+                  </span>
                   Change Password
                 </CardTitle>
                 <CardDescription>
@@ -577,7 +616,9 @@ export function SettingsContent() {
               <CardContent className="space-y-6">
                 <div className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="currentPassword">Current Password</Label>
+                    <Label htmlFor="currentPassword" className={FIELD_LABEL}>
+                      Current Password
+                    </Label>
                     <div className="relative">
                       <Input
                         id="currentPassword"
@@ -590,12 +631,13 @@ export function SettingsContent() {
                           })
                         }
                         placeholder="Enter current password"
+                        className={INPUT_CLS}
                       />
                       <Button
                         type="button"
                         variant="ghost"
                         size="icon"
-                        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                        className="absolute right-0 top-0 h-full px-3 py-2 rounded-sm hover:bg-transparent hover:text-signal"
                         onClick={() => setShowCurrentPassword(!showCurrentPassword)}
                       >
                         {showCurrentPassword ? (
@@ -608,7 +650,9 @@ export function SettingsContent() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="newPassword">New Password</Label>
+                    <Label htmlFor="newPassword" className={FIELD_LABEL}>
+                      New Password
+                    </Label>
                     <div className="relative">
                       <Input
                         id="newPassword"
@@ -621,12 +665,13 @@ export function SettingsContent() {
                           })
                         }
                         placeholder="Enter new password"
+                        className={INPUT_CLS}
                       />
                       <Button
                         type="button"
                         variant="ghost"
                         size="icon"
-                        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                        className="absolute right-0 top-0 h-full px-3 py-2 rounded-sm hover:bg-transparent hover:text-signal"
                         onClick={() => setShowNewPassword(!showNewPassword)}
                       >
                         {showNewPassword ? (
@@ -642,7 +687,9 @@ export function SettingsContent() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="confirmPassword">Confirm New Password</Label>
+                    <Label htmlFor="confirmPassword" className={FIELD_LABEL}>
+                      Confirm New Password
+                    </Label>
                     <Input
                       id="confirmPassword"
                       type="password"
@@ -654,11 +701,12 @@ export function SettingsContent() {
                         })
                       }
                       placeholder="Confirm new password"
+                      className={INPUT_CLS}
                     />
                     {passwordData.newPassword &&
                       passwordData.confirmPassword &&
                       passwordData.newPassword === passwordData.confirmPassword && (
-                        <p className="text-xs text-green-600 flex items-center gap-1">
+                        <p className="text-xs font-mono text-signal flex items-center gap-1">
                           <Check className="h-3 w-3" />
                           Passwords match
                         </p>
@@ -666,16 +714,17 @@ export function SettingsContent() {
                     {passwordData.newPassword &&
                       passwordData.confirmPassword &&
                       passwordData.newPassword !== passwordData.confirmPassword && (
-                        <p className="text-xs text-destructive">
+                        <p className="text-xs font-mono text-destructive">
                           Passwords do not match
                         </p>
                       )}
                   </div>
                 </div>
 
-                <Separator />
+                <Separator className="hairline-t border-0" />
 
                 <Button
+                  variant="technical"
                   onClick={handleChangePassword}
                   disabled={
                     changingPassword ||
@@ -695,10 +744,12 @@ export function SettingsContent() {
             </Card>
 
             {/* Other Security Settings Card */}
-            <Card>
+            <Card className="card-technical rounded-none">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Settings className="h-5 w-5" />
+                <CardTitle className={SECTION_TITLE}>
+                  <span className={ICON_BOX}>
+                    <Settings className="h-4 w-4" />
+                  </span>
                   Security Preferences
                 </CardTitle>
                 <CardDescription>
@@ -708,7 +759,7 @@ export function SettingsContent() {
               <CardContent className="space-y-6">
                 <div className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="sessionTimeout">
+                    <Label htmlFor="sessionTimeout" className={FIELD_LABEL}>
                       Session Timeout (minutes)
                     </Label>
                     <Input
@@ -723,6 +774,7 @@ export function SettingsContent() {
                       }
                       min="5"
                       max="1440"
+                      className={INPUT_CLS}
                     />
                     <p className="text-xs text-muted-foreground">
                       Automatically log out after this period of inactivity
@@ -730,7 +782,9 @@ export function SettingsContent() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="maxLoginAttempts">Max Login Attempts</Label>
+                    <Label htmlFor="maxLoginAttempts" className={FIELD_LABEL}>
+                      Max Login Attempts
+                    </Label>
                     <Input
                       id="maxLoginAttempts"
                       type="number"
@@ -743,17 +797,20 @@ export function SettingsContent() {
                       }
                       min="3"
                       max="10"
+                      className={INPUT_CLS}
                     />
                     <p className="text-xs text-muted-foreground">
                       Lock account after this many failed login attempts
                     </p>
                   </div>
 
-                  <Separator />
+                  <Separator className="hairline-t border-0" />
 
                   <div className="flex items-center justify-between">
                     <div className="space-y-0.5">
-                      <Label>Require Strong Passwords</Label>
+                      <Label className={FIELD_LABEL}>
+                        Require Strong Passwords
+                      </Label>
                       <p className="text-sm text-muted-foreground">
                         Enforce minimum password complexity requirements
                       </p>
@@ -767,17 +824,20 @@ export function SettingsContent() {
                           requireStrongPassword: e.target.checked,
                         })
                       }
-                      className="h-4 w-4 rounded"
+                      className={CHECKBOX_CLS}
                     />
                   </div>
 
-                  <Separator />
+                  <Separator className="hairline-t border-0" />
 
                   <div className="flex items-center justify-between">
                     <div className="space-y-0.5">
-                      <Label className="flex items-center gap-2">
+                      <Label className={`${FIELD_LABEL} flex items-center gap-2`}>
                         Two-Factor Authentication
-                        <Badge variant="secondary" className="text-xs">
+                        <Badge
+                          variant="secondary"
+                          className="rounded-sm font-mono text-[10px] uppercase tracking-[0.12em]"
+                        >
                           Coming Soon
                         </Badge>
                       </Label>
@@ -794,15 +854,19 @@ export function SettingsContent() {
                           enableTwoFactor: e.target.checked,
                         })
                       }
-                      className="h-4 w-4 rounded"
+                      className={CHECKBOX_CLS}
                       disabled
                     />
                   </div>
                 </div>
 
-                <Separator />
+                <Separator className="hairline-t border-0" />
 
-                <Button onClick={handleSaveSecurity} disabled={saving}>
+                <Button
+                  variant="technical"
+                  onClick={handleSaveSecurity}
+                  disabled={saving}
+                >
                   <Save className="mr-2 h-4 w-4" />
                   {saving ? "Saving..." : "Save Changes"}
                 </Button>
@@ -813,10 +877,12 @@ export function SettingsContent() {
 
           {/* Appearance Settings */}
           {activeTab === "appearance" && (
-            <Card>
+            <Card className="card-technical rounded-none">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Palette className="h-5 w-5" />
+                <CardTitle className={SECTION_TITLE}>
+                  <span className={ICON_BOX}>
+                    <Palette className="h-4 w-4" />
+                  </span>
                   Appearance Settings
                 </CardTitle>
                 <CardDescription>
@@ -826,7 +892,9 @@ export function SettingsContent() {
               <CardContent className="space-y-6">
                 <div className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="theme">Theme</Label>
+                    <Label htmlFor="theme" className={FIELD_LABEL}>
+                      Theme
+                    </Label>
                     <select
                       id="theme"
                       value={appearanceSettings.theme}
@@ -836,7 +904,7 @@ export function SettingsContent() {
                           theme: e.target.value,
                         })
                       }
-                      className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                      className="w-full rounded-sm border border-hairline bg-background px-3 py-2 text-sm focus-visible:ring-signal focus-visible:ring-[3px] outline-none"
                     >
                       <option value="light">Light</option>
                       <option value="dark">Dark</option>
@@ -845,7 +913,9 @@ export function SettingsContent() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="accentColor">Accent Color</Label>
+                    <Label htmlFor="accentColor" className={FIELD_LABEL}>
+                      Accent Color
+                    </Label>
                     <div className="flex gap-2">
                       <Input
                         id="accentColor"
@@ -857,7 +927,7 @@ export function SettingsContent() {
                             accentColor: e.target.value,
                           })
                         }
-                        className="w-20 h-10"
+                        className={`w-20 h-10 ${INPUT_CLS}`}
                       />
                       <Input
                         type="text"
@@ -868,16 +938,16 @@ export function SettingsContent() {
                             accentColor: e.target.value,
                           })
                         }
-                        className="flex-1"
+                        className={`flex-1 ${INPUT_CLS}`}
                       />
                     </div>
                   </div>
 
-                  <Separator />
+                  <Separator className="hairline-t border-0" />
 
                   <div className="flex items-center justify-between">
                     <div className="space-y-0.5">
-                      <Label>Compact Mode</Label>
+                      <Label className={FIELD_LABEL}>Compact Mode</Label>
                       <p className="text-sm text-muted-foreground">
                         Use a more condensed layout
                       </p>
@@ -891,14 +961,18 @@ export function SettingsContent() {
                           compactMode: e.target.checked,
                         })
                       }
-                      className="h-4 w-4 rounded"
+                      className={CHECKBOX_CLS}
                     />
                   </div>
                 </div>
 
-                <Separator />
+                <Separator className="hairline-t border-0" />
 
-                <Button onClick={handleSaveAppearance} disabled={saving}>
+                <Button
+                  variant="technical"
+                  onClick={handleSaveAppearance}
+                  disabled={saving}
+                >
                   <Save className="mr-2 h-4 w-4" />
                   {saving ? "Saving..." : "Save Changes"}
                 </Button>
@@ -909,10 +983,12 @@ export function SettingsContent() {
           {/* Data Management */}
           {activeTab === "data" && (
             <div className="space-y-6">
-              <Card>
+              <Card className="card-technical rounded-none">
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Database className="h-5 w-5" />
+                  <CardTitle className={SECTION_TITLE}>
+                    <span className={ICON_BOX}>
+                      <Database className="h-4 w-4" />
+                    </span>
                     Data Export
                   </CardTitle>
                   <CardDescription>
@@ -927,7 +1003,11 @@ export function SettingsContent() {
                         Download all inquiries, posts, and settings as JSON
                       </p>
                     </div>
-                    <Button variant="outline" onClick={handleExportData}>
+                    <Button
+                      variant="outline"
+                      onClick={handleExportData}
+                      className="rounded-sm border-hairline font-mono text-xs uppercase tracking-[0.12em]"
+                    >
                       <Download className="mr-2 h-4 w-4" />
                       Export
                     </Button>
@@ -935,10 +1015,12 @@ export function SettingsContent() {
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className="card-technical rounded-none">
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Database className="h-5 w-5" />
+                  <CardTitle className={SECTION_TITLE}>
+                    <span className={ICON_BOX}>
+                      <Database className="h-4 w-4" />
+                    </span>
                     Cache Management
                   </CardTitle>
                   <CardDescription>
@@ -953,7 +1035,11 @@ export function SettingsContent() {
                         Remove all cached data and temporary files
                       </p>
                     </div>
-                    <Button variant="outline" onClick={handleClearCache}>
+                    <Button
+                      variant="outline"
+                      onClick={handleClearCache}
+                      className="rounded-sm border-hairline font-mono text-xs uppercase tracking-[0.12em]"
+                    >
                       <Trash2 className="mr-2 h-4 w-4" />
                       Clear Cache
                     </Button>
@@ -961,10 +1047,14 @@ export function SettingsContent() {
                 </CardContent>
               </Card>
 
-              <Card className="border-destructive">
+              <Card className="card-technical rounded-none border-destructive">
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-destructive">
-                    <AlertTriangle className="h-5 w-5" />
+                  <CardTitle
+                    className={`${SECTION_TITLE} text-destructive`}
+                  >
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center border border-destructive/40 text-destructive">
+                      <AlertTriangle className="h-4 w-4" />
+                    </span>
                     Danger Zone
                   </CardTitle>
                   <CardDescription>
@@ -981,6 +1071,7 @@ export function SettingsContent() {
                     </div>
                     <Button
                       variant="destructive"
+                      className="rounded-sm font-mono text-xs uppercase tracking-[0.12em]"
                       onClick={() =>
                         toast.error("This action is not yet implemented")
                       }
@@ -990,7 +1081,7 @@ export function SettingsContent() {
                     </Button>
                   </div>
 
-                  <Separator />
+                  <Separator className="hairline-t border-0" />
 
                   <div className="flex items-center justify-between">
                     <div>
@@ -1001,6 +1092,7 @@ export function SettingsContent() {
                     </div>
                     <Button
                       variant="destructive"
+                      className="rounded-sm font-mono text-xs uppercase tracking-[0.12em]"
                       onClick={() =>
                         toast.error("This action is not yet implemented")
                       }

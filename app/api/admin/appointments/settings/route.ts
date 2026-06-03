@@ -1,18 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/lib/db";
-
-// Valid IANA timezones for US
-const VALID_TIMEZONES = [
-  "America/New_York",
-  "America/Chicago",
-  "America/Denver",
-  "America/Los_Angeles",
-  "America/Phoenix",
-  "America/Anchorage",
-  "Pacific/Honolulu",
-  "UTC",
-];
+import { DEFAULT_TIMEZONE, VALID_TIMEZONES } from "@/lib/timezone";
 
 const settingsSchema = z.object({
   startTime: z.string().regex(/^\d{2}:\d{2}$/, "Invalid time format").optional(),
@@ -37,7 +26,7 @@ export async function GET() {
           startTime: "08:00",
           endTime: "17:00",
           slotDurationMinutes: 30,
-          timezone: "America/New_York",
+          timezone: DEFAULT_TIMEZONE,
         },
       });
     }
@@ -95,7 +84,7 @@ export async function PUT(request: NextRequest) {
         startTime: startTime || "08:00",
         endTime: endTime || "17:00",
         slotDurationMinutes: slotDurationMinutes || 30,
-        timezone: timezone || "America/New_York",
+        timezone: timezone || DEFAULT_TIMEZONE,
       },
     });
 

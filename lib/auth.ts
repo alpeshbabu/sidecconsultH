@@ -2,10 +2,36 @@ import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { prisma } from "@/lib/db";
 import { authConfig } from "@/lib/auth.config";
+import { verifyAndConsumeMagicLink } from "@/lib/magic-link";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   ...authConfig,
   providers: [
+    // Passwordless login for portal CLIENT users (magic link).
+    Credentials({
+      id: "magic-link",
+      name: "Magic Link",
+      credentials: {
+        email: { label: "Email", type: "email" },
+        token: { label: "Token", type: "text" },
+      },
+      async authorize(credentials) {
+        const email = credentials?.email as string | undefined;
+        const token = credentials?.token as string | undefined;
+        if (!email || !token) return null;
+
+        const user = await verifyAndConsumeMagicLink(email, token);
+        if (!user) return null;
+
+        return {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          role: user.role,
+        };
+      },
+    }),
+    // Password login for admins/editors.
     Credentials({
       name: "credentials",
       credentials: {
@@ -25,7 +51,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           where: { email: email.toLowerCase() },
         });
 
-        if (!user) {
+        if (!user || !user.passwordHash) {
           throw new Error("Invalid email or password");
         }
 

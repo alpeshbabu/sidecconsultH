@@ -17,18 +17,9 @@ import {
   CheckCircle,
   Clock,
   MessageSquare,
-  X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import {
   Table,
   TableBody,
@@ -106,13 +97,32 @@ const serviceDisplayNames: Record<string, string> = {
   "general": "General Inquiry",
 };
 
-// Status config
+// Status config — mono chip color semantics preserved
 const statusConfig = {
-  NEW: { label: "New", color: "destructive" as const, icon: MessageSquare },
-  IN_PROGRESS: { label: "In Progress", color: "default" as const, icon: Clock },
-  RESPONDED: { label: "Responded", color: "secondary" as const, icon: CheckCircle },
-  ARCHIVED: { label: "Archived", color: "outline" as const, icon: Archive },
+  NEW: {
+    label: "New",
+    icon: MessageSquare,
+    chip: "bg-destructive/10 text-destructive border border-destructive/30",
+  },
+  IN_PROGRESS: {
+    label: "In Progress",
+    icon: Clock,
+    chip: "bg-primary/10 text-primary border border-primary/30",
+  },
+  RESPONDED: {
+    label: "Responded",
+    icon: CheckCircle,
+    chip: "bg-emerald-500/10 text-emerald-600 border border-emerald-500/30",
+  },
+  ARCHIVED: {
+    label: "Archived",
+    icon: Archive,
+    chip: "bg-muted-foreground/10 text-muted-foreground border border-muted-foreground/30",
+  },
 };
+
+const statusChipBase =
+  "inline-flex items-center rounded-sm px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.1em]";
 
 export function InquiriesContent() {
   // State
@@ -419,17 +429,29 @@ export function InquiriesContent() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Inquiries</h1>
+          <p className="font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">
+            Submissions
+          </p>
+          <h1 className="font-display text-2xl tracking-tight">Inquiries</h1>
           <p className="text-muted-foreground">
             Manage contact form submissions
           </p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" onClick={fetchInquiries} disabled={isLoading}>
+          <Button
+            variant="outline"
+            onClick={fetchInquiries}
+            disabled={isLoading}
+            className="rounded-sm border-hairline font-mono text-xs uppercase tracking-[0.12em]"
+          >
             <RefreshCw className={cn("mr-2 h-4 w-4", isLoading && "animate-spin")} />
             Refresh
           </Button>
-          <Button variant="outline" onClick={exportToCSV}>
+          <Button
+            variant="outline"
+            onClick={exportToCSV}
+            className="rounded-sm border-hairline font-mono text-xs uppercase tracking-[0.12em]"
+          >
             <Download className="mr-2 h-4 w-4" />
             Export CSV
           </Button>
@@ -437,8 +459,8 @@ export function InquiriesContent() {
       </div>
 
       {/* Filters */}
-      <Card>
-        <CardContent className="p-4">
+      <div className="card-technical rounded-none">
+        <div className="p-4">
           <div className="flex flex-col sm:flex-row gap-4">
             {/* Search */}
             <div className="relative flex-1">
@@ -447,7 +469,7 @@ export function InquiriesContent() {
                 placeholder="Search by name, email, or company..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10"
+                className="rounded-sm border-hairline pl-10 focus-visible:ring-signal hover:border-signal/60"
               />
             </div>
 
@@ -456,7 +478,10 @@ export function InquiriesContent() {
               setStatusFilter(value);
               setPagination((prev) => ({ ...prev, page: 1 }));
             }}>
-              <SelectTrigger className="w-full sm:w-[180px]">
+              <SelectTrigger className={cn(
+                "w-full sm:w-[180px] rounded-sm border-hairline focus-visible:ring-signal hover:border-signal/60",
+                statusFilter !== "all" && "border-signal bg-signal/10 text-foreground"
+              )}>
                 <Filter className="mr-2 h-4 w-4" />
                 <SelectValue placeholder="Filter by status" />
               </SelectTrigger>
@@ -475,7 +500,7 @@ export function InquiriesContent() {
               setSortBy(newSortBy);
               setSortOrder(newSortOrder as "asc" | "desc");
             }}>
-              <SelectTrigger className="w-full sm:w-[180px]">
+              <SelectTrigger className="w-full sm:w-[180px] rounded-sm border-hairline focus-visible:ring-signal hover:border-signal/60">
                 <SelectValue placeholder="Sort by" />
               </SelectTrigger>
               <SelectContent>
@@ -486,36 +511,36 @@ export function InquiriesContent() {
               </SelectContent>
             </Select>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
       {/* Table */}
-      <Card>
-        <CardContent className="p-0">
+      <div className="border border-hairline">
+        <div className="p-0">
           <Table>
             <TableHeader>
-              <TableRow>
-                <TableHead className="w-[40px]"></TableHead>
-                <TableHead>Name</TableHead>
-                <TableHead className="hidden md:table-cell">Email</TableHead>
-                <TableHead className="hidden lg:table-cell">Service</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="hidden sm:table-cell">Date</TableHead>
-                <TableHead className="w-[50px]"></TableHead>
+              <TableRow className="hairline-b hover:bg-transparent">
+                <TableHead className="w-[40px] font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground"></TableHead>
+                <TableHead className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Name</TableHead>
+                <TableHead className="hidden md:table-cell font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Email</TableHead>
+                <TableHead className="hidden lg:table-cell font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Service</TableHead>
+                <TableHead className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Status</TableHead>
+                <TableHead className="hidden sm:table-cell font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Date</TableHead>
+                <TableHead className="w-[50px] font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground"></TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {isLoading ? (
-                <TableRow>
+                <TableRow className="hover:bg-transparent">
                   <TableCell colSpan={7} className="h-32 text-center">
-                    <RefreshCw className="h-6 w-6 animate-spin mx-auto text-muted-foreground" />
+                    <RefreshCw className="h-6 w-6 animate-spin mx-auto text-signal" />
                   </TableCell>
                 </TableRow>
               ) : inquiries.length === 0 ? (
-                <TableRow>
+                <TableRow className="hover:bg-transparent">
                   <TableCell colSpan={7} className="h-32 text-center">
-                    <MessageSquare className="h-10 w-10 mx-auto mb-2 text-muted-foreground opacity-50" />
-                    <p className="text-muted-foreground">No inquiries found</p>
+                    <MessageSquare className="h-10 w-10 mx-auto mb-2 text-signal opacity-60" />
+                    <p className="font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">No inquiries found</p>
                   </TableCell>
                 </TableRow>
               ) : (
@@ -523,14 +548,14 @@ export function InquiriesContent() {
                   <TableRow
                     key={inquiry.id}
                     className={cn(
-                      "cursor-pointer hover:bg-muted/50",
-                      !inquiry.isRead && "bg-primary/5"
+                      "cursor-pointer hairline-b hover:bg-muted/40",
+                      !inquiry.isRead && "bg-signal/5"
                     )}
                     onClick={() => openInquiryDetail(inquiry)}
                   >
                     <TableCell>
                       {!inquiry.isRead && (
-                        <div className="h-2 w-2 rounded-full bg-primary" />
+                        <div className="h-2 w-2 rounded-full bg-signal" />
                       )}
                     </TableCell>
                     <TableCell>
@@ -545,14 +570,14 @@ export function InquiriesContent() {
                       {inquiry.email}
                     </TableCell>
                     <TableCell className="hidden lg:table-cell">
-                      <Badge variant="outline" className="text-xs">
+                      <span className="inline-flex items-center rounded-sm border border-hairline px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.1em] text-muted-foreground">
                         {serviceDisplayNames[inquiry.serviceInterest] || inquiry.serviceInterest}
-                      </Badge>
+                      </span>
                     </TableCell>
                     <TableCell>
-                      <Badge variant={statusConfig[inquiry.status].color}>
+                      <span className={cn(statusChipBase, statusConfig[inquiry.status].chip)}>
                         {statusConfig[inquiry.status].label}
-                      </Badge>
+                      </span>
                     </TableCell>
                     <TableCell className="hidden sm:table-cell text-sm text-muted-foreground">
                       {new Date(inquiry.createdAt).toLocaleDateString()}
@@ -560,11 +585,11 @@ export function InquiriesContent() {
                     <TableCell>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
-                          <Button variant="ghost" size="icon" className="h-8 w-8">
+                          <Button variant="ghost" size="icon" className="h-8 w-8 rounded-sm hover:text-signal">
                             <MoreHorizontal className="h-4 w-4" />
                           </Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
+                        <DropdownMenuContent align="end" className="rounded-sm border-hairline">
                           <DropdownMenuLabel>Actions</DropdownMenuLabel>
                           <DropdownMenuSeparator />
                           <DropdownMenuItem onClick={(e) => {
@@ -607,12 +632,12 @@ export function InquiriesContent() {
               )}
             </TableBody>
           </Table>
-        </CardContent>
+        </div>
 
         {/* Pagination */}
         {pagination.totalPages > 1 && (
-          <div className="flex items-center justify-between p-4 border-t">
-            <p className="text-sm text-muted-foreground">
+          <div className="flex items-center justify-between p-4 hairline-t">
+            <p className="font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">
               Showing {((pagination.page - 1) * pagination.limit) + 1} to{" "}
               {Math.min(pagination.page * pagination.limit, pagination.total)} of{" "}
               {pagination.total} inquiries
@@ -621,17 +646,19 @@ export function InquiriesContent() {
               <Button
                 variant="outline"
                 size="sm"
+                className="rounded-sm border-hairline hover:border-signal/60 hover:text-signal"
                 onClick={() => setPagination((prev) => ({ ...prev, page: prev.page - 1 }))}
                 disabled={pagination.page === 1}
               >
                 <ChevronLeft className="h-4 w-4" />
               </Button>
-              <span className="text-sm">
+              <span className="font-mono text-xs tracking-[0.12em] text-signal">
                 Page {pagination.page} of {pagination.totalPages}
               </span>
               <Button
                 variant="outline"
                 size="sm"
+                className="rounded-sm border-hairline hover:border-signal/60 hover:text-signal"
                 onClick={() => setPagination((prev) => ({ ...prev, page: prev.page + 1 }))}
                 disabled={!pagination.hasMore}
               >
@@ -640,24 +667,24 @@ export function InquiriesContent() {
             </div>
           </div>
         )}
-      </Card>
+      </div>
 
       {/* Detail Modal */}
       <Dialog open={isDetailOpen} onOpenChange={setIsDetailOpen}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto rounded-sm border-hairline">
           {selectedInquiry && (
             <>
               <DialogHeader>
                 <div className="flex items-start justify-between">
                   <div>
-                    <DialogTitle className="text-xl">{selectedInquiry.name}</DialogTitle>
-                    <DialogDescription>
+                    <DialogTitle className="font-display text-xl tracking-tight">{selectedInquiry.name}</DialogTitle>
+                    <DialogDescription className="font-mono text-xs uppercase tracking-[0.12em]">
                       Submitted on {formatDate(selectedInquiry.createdAt)}
                     </DialogDescription>
                   </div>
-                  <Badge variant={statusConfig[selectedInquiry.status].color}>
+                  <span className={cn(statusChipBase, statusConfig[selectedInquiry.status].chip)}>
                     {statusConfig[selectedInquiry.status].label}
-                  </Badge>
+                  </span>
                 </div>
               </DialogHeader>
 
@@ -665,26 +692,26 @@ export function InquiriesContent() {
                 {/* Contact Info */}
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div>
-                    <Label className="text-muted-foreground">Email</Label>
+                    <Label className="font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">Email</Label>
                     <p className="font-medium">{selectedInquiry.email}</p>
                   </div>
                   <div>
-                    <Label className="text-muted-foreground">Phone</Label>
+                    <Label className="font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">Phone</Label>
                     <p className="font-medium">{selectedInquiry.phone || "Not provided"}</p>
                   </div>
                   <div>
-                    <Label className="text-muted-foreground">Company</Label>
+                    <Label className="font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">Company</Label>
                     <p className="font-medium">{selectedInquiry.companyName || "Not provided"}</p>
                   </div>
                   <div>
-                    <Label className="text-muted-foreground">Service Interest</Label>
+                    <Label className="font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">Service Interest</Label>
                     <p className="font-medium">
                       {serviceDisplayNames[selectedInquiry.serviceInterest] || selectedInquiry.serviceInterest}
                     </p>
                   </div>
                   {selectedInquiry.projectTimeline && (
                     <div>
-                      <Label className="text-muted-foreground">Timeline</Label>
+                      <Label className="font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">Timeline</Label>
                       <p className="font-medium">{selectedInquiry.projectTimeline}</p>
                     </div>
                   )}
@@ -692,21 +719,25 @@ export function InquiriesContent() {
 
                 {/* Message */}
                 <div>
-                  <Label className="text-muted-foreground">Message</Label>
-                  <div className="mt-2 p-4 rounded-lg bg-muted">
+                  <Label className="font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">Message</Label>
+                  <div className="mt-2 p-4 rounded-sm border border-hairline bg-muted/20">
                     <p className="whitespace-pre-wrap">{selectedInquiry.message}</p>
                   </div>
                 </div>
 
                 {/* Status Change */}
                 <div>
-                  <Label className="text-muted-foreground">Update Status</Label>
+                  <Label className="font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">Update Status</Label>
                   <div className="flex flex-wrap gap-2 mt-2">
                     {(Object.keys(statusConfig) as Array<keyof typeof statusConfig>).map((status) => (
                       <Button
                         key={status}
-                        variant={selectedInquiry.status === status ? "default" : "outline"}
+                        variant={selectedInquiry.status === status ? "technical" : "outline"}
                         size="sm"
+                        className={cn(
+                          "rounded-sm",
+                          selectedInquiry.status !== status && "border-hairline font-mono text-xs uppercase tracking-[0.12em] hover:border-signal/60 hover:text-signal"
+                        )}
                         onClick={() => changeStatus(selectedInquiry.id, status)}
                       >
                         {statusConfig[status].label}
@@ -717,10 +748,10 @@ export function InquiriesContent() {
 
                 {/* Follow-up Details */}
                 <div>
-                  <Label className="text-muted-foreground">Follow-up Details</Label>
+                  <Label className="font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">Follow-up Details</Label>
                   <div className="mt-2 grid gap-4 sm:grid-cols-2">
                     <div className="sm:col-span-2">
-                      <Label className="text-xs text-muted-foreground">Address</Label>
+                      <Label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Address</Label>
                       <Textarea
                         value={followUpInfo.supplierAddress}
                         onChange={(e) =>
@@ -730,12 +761,12 @@ export function InquiriesContent() {
                           }))
                         }
                         placeholder="Street, city, state, postal code"
-                        className="mt-2"
+                        className="mt-2 rounded-sm border-hairline focus-visible:ring-signal"
                         rows={3}
                       />
                     </div>
                     <div>
-                      <Label className="text-xs text-muted-foreground">Estimated Budget</Label>
+                      <Label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Estimated Budget</Label>
                       <Input
                         value={followUpInfo.estimatedBudget}
                         onChange={(e) =>
@@ -745,11 +776,11 @@ export function InquiriesContent() {
                           }))
                         }
                         placeholder="e.g. $50k–$100k"
-                        className="mt-2"
+                        className="mt-2 rounded-sm border-hairline focus-visible:ring-signal"
                       />
                     </div>
                     <div>
-                      <Label className="text-xs text-muted-foreground">Other Sites</Label>
+                      <Label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Other Sites</Label>
                       <div className="mt-2 flex gap-2">
                         <Input
                           value={followUpInputs.otherSiteName}
@@ -760,6 +791,7 @@ export function InquiriesContent() {
                             }))
                           }
                           placeholder="Site name"
+                          className="rounded-sm border-hairline focus-visible:ring-signal"
                         />
                         <Input
                           value={followUpInputs.otherSiteAddress}
@@ -770,10 +802,12 @@ export function InquiriesContent() {
                             }))
                           }
                           placeholder="Site address"
+                          className="rounded-sm border-hairline focus-visible:ring-signal"
                         />
                         <Button
                           type="button"
                           variant="outline"
+                          className="rounded-sm border-hairline font-mono text-xs uppercase tracking-[0.12em] hover:border-signal/60 hover:text-signal"
                           onClick={addSiteWithAddress}
                           disabled={isSavingFollowUp}
                         >
@@ -789,12 +823,12 @@ export function InquiriesContent() {
                           }))
                         }
                         placeholder="Site names, one per line"
-                        className="mt-2"
+                        className="mt-2 rounded-sm border-hairline focus-visible:ring-signal"
                         rows={3}
                       />
                     </div>
                     <div className="sm:col-span-2">
-                      <Label className="text-xs text-muted-foreground">Other Site Addresses</Label>
+                      <Label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Other Site Addresses</Label>
                       <Textarea
                         value={followUpInfo.otherSiteLocations}
                         onChange={(e) =>
@@ -804,12 +838,12 @@ export function InquiriesContent() {
                           }))
                         }
                         placeholder="Site addresses, one per line"
-                        className="mt-2"
+                        className="mt-2 rounded-sm border-hairline focus-visible:ring-signal"
                         rows={3}
                       />
                     </div>
                     <div className="sm:col-span-2">
-                      <Label className="text-xs text-muted-foreground">Expected Documents</Label>
+                      <Label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Expected Documents</Label>
                       <div className="mt-2 flex gap-2">
                         <Input
                           value={followUpInputs.expectedDocuments}
@@ -820,10 +854,12 @@ export function InquiriesContent() {
                             }))
                           }
                           placeholder="Add one document"
+                          className="rounded-sm border-hairline focus-visible:ring-signal"
                         />
                         <Button
                           type="button"
                           variant="outline"
+                          className="rounded-sm border-hairline font-mono text-xs uppercase tracking-[0.12em] hover:border-signal/60 hover:text-signal"
                           onClick={() =>
                             addFollowUpListItem(
                               "expectedDocuments",
@@ -844,12 +880,12 @@ export function InquiriesContent() {
                           }))
                         }
                         placeholder="One document per line"
-                        className="mt-2"
+                        className="mt-2 rounded-sm border-hairline focus-visible:ring-signal"
                         rows={3}
                       />
                     </div>
                     <div className="sm:col-span-2">
-                      <Label className="text-xs text-muted-foreground">Regulatory Standards</Label>
+                      <Label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Regulatory Standards</Label>
                       <div className="mt-2 flex gap-2">
                         <Input
                           value={followUpInputs.regulatoryStandards}
@@ -860,10 +896,12 @@ export function InquiriesContent() {
                             }))
                           }
                           placeholder="Add one standard"
+                          className="rounded-sm border-hairline focus-visible:ring-signal"
                         />
                         <Button
                           type="button"
                           variant="outline"
+                          className="rounded-sm border-hairline font-mono text-xs uppercase tracking-[0.12em] hover:border-signal/60 hover:text-signal"
                           onClick={() =>
                             addFollowUpListItem(
                               "regulatoryStandards",
@@ -884,12 +922,13 @@ export function InquiriesContent() {
                           }))
                         }
                         placeholder="One standard per line (e.g. FDA, ISO 13485)"
-                        className="mt-2"
+                        className="mt-2 rounded-sm border-hairline focus-visible:ring-signal"
                         rows={3}
                       />
                     </div>
                   </div>
                   <Button
+                    variant="technical"
                     onClick={saveFollowUpInfo}
                     disabled={isSavingFollowUp}
                     className="mt-2"
@@ -901,15 +940,16 @@ export function InquiriesContent() {
 
                 {/* Internal Notes */}
                 <div>
-                  <Label className="text-muted-foreground">Internal Notes</Label>
+                  <Label className="font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">Internal Notes</Label>
                   <Textarea
                     value={internalNotes}
                     onChange={(e) => setInternalNotes(e.target.value)}
                     placeholder="Add private notes about this inquiry..."
-                    className="mt-2"
+                    className="mt-2 rounded-sm border-hairline focus-visible:ring-signal"
                     rows={4}
                   />
                   <Button
+                    variant="technical"
                     onClick={saveInternalNotes}
                     disabled={isSaving}
                     className="mt-2"
@@ -920,8 +960,9 @@ export function InquiriesContent() {
                 </div>
 
                 {/* Actions */}
-                <div className="flex flex-wrap gap-2 pt-4 border-t">
+                <div className="flex flex-wrap gap-2 pt-4 hairline-t">
                   <Button
+                    variant="technical"
                     onClick={() => {
                       window.location.href = `mailto:${selectedInquiry.email}?subject=Re: Your Inquiry to SIDEC Consulting`;
                     }}
@@ -932,6 +973,7 @@ export function InquiriesContent() {
                   {selectedInquiry.phone && (
                     <Button
                       variant="outline"
+                      className="rounded-sm border-hairline font-mono text-xs uppercase tracking-[0.12em] hover:border-signal/60 hover:text-signal"
                       onClick={() => {
                         window.location.href = `tel:${selectedInquiry.phone}`;
                       }}
@@ -942,6 +984,7 @@ export function InquiriesContent() {
                   )}
                   <Button
                     variant="outline"
+                    className="rounded-sm border-hairline font-mono text-xs uppercase tracking-[0.12em] hover:border-signal/60 hover:text-signal"
                     onClick={() => changeStatus(selectedInquiry.id, "ARCHIVED")}
                   >
                     <Archive className="mr-2 h-4 w-4" />
@@ -949,6 +992,7 @@ export function InquiriesContent() {
                   </Button>
                   <Button
                     variant="destructive"
+                    className="rounded-sm font-mono text-xs uppercase tracking-[0.12em]"
                     onClick={() => deleteInquiry(selectedInquiry.id)}
                   >
                     <Trash2 className="mr-2 h-4 w-4" />

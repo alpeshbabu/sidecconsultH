@@ -7,10 +7,14 @@ import {
   adminNotificationEmail,
 } from "@/lib/email-templates";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
+import { DEFAULT_TIMEZONE, zonedClockMinutes } from "@/lib/timezone";
 
 const bookingSchema = z.object({
-  date: z.string().min(10), // YYYY-MM-DD
-  time: z.string().min(5), // HH:mm
+  // Canonical UTC instants from the slots API — the source of truth for
+  // validation, so it never depends on the visitor's browser timezone.
+  startAt: z.string().datetime(),
+  endAt: z.string().datetime().optional(),
+  date: z.string().min(10).optional(), // YYYY-MM-DD (display only)
   name: z.string().min(2).max(100),
   email: z.string().email(),
   phone: z.string().max(20).optional(),
@@ -51,8 +55,7 @@ export async function POST(request: NextRequest) {
     }
 
     const {
-      date,
-      time,
+      startAt,
       name,
       email,
       phone,
@@ -74,21 +77,39 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Parse the booking time
-    const [year, month, day] = date.split("-").map(Number);
-    const [hour, minute] = time.split(":").map(Number);
-    const bookedAt = new Date(year, month - 1, day, hour, minute, 0, 0);
+    const businessTimeZone = settings.timezone || DEFAULT_TIMEZONE;
+
+    // bookedAt is the canonical UTC instant from the slots API.
+    const bookedAt = new Date(startAt);
+    if (Number.isNaN(bookedAt.getTime())) {
+      return NextResponse.json(
+        { success: false, error: "Invalid appointment time" },
+        { status: 400 }
+      );
+    }
+    if (bookedAt.getTime() <= Date.now()) {
+      return NextResponse.json(
+        { success: false, error: "Selected time is in the past" },
+        { status: 400 }
+      );
+    }
     const bookedEndAt = new Date(
       bookedAt.getTime() + settings.slotDurationMinutes * 60000
     );
 
-    // Validate the time is within availability hours
+    // Validate the time is within availability hours, measured on the
+    // *business* timezone clock — independent of the visitor's or server's TZ.
     const [startHour, startMin] = settings.startTime.split(":").map(Number);
     const [endHour, endMin] = settings.endTime.split(":").map(Number);
-    const dayStart = new Date(year, month - 1, day, startHour, startMin, 0, 0);
-    const dayEnd = new Date(year, month - 1, day, endHour, endMin, 0, 0);
+    const startMinutes = startHour * 60 + startMin;
+    const endMinutes = endHour * 60 + endMin;
+    const startBusinessMinutes = zonedClockMinutes(bookedAt, businessTimeZone);
+    const endBusinessMinutes = zonedClockMinutes(bookedEndAt, businessTimeZone);
 
-    if (bookedAt < dayStart || bookedEndAt > dayEnd) {
+    if (
+      startBusinessMinutes < startMinutes ||
+      endBusinessMinutes > endMinutes
+    ) {
       return NextResponse.json(
         { success: false, error: "Selected time is outside availability hours" },
         { status: 400 }

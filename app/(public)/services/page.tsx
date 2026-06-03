@@ -27,11 +27,7 @@ import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { MainLayout } from "@/components/layout";
 import { CTASection } from "@/components/sections";
 
@@ -102,8 +98,6 @@ const fallbackServiceCategories = [
     name: "Manufacturing & Operations",
     description: "Build and optimize world-class manufacturing capabilities",
     icon: "Factory",
-    color: "from-blue-500/20 to-blue-600/10",
-    borderColor: "border-blue-500/30",
     services: [
       {
         id: "manufacturing-engineering",
@@ -158,8 +152,6 @@ const fallbackServiceCategories = [
     name: "Quality & Compliance",
     description: "Navigate regulatory requirements with confidence",
     icon: Scale,
-    color: "from-emerald-500/20 to-emerald-600/10",
-    borderColor: "border-emerald-500/30",
     services: [
       {
         id: "quality-regulatory",
@@ -192,8 +184,6 @@ const fallbackServiceCategories = [
     name: "Process & Technical Excellence",
     description: "Master the science of manufacturing processes",
     icon: Layers,
-    color: "from-violet-500/20 to-violet-600/10",
-    borderColor: "border-violet-500/30",
     services: [
       {
         id: "injection-molding",
@@ -250,8 +240,6 @@ const fallbackServiceCategories = [
     name: "Strategy & Supply Chain",
     description: "Build resilient operations and strategic advantage",
     icon: Rocket,
-    color: "from-amber-500/20 to-amber-600/10",
-    borderColor: "border-amber-500/30",
     services: [
       {
         id: "supplier-development",
@@ -386,23 +374,19 @@ export default async function ServicesPage() {
     <MainLayout>
       {/* Hero Section */}
       <section className="relative overflow-hidden">
-        <div className="absolute inset-0 -z-10">
-          <div className="absolute inset-0 gradient-hero" />
-          <div className="absolute left-1/2 top-0 -translate-x-1/2 w-[1000px] h-[1000px] rounded-full bg-primary/5 blur-3xl" />
+        <div className="absolute inset-0 -z-10" aria-hidden>
+          <div className="grid-blueprint absolute inset-0 opacity-70" />
+          <div className="absolute inset-x-0 top-0 h-px bg-signal/40" />
         </div>
 
         <div className="container-wide py-20 md:py-28">
           <div className="mx-auto max-w-3xl text-center">
-            <Badge
-              variant="outline"
-              className="mb-6 px-4 py-1.5 border-primary/30 bg-primary/5"
-            >
-              <Sparkles className="h-3.5 w-3.5 mr-2 text-primary" />
+            <p className="eyebrow mb-6 justify-center">
               Consulting Services
-            </Badge>
-            <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
-              Expert Solutions for{" "}
-              <span className="text-gradient">Medical Device Manufacturing</span>
+            </p>
+            <h1 className="font-display text-4xl font-bold tracking-tight text-balance sm:text-5xl lg:text-6xl">
+              Expert solutions for{" "}
+              <span className="text-signal">medical device manufacturing</span>
             </h1>
             <p className="mt-6 text-lg text-muted-foreground md:text-xl">
               From injection molding process development to quality system
@@ -410,38 +394,41 @@ export default async function ServicesPage() {
               your organization achieve manufacturing excellence.
             </p>
             <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
-              <Link href="/schedule">
-                <Button size="lg" className="btn-glow">
+              <Button asChild size="lg" variant="technical">
+                <Link href="/schedule">
                   Schedule Consultation
                   <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </Link>
-              <Link href="#categories">
-                <Button size="lg" variant="outline">
-                  Explore Services
-                </Button>
-              </Link>
+                </Link>
+              </Button>
+              <Button
+                asChild
+                size="lg"
+                variant="outline"
+                className="rounded-sm border-hairline font-mono text-xs uppercase tracking-[0.12em]"
+              >
+                <Link href="#categories">Explore Services</Link>
+              </Button>
             </div>
           </div>
         </div>
       </section>
 
       {/* Category Quick Navigation */}
-      <section className="border-y bg-muted/30 py-8" id="categories">
+      <section className="hairline-t hairline-b bg-muted/20 py-8" id="categories">
         <div className="container-wide">
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {serviceCategories.map((category: any) => {
               const IconComponent = category.icon;
               return (
-                <Link key={category.id} href={`#${category.id}`}>
-                  <Card className={`h-full transition-all duration-300 hover:shadow-lg hover:-translate-y-1 border-2 ${category.borderColor} bg-gradient-to-br ${category.color}`}>
+                <Link key={category.id} href={`#${category.id}`} className="group">
+                  <Card className="card-technical h-full rounded-none">
                     <CardContent className="p-4 flex items-center gap-4">
-                      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-background/80 text-primary">
+                      <div className="flex h-12 w-12 shrink-0 items-center justify-center border border-hairline text-primary transition-colors group-hover:border-signal/60 group-hover:text-signal">
                         <IconComponent className="h-6 w-6" />
                       </div>
                       <div>
-                        <h3 className="font-semibold">{category.name}</h3>
-                        <p className="text-xs text-muted-foreground">
+                        <h3 className="font-display font-semibold transition-colors group-hover:text-signal">{category.name}</h3>
+                        <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
                           {category.services.length} service{category.services.length > 1 ? "s" : ""}
                         </p>
                       </div>
@@ -463,21 +450,21 @@ export default async function ServicesPage() {
             <section
               key={category.id}
               id={category.id}
-              className={`section-padding ${categoryIndex % 2 === 1 ? "bg-muted/30" : ""}`}
+              className={`section-padding hairline-t ${categoryIndex % 2 === 1 ? "bg-muted/20" : ""}`}
             >
               <div className="container-wide">
                 {/* Category Header */}
                 <div className="mb-12 flex flex-col md:flex-row md:items-end md:justify-between gap-4">
                   <div>
                     <div className="flex items-center gap-3 mb-3">
-                      <div className={`flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br ${category.color} border ${category.borderColor}`}>
-                        <CategoryIcon className="h-5 w-5 text-primary" />
+                      <div className="flex h-10 w-10 items-center justify-center border border-hairline text-primary">
+                        <CategoryIcon className="h-5 w-5" />
                       </div>
-                      <Badge variant="outline" className={category.borderColor}>
+                      <span className="rounded-sm border border-hairline px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.1em] text-muted-foreground">
                         {category.services.length} Service{category.services.length > 1 ? "s" : ""}
-                      </Badge>
+                      </span>
                     </div>
-                    <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
+                    <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">
                       {category.name}
                     </h2>
                     <p className="mt-2 text-muted-foreground max-w-2xl">
@@ -496,18 +483,18 @@ export default async function ServicesPage() {
                       <Card
                         key={service.id}
                         id={service.id}
-                        className="overflow-hidden"
+                        className="card-technical gap-0 overflow-hidden rounded-none py-0"
                       >
                         <div className="grid gap-0 lg:grid-cols-2">
                           {/* Content Side */}
                           <div className={`p-6 md:p-8 ${isEven ? "" : "lg:order-2"}`}>
-                            <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                            <div className="mb-4 flex h-14 w-14 items-center justify-center border border-hairline text-primary">
                               <ServiceIcon className="h-7 w-7" />
                             </div>
-                            <h3 className="text-2xl font-bold tracking-tight">
+                            <h3 className="font-display text-2xl font-bold tracking-tight">
                               {service.title}
                             </h3>
-                            <p className="mt-1 text-lg font-medium text-primary">
+                            <p className="mt-1 text-lg font-medium text-signal">
                               {service.tagline}
                             </p>
                             <p className="mt-4 text-muted-foreground leading-relaxed">
@@ -516,48 +503,47 @@ export default async function ServicesPage() {
 
                             {/* Outcomes */}
                             <div className="mt-6">
-                              <h4 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+                              <h4 className="font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
                                 Expected Outcomes
                               </h4>
                               <div className="mt-3 flex flex-wrap gap-2">
                                 {service.outcomes.map((outcome: string, outcomeIndex: number) => (
-                                  <Badge
+                                  <span
                                     key={outcomeIndex}
-                                    variant="outline"
-                                    className="text-sm"
+                                    className="rounded-sm border border-hairline px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.1em] text-muted-foreground"
                                   >
                                     {outcome}
-                                  </Badge>
+                                  </span>
                                 ))}
                               </div>
                             </div>
 
                             <div className="mt-6">
-                              <Link href="/schedule">
-                                <Button className="btn-glow">
+                              <Button asChild variant="technical">
+                                <Link href="/schedule">
                                   Discuss Your Needs
                                   <ArrowRight className="ml-2 h-4 w-4" />
-                                </Button>
-                              </Link>
+                                </Link>
+                              </Button>
                             </div>
                           </div>
 
                           {/* Key Offerings Side */}
-                          <div className={`bg-muted/30 p-6 md:p-8 ${isEven ? "" : "lg:order-1"}`}>
+                          <div className={`bg-muted/20 p-6 md:p-8 ${isEven ? "lg:hairline-l" : "lg:order-1 lg:hairline-r"}`}>
                             <div className="flex items-center gap-2 mb-4">
-                              <ClipboardCheck className="h-5 w-5 text-primary" />
-                              <h4 className="font-semibold">Key Offerings</h4>
+                              <ClipboardCheck className="h-5 w-5 text-signal" />
+                              <h4 className="font-display font-semibold">Key Offerings</h4>
                             </div>
                             <p className="text-sm text-muted-foreground mb-4">
                               What we deliver in this service area
                             </p>
-                            <ul className="space-y-3">
+                            <ul className="space-y-px border-y border-hairline">
                               {service.keyOfferings.map((offering: string, offeringIndex: number) => (
                                 <li
                                   key={offeringIndex}
-                                  className="flex items-start gap-3"
+                                  className="flex items-start gap-3 py-2.5"
                                 >
-                                  <CheckCircle className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                                  <CheckCircle className="mt-0.5 h-4 w-4 shrink-0 text-signal" />
                                   <span className="text-sm">
                                     {offering}
                                   </span>
@@ -577,27 +563,31 @@ export default async function ServicesPage() {
       </div>
 
       {/* Why Choose Us Section */}
-      <section className="section-padding bg-primary text-primary-foreground">
-        <div className="container-wide">
+      <section className="section-padding surface-ink relative overflow-hidden">
+        <div className="grid-dots absolute inset-0 opacity-50" aria-hidden />
+        <div className="container-wide relative">
           <div className="mx-auto max-w-2xl text-center">
-            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
+            <p className="eyebrow-plain mb-5 text-signal flex justify-center">
+              <span aria-hidden>// </span>Why SIDEC
+            </p>
+            <h2 className="font-display text-3xl font-bold tracking-tight text-ink-foreground sm:text-4xl">
               Why Work With Us?
             </h2>
-            <p className="mt-4 text-lg opacity-90">
+            <p className="mt-4 text-lg text-ink-muted">
               What sets SIDEC Consulting apart from other consultants
             </p>
           </div>
 
-          <div className="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-16 grid gap-px bg-white/10 border border-white/10 sm:grid-cols-2 lg:grid-cols-4">
             {whyChooseUs.map((item: any, index: number) => {
               const IconComponent = item.icon;
               return (
-                <div key={index} className="text-center">
-                  <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-white/10">
-                    <IconComponent className="h-8 w-8" />
+                <div key={index} className="group surface-ink p-7 text-center">
+                  <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center border border-white/15 text-signal transition-colors group-hover:border-signal/60">
+                    <IconComponent className="h-7 w-7" />
                   </div>
-                  <h3 className="text-lg font-semibold">{item.title}</h3>
-                  <p className="mt-2 text-sm opacity-80">{item.description}</p>
+                  <h3 className="font-display text-lg font-semibold text-ink-foreground">{item.title}</h3>
+                  <p className="mt-2 text-sm text-ink-muted">{item.description}</p>
                 </div>
               );
             })}
@@ -606,13 +596,11 @@ export default async function ServicesPage() {
       </section>
 
       {/* Service Delivery Approach */}
-      <section className="section-padding">
+      <section className="section-padding hairline-t">
         <div className="container-wide">
           <div className="mx-auto max-w-2xl text-center">
-            <Badge variant="outline" className="mb-4">
-              Our Approach
-            </Badge>
-            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
+            <p className="eyebrow mb-5 justify-center">Our Approach</p>
+            <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">
               A Proven Process for Success
             </h2>
             <p className="mt-4 text-muted-foreground">
@@ -622,10 +610,7 @@ export default async function ServicesPage() {
           </div>
 
           <div className="mt-16 relative">
-            {/* Connection Line */}
-            <div className="absolute top-12 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-primary/30 to-transparent hidden lg:block" />
-
-            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
+            <div className="grid gap-px hairline border border-hairline bg-hairline md:grid-cols-2 lg:grid-cols-4">
               {[
                 {
                   phase: "01",
@@ -676,35 +661,33 @@ export default async function ServicesPage() {
                   ],
                 },
               ].map((step: any, index: number) => (
-                <Card key={index} className="relative card-hover">
-                  <CardHeader className="text-center pb-2">
-                    <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-primary text-primary-foreground text-xl font-bold">
+                <div key={index} className="group relative bg-background p-7">
+                  <div className="flex items-center gap-3">
+                    <span className="h-3 w-px bg-signal" />
+                    <span className="font-display text-4xl font-bold text-primary/15 transition-colors group-hover:text-signal/70">
                       {step.phase}
-                    </div>
-                    <CardTitle className="text-lg">{step.title}</CardTitle>
-                  </CardHeader>
-                  <CardContent className="text-center">
-                    <p className="text-sm text-muted-foreground mb-4">
-                      {step.description}
+                    </span>
+                  </div>
+                  <h3 className="mt-6 font-display text-lg font-semibold">{step.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                    {step.description}
+                  </p>
+                  <div className="mt-5 pt-4 border-t border-hairline">
+                    <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground mb-3">
+                      Key Deliverables
                     </p>
-                    <div className="pt-4 border-t">
-                      <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">
-                        Key Deliverables
-                      </p>
-                      <div className="flex flex-wrap justify-center gap-1">
-                        {step.deliverables.map((item: string, i: number) => (
-                          <Badge
-                            key={i}
-                            variant="secondary"
-                            className="text-xs"
-                          >
-                            {item}
-                          </Badge>
-                        ))}
-                      </div>
+                    <div className="flex flex-wrap gap-2">
+                      {step.deliverables.map((item: string, i: number) => (
+                        <span
+                          key={i}
+                          className="rounded-sm border border-hairline px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.1em] text-muted-foreground"
+                        >
+                          {item}
+                        </span>
+                      ))}
                     </div>
-                  </CardContent>
-                </Card>
+                  </div>
+                </div>
               ))}
             </div>
           </div>
@@ -712,13 +695,11 @@ export default async function ServicesPage() {
       </section>
 
       {/* Engagement Models */}
-      <section className="section-padding bg-muted/30">
+      <section className="section-padding hairline-t bg-muted/20">
         <div className="container-wide">
           <div className="mx-auto max-w-2xl text-center">
-            <Badge variant="outline" className="mb-4">
-              How We Work
-            </Badge>
-            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
+            <p className="eyebrow mb-5 justify-center">How We Work</p>
+            <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">
               Flexible Engagement Models
             </h2>
             <p className="mt-4 text-muted-foreground">
@@ -727,39 +708,41 @@ export default async function ServicesPage() {
             </p>
           </div>
 
-          <div className="mt-16 grid gap-8 md:grid-cols-3">
+          <div className="mt-16 grid gap-px hairline border border-hairline bg-hairline md:grid-cols-3">
             {engagementModels.map((model: any, index: number) => (
-              <Card key={index} className="text-center card-hover">
-                <CardHeader>
-                  <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary text-xl font-bold">
-                    {index + 1}
-                  </div>
-                  <CardTitle>{model.title}</CardTitle>
-                  <CardDescription>{model.description}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-2">
-                    {model.examples.map((example: string, exIndex: number) => (
-                      <Badge key={exIndex} variant="outline" className="mr-1">
-                        {example}
-                      </Badge>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
+              <div key={index} className="group bg-background p-7 text-center">
+                <div className="flex items-center justify-center gap-3">
+                  <span className="h-3 w-px bg-signal" />
+                  <span className="font-display text-4xl font-bold text-primary/15 transition-colors group-hover:text-signal/70">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                </div>
+                <h3 className="mt-6 font-display text-xl font-semibold">{model.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                  {model.description}
+                </p>
+                <div className="mt-5 flex flex-wrap justify-center gap-2">
+                  {model.examples.map((example: string, exIndex: number) => (
+                    <span
+                      key={exIndex}
+                      className="rounded-sm border border-hairline px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.1em] text-muted-foreground"
+                    >
+                      {example}
+                    </span>
+                  ))}
+                </div>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
       {/* Industries & Applications */}
-      <section className="section-padding">
+      <section className="section-padding hairline-t">
         <div className="container-wide">
           <div className="mx-auto max-w-2xl text-center">
-            <Badge variant="outline" className="mb-4">
-              Industry Applications
-            </Badge>
-            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
+            <p className="eyebrow mb-5 justify-center">Industry Applications</p>
+            <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">
               Medical Device Manufacturing Focus
             </h2>
             <p className="mt-4 text-muted-foreground">
@@ -770,7 +753,7 @@ export default async function ServicesPage() {
 
           {/* Device Classifications */}
           <div className="mt-12">
-            <h3 className="text-lg font-semibold text-center mb-6">
+            <h3 className="font-display text-lg font-semibold text-center mb-6">
               Device Classifications
             </h3>
             <div className="grid gap-6 md:grid-cols-3">
@@ -785,7 +768,6 @@ export default async function ServicesPage() {
                     "Examination gloves",
                     "Hand-held surgical instruments",
                   ],
-                  color: "bg-green-500/10 text-green-600 border-green-500/30",
                 },
                 {
                   classification: "Class II",
@@ -797,7 +779,6 @@ export default async function ServicesPage() {
                     "Pregnancy test kits",
                     "Infusion pumps",
                   ],
-                  color: "bg-yellow-500/10 text-yellow-600 border-yellow-500/30",
                 },
                 {
                   classification: "Class III",
@@ -809,32 +790,31 @@ export default async function ServicesPage() {
                     "Implantable defibrillators",
                     "Drug-eluting stents",
                   ],
-                  color: "bg-red-500/10 text-red-600 border-red-500/30",
                 },
               ].map((item: any, index: number) => (
-                <Card key={index} className="card-hover overflow-hidden">
-                  <div className={`p-4 ${item.color} border-b`}>
+                <Card key={index} className="card-technical gap-0 overflow-hidden rounded-none py-0">
+                  <div className="border-b border-hairline p-4">
                     <div className="flex items-center justify-between">
-                      <span className="text-2xl font-bold">
+                      <span className="font-display text-2xl font-bold">
                         {item.classification}
                       </span>
-                      <Badge variant="outline" className={item.color}>
+                      <span className="rounded-sm border border-hairline px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.1em] text-signal">
                         {item.riskLevel}
-                      </Badge>
+                      </span>
                     </div>
                   </div>
-                  <CardContent className="pt-4">
+                  <CardContent className="pt-4 pb-6">
                     <p className="text-sm text-muted-foreground mb-4">
                       {item.description}
                     </p>
                     <div>
-                      <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">
+                      <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground mb-2">
                         Examples
                       </p>
                       <ul className="text-sm space-y-1">
                         {item.examples.map((example: string, i: number) => (
                           <li key={i} className="flex items-center gap-2">
-                            <CheckCircle className="h-3 w-3 text-primary" />
+                            <CheckCircle className="h-3 w-3 text-signal" />
                             {example}
                           </li>
                         ))}
@@ -848,7 +828,7 @@ export default async function ServicesPage() {
 
           {/* Product Categories */}
           <div className="mt-16">
-            <h3 className="text-lg font-semibold text-center mb-6">
+            <h3 className="font-display text-lg font-semibold text-center mb-6">
               Product Categories We Support
             </h3>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
@@ -896,12 +876,12 @@ export default async function ServicesPage() {
               ].map((category: any, index: number) => {
                 const IconComponent = category.icon;
                 return (
-                  <Card key={index} className="card-hover">
+                  <Card key={index} className="card-technical group h-full rounded-none">
                     <CardContent className="p-6">
-                      <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                      <div className="mb-4 flex h-12 w-12 items-center justify-center border border-hairline text-primary transition-colors group-hover:border-signal/60 group-hover:text-signal">
                         <IconComponent className="h-6 w-6" />
                       </div>
-                      <h4 className="font-semibold">{category.name}</h4>
+                      <h4 className="font-display font-semibold">{category.name}</h4>
                       <p className="mt-2 text-sm text-muted-foreground">
                         {category.description}
                       </p>

@@ -12,7 +12,6 @@ import {
   Linkedin,
   Mail,
   Shield,
-  Sparkles,
   Target,
   Users,
 } from "lucide-react";
@@ -24,7 +23,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { MainLayout } from "@/components/layout";
 import { AnimatedStats, CTASection } from "@/components/sections";
 import Image from "next/image";
@@ -256,24 +254,19 @@ export default function AboutPage() {
 
       {/* Hero Section */}
       <section className="relative overflow-hidden">
-        <div className="absolute inset-0 -z-10">
-          <div className="absolute inset-0 gradient-hero" />
-          <div className="absolute left-1/2 top-0 -translate-x-1/2 w-[1000px] h-[1000px] rounded-full bg-primary/5 blur-3xl" />
+        <div className="absolute inset-0 -z-10" aria-hidden>
+          <div className="grid-blueprint absolute inset-0 opacity-70" />
+          <div className="absolute inset-x-0 top-0 h-px bg-signal/40" />
         </div>
 
         <div className="container-wide py-20 md:py-28">
           <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
             {/* Content */}
             <div>
-              <Badge
-                variant="outline"
-                className="mb-6 px-4 py-1.5 border-primary/30 bg-primary/5"
-              >
-                <Sparkles className="h-3.5 w-3.5 mr-2 text-primary" />
-                About Us
-              </Badge>
-              <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
-                Your Manufacturing Excellence Partner
+              <p className="eyebrow mb-5">About Us</p>
+              <h1 className="font-display text-4xl font-bold tracking-tight text-balance sm:text-5xl lg:text-6xl">
+                Your Manufacturing{" "}
+                <span className="text-signal">Excellence Partner</span>
               </h1>
               <p className="mt-2 text-xl text-muted-foreground">
                 Medical Device Manufacturing Experts | 25+ Years Experience
@@ -294,13 +287,18 @@ export default function AboutPage() {
                 that work.
               </p>
               <div className="mt-8 flex flex-wrap gap-4">
-                <Link href="/schedule">
-                  <Button size="lg" className="btn-glow">
+                <Button asChild size="lg" variant="technical">
+                  <Link href="/schedule">
                     Schedule Consultation
                     <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
-                </Link>
-                <Button variant="outline" size="lg" asChild>
+                  </Link>
+                </Button>
+                <Button
+                  variant="outline"
+                  size="lg"
+                  asChild
+                  className="rounded-sm border-hairline font-mono text-xs uppercase tracking-[0.12em]"
+                >
                   <a
                     href="https://linkedin.com/in/"
                     target="_blank"
@@ -313,16 +311,23 @@ export default function AboutPage() {
               </div>
             </div>
 
-            {/* Profile Image Placeholder */}
+            {/* Profile Image — spec frame */}
             <div className="relative">
-              <div className="aspect-[4/5] overflow-hidden rounded-2xl bg-gradient-to-br from-primary/10 via-primary/5 to-accent/10 shadow-2xl">
-                <div className="flex h-full flex-col items-center justify-center p-8">
-                  <Image src="/AboutPageAssets/aboutus2.png" alt="SIDEC" fill className="object-cover rounded-3xl" priority />
+              <div className="corner-marks relative aspect-[4/5] border border-hairline p-2">
+                <span className="absolute -top-3 left-6 bg-background px-2 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+                  Fig. — Founder
+                </span>
+                <div className="relative h-full w-full overflow-hidden">
+                  <Image
+                    src="/AboutPageAssets/aboutus2.png"
+                    alt="SIDEC"
+                    fill
+                    className="object-cover"
+                    priority
+                  />
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-ink/15 to-transparent" />
                 </div>
               </div>
-              {/* Decorative elements */}
-              <div className="absolute -bottom-4 -left-4 h-24 w-24 rounded-xl bg-primary/10 blur-2xl" />
-              <div className="absolute -right-4 -top-4 h-32 w-32 rounded-xl bg-accent/10 blur-2xl" />
             </div>
           </div>
         </div>
@@ -335,10 +340,8 @@ export default function AboutPage() {
       <section className="section-padding">
         <div className="container-wide">
           <div className="mx-auto max-w-2xl text-center">
-            <Badge variant="outline" className="mb-4">
-              Areas of Expertise
-            </Badge>
-            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
+            <p className="eyebrow mb-5 justify-center">Areas of Expertise</p>
+            <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">
               Deep Technical Knowledge
             </h2>
             <p className="mt-4 text-muted-foreground">
@@ -353,19 +356,18 @@ export default function AboutPage() {
             {expertiseAreas.map((area, index) => {
               const IconComponent = area.icon;
               return (
-                <Card key={index} className="relative overflow-hidden card-hover">
-                  <div className="absolute right-0 top-0 h-32 w-32 -translate-y-8 translate-x-8 rounded-full bg-primary/5" />
+                <Card key={index} className="card-technical group rounded-none">
                   <CardHeader>
-                    <div className="mb-2 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                    <div className="mb-2 flex h-12 w-12 items-center justify-center border border-hairline text-primary transition-colors group-hover:border-signal/60 group-hover:text-signal">
                       <IconComponent className="h-6 w-6" />
                     </div>
-                    <CardTitle className="text-xl">{area.title}</CardTitle>
+                    <CardTitle className="font-display text-xl">{area.title}</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <ul className="space-y-2">
                       {area.items.map((item, itemIndex) => (
                         <li key={itemIndex} className="flex items-start gap-2">
-                          <CheckCircle className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                          <CheckCircle className="mt-0.5 h-4 w-4 shrink-0 text-signal" />
                           <span className="text-sm text-muted-foreground">
                             {item}
                           </span>
@@ -381,13 +383,11 @@ export default function AboutPage() {
       </section>
 
       {/* Career Journey Section */}
-      <section className="section-padding bg-muted/30">
+      <section className="section-padding bg-muted/20 hairline-t">
         <div className="container-wide">
           <div className="mx-auto max-w-2xl text-center">
-            <Badge variant="outline" className="mb-4">
-              Career Journey
-            </Badge>
-            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
+            <p className="eyebrow mb-5 justify-center">Career Journey</p>
+            <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">
               Professional Background
             </h2>
             <p className="mt-4 text-muted-foreground">
@@ -399,7 +399,7 @@ export default function AboutPage() {
           </div>
 
           <div className="mx-auto mt-16 max-w-3xl">
-            <div className="relative space-y-8 before:absolute before:left-[19px] before:top-2 before:h-[calc(100%-40px)] before:w-0.5 before:bg-border md:before:left-1/2 md:before:-translate-x-px">
+            <div className="relative space-y-8 before:absolute before:left-[19px] before:top-2 before:h-[calc(100%-40px)] before:w-px before:bg-hairline md:before:left-1/2 md:before:-translate-x-px">
               {careerTimeline.map((item, index) => (
                 <div
                   key={index}
@@ -408,22 +408,23 @@ export default function AboutPage() {
                   }`}
                 >
                   {/* Timeline dot */}
-                  <div className="absolute left-0 top-2 flex h-10 w-10 items-center justify-center rounded-full border-4 border-background bg-primary text-primary-foreground md:left-1/2 md:-translate-x-1/2">
+                  <div className="absolute left-0 top-2 z-10 flex h-10 w-10 items-center justify-center border border-hairline bg-background text-signal md:left-1/2 md:-translate-x-1/2">
                     <Briefcase className="h-4 w-4" />
                   </div>
 
-                  {/* Content */}
+                  {/* Content — pad the center-facing side so the card never
+                      overlaps the centered timeline dot. */}
                   <div
                     className={`ml-16 md:ml-0 md:w-1/2 ${
-                      index % 2 === 0 ? "md:pr-16" : "md:pl-16"
+                      index % 2 === 0 ? "md:pl-16" : "md:pr-16"
                     }`}
                   >
-                    <Card className="card-hover">
+                    <Card className="card-technical rounded-none">
                       <CardHeader className="pb-2">
-                        <Badge variant="outline" className="w-fit">
+                        <span className="w-fit rounded-sm border border-hairline px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.1em] text-muted-foreground">
                           {item.period}
-                        </Badge>
-                        <CardTitle className="text-lg">{item.role}</CardTitle>
+                        </span>
+                        <CardTitle className="font-display text-lg">{item.role}</CardTitle>
                         <CardDescription className="font-medium text-primary">
                           {item.company}
                         </CardDescription>
@@ -448,10 +449,8 @@ export default function AboutPage() {
           <div className="grid gap-12 lg:grid-cols-2">
             {/* Education */}
             <div>
-              <Badge variant="outline" className="mb-4">
-                Education
-              </Badge>
-              <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">
+              <p className="eyebrow mb-5">Education</p>
+              <h2 className="font-display text-2xl font-bold tracking-tight sm:text-3xl">
                 Academic Foundation
               </h2>
               <p className="mt-4 text-muted-foreground">
@@ -460,14 +459,14 @@ export default function AboutPage() {
               </p>
               <div className="mt-8 space-y-6">
                 {education.map((edu, index) => (
-                  <Card key={index} className="card-hover">
+                  <Card key={index} className="card-technical group rounded-none">
                     <CardContent className="p-6">
                       <div className="flex items-start gap-4">
-                        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                        <div className="flex h-12 w-12 shrink-0 items-center justify-center border border-hairline text-primary transition-colors group-hover:border-signal/60 group-hover:text-signal">
                           <GraduationCap className="h-6 w-6" />
                         </div>
                         <div>
-                          <h3 className="font-semibold">{edu.degree}</h3>
+                          <h3 className="font-display font-semibold">{edu.degree}</h3>
                           <p className="text-sm text-primary font-medium">
                             {edu.specialization}
                           </p>
@@ -484,10 +483,8 @@ export default function AboutPage() {
 
             {/* CV Download / Connect */}
             <div>
-              <Badge variant="outline" className="mb-4">
-                Connect
-              </Badge>
-              <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">
+              <p className="eyebrow mb-5">Connect</p>
+              <h2 className="font-display text-2xl font-bold tracking-tight sm:text-3xl">
                 Learn More About Us
               </h2>
               <p className="mt-4 text-muted-foreground">
@@ -498,17 +495,17 @@ export default function AboutPage() {
 
               <div className="mt-8 space-y-4">
                 {/* Email Card */}
-                <Card className="card-hover overflow-hidden">
+                <Card className="card-technical group overflow-hidden rounded-none">
                   <CardContent className="p-0">
                     <Link
                       href="/schedule"
                       className="flex items-center gap-4 p-6 transition-colors hover:bg-muted/50"
                     >
-                      <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                      <div className="flex h-14 w-14 shrink-0 items-center justify-center border border-hairline text-primary transition-colors group-hover:border-signal/60 group-hover:text-signal">
                         <Mail className="h-7 w-7" />
                       </div>
                       <div className="flex-1">
-                        <h3 className="font-semibold">Get in Touch</h3>
+                        <h3 className="font-display font-semibold">Get in Touch</h3>
                         <p className="text-sm text-muted-foreground">
                           Schedule a consultation or ask questions
                         </p>
@@ -524,15 +521,13 @@ export default function AboutPage() {
       </section>
 
       {/* Deep Expertise & Certifications Section */}
-      <section className="section-padding bg-muted/30">
+      <section className="section-padding bg-muted/20 hairline-t">
         <div className="container-wide">
           <div className="grid gap-16 lg:grid-cols-2">
             {/* Deep Expertise */}
             <div>
-              <Badge variant="outline" className="mb-4">
-                What Sets Us Apart
-              </Badge>
-              <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">
+              <p className="eyebrow mb-5">What Sets Us Apart</p>
+              <h2 className="font-display text-2xl font-bold tracking-tight sm:text-3xl">
                 Cross-Functional Expertise
               </h2>
               <p className="mt-4 text-muted-foreground">
@@ -545,13 +540,13 @@ export default function AboutPage() {
                 {deepExpertise.map((item, index) => {
                   const IconComponent = item.icon;
                   return (
-                    <Card key={index} className="card-hover">
+                    <Card key={index} className="card-technical group rounded-none">
                       <CardContent className="flex items-start gap-4 p-6">
-                        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                        <div className="flex h-12 w-12 shrink-0 items-center justify-center border border-hairline text-primary transition-colors group-hover:border-signal/60 group-hover:text-signal">
                           <IconComponent className="h-6 w-6" />
                         </div>
                         <div>
-                          <h3 className="font-semibold">{item.area}</h3>
+                          <h3 className="font-display font-semibold">{item.area}</h3>
                           <p className="text-sm text-muted-foreground">
                             {item.description}
                           </p>
@@ -565,10 +560,8 @@ export default function AboutPage() {
 
             {/* Regulatory Expertise */}
             <div>
-              <Badge variant="outline" className="mb-4">
-                Regulatory Expertise
-              </Badge>
-              <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">
+              <p className="eyebrow mb-5">Regulatory Expertise</p>
+              <h2 className="font-display text-2xl font-bold tracking-tight sm:text-3xl">
                 Standards & Certifications
               </h2>
               <p className="mt-4 text-muted-foreground">
@@ -577,18 +570,17 @@ export default function AboutPage() {
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
                 {certifications.map((cert, index) => (
-                  <Badge
+                  <span
                     key={index}
-                    variant="secondary"
-                    className="px-4 py-2 text-sm font-medium"
+                    className="rounded-sm border border-hairline px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.1em] text-muted-foreground"
                   >
                     {cert}
-                  </Badge>
+                  </span>
                 ))}
               </div>
-              <Card className="mt-6">
+              <Card className="card-technical mt-6 rounded-none">
                 <CardContent className="p-6">
-                  <h3 className="mb-3 font-semibold">
+                  <h3 className="mb-3 font-display font-semibold">
                     Regulatory Experience Includes:
                   </h3>
                   <ul className="space-y-2">
@@ -600,7 +592,7 @@ export default function AboutPage() {
                       "CAPA and complaint handling systems",
                     ].map((item, index) => (
                       <li key={index} className="flex items-start gap-2">
-                        <CheckCircle className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                        <CheckCircle className="mt-0.5 h-4 w-4 shrink-0 text-signal" />
                         <span className="text-sm text-muted-foreground">
                           {item}
                         </span>
@@ -615,13 +607,11 @@ export default function AboutPage() {
       </section>
 
       {/* Philosophy Section */}
-      <section className="section-padding">
+      <section className="section-padding hairline-t">
         <div className="container-wide">
           <div className="mx-auto max-w-2xl text-center">
-            <Badge variant="outline" className="mb-4">
-              Philosophy
-            </Badge>
-            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
+            <p className="eyebrow mb-5 justify-center">Philosophy</p>
+            <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">
               Our Consulting Approach
             </h2>
             <p className="mt-4 text-muted-foreground">
@@ -634,12 +624,12 @@ export default function AboutPage() {
             {coreValues.map((value, index) => {
               const IconComponent = value.icon;
               return (
-                <Card key={index} className="text-center card-hover">
+                <Card key={index} className="card-technical group rounded-none text-center">
                   <CardHeader>
-                    <div className="mx-auto mb-2 flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 text-primary">
+                    <div className="mx-auto mb-2 flex h-14 w-14 items-center justify-center border border-hairline text-primary transition-colors group-hover:border-signal/60 group-hover:text-signal">
                       <IconComponent className="h-7 w-7" />
                     </div>
-                    <CardTitle className="text-lg">{value.title}</CardTitle>
+                    <CardTitle className="font-display text-lg">{value.title}</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <CardDescription>{value.description}</CardDescription>
@@ -651,19 +641,20 @@ export default function AboutPage() {
 
           {/* Quote */}
           <div className="mx-auto mt-16 max-w-3xl">
-            <Card className="border-primary/20 bg-gradient-to-br from-primary/5 to-transparent">
-              <CardContent className="p-8 text-center">
-                <blockquote className="text-xl font-medium italic text-foreground">
+            <div className="surface-ink relative overflow-hidden rounded-none">
+              <div className="grid-dots absolute inset-0 opacity-50" aria-hidden />
+              <div className="relative p-8 text-center">
+                <blockquote className="text-xl font-medium italic text-ink-foreground">
                   &ldquo;Our goal is not just to solve your immediate
                   challenges, but to build capabilities within your organization
                   that drive continuous improvement long after our engagement
                   ends.&rdquo;
                 </blockquote>
-                <p className="mt-4 font-semibold text-primary">
+                <p className="mt-4 font-semibold text-signal">
                   — SIDEC Consulting
                 </p>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           </div>
         </div>
       </section>

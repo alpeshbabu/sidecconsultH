@@ -9,22 +9,19 @@ import {
   Globe,
   Lightbulb,
   ArrowRight,
-  CheckCircle,
-  Play,
-  Sparkles,
+  ArrowUpRight,
+  FileCheck,
   Shield,
   Clock,
-  FileCheck,
+  Plus,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { MainLayout } from "@/components/layout";
 import { AnimatedStats, CTASection, NewsletterForm } from "@/components/sections";
 import { SERVICE_AREAS, STATS } from "@/lib/constants";
@@ -49,6 +46,54 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Globe,
   Lightbulb,
 };
+
+const CERTS = ["ISO 13485", "FDA 21 CFR 820", "EU MDR", "MDSAP"];
+
+const PILLARS = [
+  {
+    icon: FileCheck,
+    title: "Regulatory Expertise",
+    spec: "§ 820 / MDR",
+    description:
+      "Navigate FDA, EU MDR, and global requirements with confidence — 510(k) submissions, technical files, and quality-system compliance.",
+  },
+  {
+    icon: Cog,
+    title: "Process Mastery",
+    spec: "IQ / OQ / PQ",
+    description:
+      "Deep expertise in injection molding, scientific molding principles, and process validation. Engineered for repeatability.",
+  },
+  {
+    icon: Globe,
+    title: "Global Experience",
+    spec: "Multi-site",
+    description:
+      "Global supplier networks, technology transfer, and international manufacturing operations across multiple continents.",
+  },
+];
+
+const GUARANTEES = [
+  {
+    icon: Shield,
+    title: "Complete Confidentiality",
+    description:
+      "Your intellectual property is protected at the highest level. All discussions and materials remain strictly confidential.",
+  },
+  {
+    icon: Clock,
+    title: "24–48 Hour Response",
+    description:
+      "Every inquiry receives a thoughtful response within 24–48 business hours, keeping your project on track.",
+  },
+];
+
+const PROCESS = [
+  { step: "01", title: "Discovery", description: "Comprehensive assessment of your current state, challenges, and objectives." },
+  { step: "02", title: "Solution Design", description: "Tailored strategies and action plans aligned precisely with your goals." },
+  { step: "03", title: "Implementation", description: "Execute the plan with hands-on support and expert engineering guidance." },
+  { step: "04", title: "Validation", description: "Verify results, document outcomes, and ensure sustainable, audit-ready success." },
+];
 
 export default async function HomePage() {
   // Fetch latest 3 published blog posts
@@ -88,271 +133,231 @@ export default async function HomePage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: getJsonLd(serviceSchemas) }}
       />
-      
-      {/* Hero Section - Cytovale Inspired */}
+
+      {/* ============ HERO ============ */}
       <section className="relative overflow-hidden">
-        {/* Background Elements */}
-        <div className="absolute inset-0 -z-10">
-          <div className="absolute inset-0 gradient-hero" />
-          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[1200px] rounded-full bg-primary/5 blur-3xl" />
-          <div className="absolute right-0 top-0 w-[600px] h-[600px] rounded-full bg-accent/5 blur-3xl" />
+        {/* Blueprint grid backdrop */}
+        <div className="absolute inset-0 -z-10" aria-hidden>
+          <div className="grid-blueprint absolute inset-0 opacity-70" />
+          <div className="absolute inset-x-0 top-0 h-px bg-signal/40" />
+          <div className="absolute left-1/2 top-0 h-[700px] w-[1100px] -translate-x-1/2 rounded-full bg-primary/5 blur-3xl" />
         </div>
 
-        <div className="container-wide py-20 md:py-28 lg:py-36">
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-            {/* Left Content */}
-            <div className="text-center lg:text-left">
-              <Badge
-                variant="outline"
-                className="mb-6 px-4 py-1.5 border-primary/30 bg-primary/5"
-              >
-                <Sparkles className="h-3.5 w-3.5 mr-2 text-primary" />
-                25+ Years of Medical Device Expertise
-              </Badge>
-
-              <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
-                Transform Your{" "}
-                <span className="text-gradient">Medical Device</span>{" "}
-                Manufacturing
-              </h1>
-
-              <p className="mt-6 text-lg text-muted-foreground md:text-xl max-w-2xl mx-auto lg:mx-0 leading-relaxed">
-                Expert consulting for ISO 13485 quality systems, injection
-                molding process development, regulatory compliance, and facility
-                design. Trusted by industry leaders worldwide.
+        <div className="container-wide py-20 md:py-28 lg:py-32">
+          <div className="grid items-center gap-14 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
+            {/* Left content */}
+            <div className="reveal-up">
+              <p className="eyebrow mb-6">
+                25+ Years · Medical Device Manufacturing
               </p>
 
-              <div className="mt-10 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
-                <Link href="/contact">
-                  <Button size="lg" className="btn-glow w-full sm:w-auto h-12 px-8 text-base">
+              <h1 className="font-display text-4xl font-bold leading-[1.05] tracking-tight text-balance sm:text-5xl md:text-6xl lg:text-[4.25rem]">
+                Precision engineering for{" "}
+                <span className="relative whitespace-nowrap text-signal">
+                  medical devices
+                  <span className="absolute inset-x-0 -bottom-1 h-px bg-signal/50" />
+                </span>
+              </h1>
+
+              <p className="mt-7 max-w-xl text-lg leading-relaxed text-muted-foreground md:text-xl">
+                Expert consulting for ISO 13485 quality systems, injection
+                molding process development, regulatory compliance, and facility
+                design — built to exacting, audit-ready standards.
+              </p>
+
+              <div className="mt-10 flex flex-col gap-3 sm:flex-row">
+                <Button asChild size="lg" variant="technical" className="h-12 w-full px-8 sm:w-auto">
+                  <Link href="/schedule">
                     Schedule Consultation
-                    <ArrowRight className="ml-2 h-5 w-5" />
-                  </Button>
-                </Link>
-                <Link href="/services">
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    className="w-full sm:w-auto h-12 px-8 text-base"
-                  >
-                    <Play className="mr-2 h-4 w-4" />
-                    Explore Services
-                  </Button>
-                </Link>
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Link>
+                </Button>
+                <Button
+                  asChild
+                  size="lg"
+                  variant="outline"
+                  className="h-12 w-full rounded-sm border-hairline px-8 font-mono text-xs uppercase tracking-[0.12em] sm:w-auto"
+                >
+                  <Link href="/services">Explore Services</Link>
+                </Button>
               </div>
 
-              {/* Trust Indicators */}
-              <div className="mt-12 flex flex-wrap items-center justify-center lg:justify-start gap-x-8 gap-y-4">
-                {["ISO 13485", "FDA 21 CFR 820", "EU MDR", "MDSAP"].map(
-                  (cert) => (
-                    <div
-                      key={cert}
-                      className="flex items-center gap-2 text-sm text-muted-foreground"
-                    >
-                      <CheckCircle className="h-4 w-4 text-primary" />
+              {/* Instrument-panel trust row */}
+              <dl className="mt-14 grid grid-cols-2 hairline-t hairline-b sm:grid-cols-4">
+                {CERTS.map((cert, i) => (
+                  <div
+                    key={cert}
+                    className={`px-4 py-4 ${i !== 0 ? "hairline-l sm:hairline-l" : ""} ${i === 2 ? "max-sm:hairline-l" : ""}`}
+                  >
+                    <dt className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                      Std {String(i + 1).padStart(2, "0")}
+                    </dt>
+                    <dd className="mt-1 font-mono text-xs font-medium tracking-wide text-foreground">
                       {cert}
-                    </div>
-                  )
-                )}
-              </div>
+                    </dd>
+                  </div>
+                ))}
+              </dl>
             </div>
 
-            {/* Right Visual */}
-            <div className="relative hidden lg:block">
-              <div className="relative aspect-square max-w-lg mx-auto">
-                {/* Hero Image as Background */}
-                <Image 
-                  src="/HomePageAssets/Hero1.png" 
-                  alt="SIDEC" 
-                  fill
-                  className="object-cover rounded-3xl"
-                  priority
-                />
-                
-                {/* Overlay for better card contrast */}
-                <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-primary/50 via-transparent to-accent/50" />
-
-                {/* Floating Card - Top Left (half outside) */}
-                <div className="absolute -top-10 left-8 p-6 rounded-2xl bg-card/80 backdrop-blur-sm shadow-xl border animate-in slide-in-from-left-5 duration-700">
-                  <div className="flex items-center gap-4">
-                    <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center">
-                      <ShieldCheck className="h-6 w-6 text-primary" />
-                    </div>
-                    <div>
-                      <p className="font-semibold">Quality Systems Expert</p>
-                      <p className="text-sm text-muted-foreground">
-                        ISO 13485 & FDA Compliance
-                      </p>
-                    </div>
-                  </div>
+            {/* Right visual — spec frame */}
+            <div className="relative reveal-up [animation-delay:120ms]">
+              <div className="corner-marks relative aspect-[4/5] w-full max-w-md mx-auto border border-hairline p-2">
+                {/* corner annotation */}
+                <span className="absolute -top-3 left-6 bg-background px-2 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+                  Fig. 01 — Clean-room Molding
+                </span>
+                <div className="relative h-full w-full overflow-hidden">
+                  <Image
+                    src="/HomePageAssets/Hero1.png"
+                    alt="Medical device injection molding"
+                    fill
+                    sizes="(max-width: 1024px) 90vw, 28rem"
+                    className="object-cover"
+                    priority
+                  />
+                  {/* subtle technical tint — keeps the photo clearly visible */}
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-ink/15 via-transparent to-signal/10" />
+                  <div className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-white/10" />
                 </div>
+              </div>
 
-                {/* Floating Card - Bottom Right (half outside) */}
-                <div className="absolute -bottom-10 right-8 p-6 rounded-2xl bg-card/80 backdrop-blur-sm shadow-xl border animate-in slide-in-from-right-5 duration-700 delay-200">
-                  <div className="flex items-center gap-4">
-                    <div className="h-12 w-12 rounded-xl bg-accent/10 flex items-center justify-center">
-                      <Cog className="h-6 w-6 text-accent" />
-                    </div>
-                    <div>
-                      <p className="font-semibold">Process Excellence</p>
-                      <p className="text-sm text-muted-foreground">
-                        Scientific Molding & Validation
-                      </p>
-                    </div>
+              {/* Spec readout strip */}
+              <div className="mt-3 grid grid-cols-3 max-w-md mx-auto border border-hairline bg-card font-mono text-[10px] uppercase tracking-[0.14em]">
+                {[
+                  ["Tolerance", "±0.001″"],
+                  ["Cavities", "Multi"],
+                  ["Class", "ISO 7/8"],
+                ].map(([k, v], i) => (
+                  <div key={k} className={`px-3 py-2.5 ${i !== 0 ? "hairline-l" : ""}`}>
+                    <div className="text-muted-foreground">{k}</div>
+                    <div className="mt-0.5 text-foreground">{v}</div>
                   </div>
-                </div>
+                ))}
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Stats Section - Animated */}
+      {/* ============ STATS ============ */}
       <AnimatedStats stats={STATS} />
 
-      {/* Value Proposition Section */}
+      {/* ============ WHY / PILLARS ============ */}
       <section className="section-padding">
         <div className="container-wide">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <Badge variant="outline" className="mb-4">
-              Why Choose SIDEC
-            </Badge>
-            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">
-              The New Standard for{" "}
-              <span className="text-gradient">Medical Device Excellence</span>
+          <div className="max-w-3xl">
+            <p className="eyebrow mb-5">Why SIDEC</p>
+            <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl text-balance">
+              The new standard for medical device excellence
             </h2>
-            <p className="mt-4 text-lg text-muted-foreground">
-              We bring deep industry expertise to help medical device companies
-              achieve manufacturing excellence and regulatory compliance.
+            <p className="mt-5 text-lg leading-relaxed text-muted-foreground">
+              We bring deep, hands-on industry expertise to help medical device
+              companies achieve manufacturing excellence and regulatory
+              compliance — without compromise.
             </p>
           </div>
 
-          {/* Feature Grid - Cytovale Style */}
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="relative p-8 rounded-2xl bg-gradient-to-br from-muted/50 to-muted/30 border">
-              <div className="h-14 w-14 rounded-xl bg-primary/10 flex items-center justify-center mb-6">
-                <FileCheck className="h-7 w-7 text-primary" />
-              </div>
-              <h3 className="text-xl font-semibold mb-3">
-                Regulatory Expertise
-              </h3>
-              <p className="text-muted-foreground leading-relaxed">
-                Navigate FDA, EU MDR, and global regulatory requirements with
-                confidence. Our experts guide you through 510(k) submissions,
-                technical files, and quality system compliance.
-              </p>
-            </div>
-
-            <div className="relative p-8 rounded-2xl bg-gradient-to-br from-muted/50 to-muted/30 border">
-              <div className="h-14 w-14 rounded-xl bg-primary/10 flex items-center justify-center mb-6">
-                <Cog className="h-7 w-7 text-primary" />
-              </div>
-              <h3 className="text-xl font-semibold mb-3">Process Mastery</h3>
-              <p className="text-muted-foreground leading-relaxed">
-                Deep expertise in injection molding, scientific molding
-                principles, and process validation. Optimize your manufacturing
-                for quality and efficiency.
-              </p>
-            </div>
-
-            <div className="relative p-8 rounded-2xl bg-gradient-to-br from-muted/50 to-muted/30 border">
-              <div className="h-14 w-14 rounded-xl bg-primary/10 flex items-center justify-center mb-6">
-                <Globe className="h-7 w-7 text-primary" />
-              </div>
-              <h3 className="text-xl font-semibold mb-3">Global Experience</h3>
-              <p className="text-muted-foreground leading-relaxed">
-                Extensive experience with global supplier networks, technology
-                transfer, and international manufacturing operations across
-                multiple continents.
-              </p>
-            </div>
+          {/* Pillars — numbered technical entries */}
+          <div className="mt-14 grid gap-px hairline border border-hairline bg-hairline md:grid-cols-3">
+            {PILLARS.map((pillar, i) => {
+              const Icon = pillar.icon;
+              return (
+                <div
+                  key={pillar.title}
+                  className="group relative bg-background p-8 transition-colors duration-300 hover:bg-muted/40"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-signal">
+                      {pillar.spec}
+                    </span>
+                  </div>
+                  <div className="mt-8 flex h-12 w-12 items-center justify-center border border-hairline text-primary transition-colors group-hover:border-signal/60 group-hover:text-signal">
+                    <Icon className="h-6 w-6" />
+                  </div>
+                  <h3 className="mt-6 font-display text-xl font-semibold">
+                    {pillar.title}
+                  </h3>
+                  <p className="mt-3 leading-relaxed text-muted-foreground">
+                    {pillar.description}
+                  </p>
+                </div>
+              );
+            })}
           </div>
 
-          {/* Trust Guarantees Row */}
-          <div className="grid md:grid-cols-2 gap-8 mt-8 max-w-4xl mx-auto">
-            <div className="relative p-8 rounded-2xl bg-gradient-to-br from-muted/50 to-muted/30 border">
-              <div className="h-14 w-14 rounded-xl bg-primary/10 flex items-center justify-center mb-6">
-                <Shield className="h-7 w-7 text-primary" />
-              </div>
-              <h3 className="text-xl font-semibold mb-3">
-                Complete Privacy Guaranteed
-              </h3>
-              <p className="text-muted-foreground leading-relaxed">
-                Your intellectual property is protected with the highest level
-                of confidentiality. All discussions and materials remain
-                strictly confidential.
-              </p>
-            </div>
-
-            <div className="relative p-8 rounded-2xl bg-gradient-to-br from-muted/50 to-muted/30 border">
-              <div className="h-14 w-14 rounded-xl bg-primary/10 flex items-center justify-center mb-6">
-                <Clock className="h-7 w-7 text-primary" />
-              </div>
-              <h3 className="text-xl font-semibold mb-3">
-                Quick Response Guaranteed
-              </h3>
-              <p className="text-muted-foreground leading-relaxed">
-                We value your time. Every inquiry receives a thoughtful response
-                within 24-48 business hours, ensuring your project stays on
-                track.
-              </p>
-            </div>
+          {/* Guarantees */}
+          <div className="mt-px grid gap-px hairline border border-t-0 border-hairline bg-hairline md:grid-cols-2">
+            {GUARANTEES.map((g) => {
+              const Icon = g.icon;
+              return (
+                <div key={g.title} className="flex items-start gap-5 bg-background p-8">
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center border border-hairline text-signal">
+                    <Icon className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <h3 className="font-display text-lg font-semibold">{g.title}</h3>
+                    <p className="mt-2 leading-relaxed text-muted-foreground">
+                      {g.description}
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
 
-      {/* Services Overview Section */}
-      <section className="section-padding gradient-section">
+      {/* ============ SERVICES — CAPABILITIES INDEX ============ */}
+      <section className="section-padding bg-muted/20 hairline-t">
         <div className="container-wide">
-          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12">
-            <div>
-              <Badge variant="outline" className="mb-4">
-                Our Services
-              </Badge>
-              <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-                Comprehensive Consulting Solutions
+          <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+            <div className="max-w-xl">
+              <p className="eyebrow mb-5">Capabilities Index</p>
+              <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">
+                Comprehensive consulting solutions
               </h2>
-              <p className="mt-2 text-muted-foreground max-w-xl">
-                End-to-end solutions for medical device manufacturing, from
-                regulatory compliance to facility design.
+              <p className="mt-3 text-muted-foreground">
+                End-to-end engineering support, from regulatory compliance to
+                greenfield facility design.
               </p>
             </div>
-            <Link href="/services">
-              <Button variant="outline" className="shrink-0">
+            <Button asChild variant="outline" className="shrink-0 rounded-sm border-hairline font-mono text-xs uppercase tracking-[0.12em]">
+              <Link href="/services">
                 View All Services
                 <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </Link>
+              </Link>
+            </Button>
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {/* Index rows */}
+          <div className="mt-12 border-t border-hairline">
             {SERVICE_AREAS.map((service, index) => {
-              const IconComponent = iconMap[service.icon];
+              const Icon = iconMap[service.icon];
               return (
-                <Link key={service.id} href={service.href} className="group">
-                  <Card className="h-full transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:border-primary/50">
-                    <CardHeader className="pb-3">
-                      <div className="flex items-center gap-4">
-                        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
-                          {IconComponent && (
-                            <IconComponent className="h-5 w-5" />
-                          )}
-                        </div>
-                        <CardTitle className="text-base group-hover:text-primary transition-colors">
-                          {service.shortTitle}
-                        </CardTitle>
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <CardDescription className="text-sm leading-relaxed line-clamp-3">
-                        {service.description}
-                      </CardDescription>
-                      <div className="mt-4 flex items-center text-sm font-medium text-primary opacity-0 group-hover:opacity-100 transition-opacity">
-                        Learn more
-                        <ArrowRight className="ml-1 h-3 w-3 group-hover:translate-x-1 transition-transform" />
-                      </div>
-                    </CardContent>
-                  </Card>
+                <Link
+                  key={service.id}
+                  href={service.href}
+                  className="index-row group border-b border-hairline px-2 md:px-4"
+                >
+                  <span className="mt-1 w-10 shrink-0 font-mono text-sm text-muted-foreground transition-colors group-hover:text-signal">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center border border-hairline text-primary transition-colors group-hover:border-signal/60 group-hover:text-signal">
+                    {Icon && <Icon className="h-5 w-5" />}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-display text-lg font-semibold transition-colors group-hover:text-signal md:text-xl">
+                      {service.title}
+                    </h3>
+                    <p className="mt-1 max-w-2xl text-sm leading-relaxed text-muted-foreground line-clamp-2">
+                      {service.description}
+                    </p>
+                  </div>
+                  <ArrowUpRight className="mt-1 h-5 w-5 shrink-0 text-muted-foreground transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-signal" />
                 </Link>
               );
             })}
@@ -360,176 +365,151 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* About Preview Section */}
+      {/* ============ ABOUT PREVIEW ============ */}
       <section className="section-padding">
         <div className="container-wide">
-          <div className="grid gap-12 lg:grid-cols-2 lg:gap-20 items-center">
-            {/* Image/Visual Side */}
+          <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
+            {/* Visual */}
             <div className="relative order-2 lg:order-1">
-              <div className="aspect-[4/3] rounded-2xl bg-gradient-to-br from-primary/20 via-accent/10 to-primary/5 flex items-center justify-center overflow-hidden">
-                {/* Placeholder for professional headshot */}
-                <div className="text-center p-8">
-                <Image 
-                  src="/HomePageAssets/AboutUs1.jpeg" 
-                  alt="SIDEC" 
-                  fill
-                  className="object-cover rounded-3xl"
-                  priority
-                />
+              <div className="corner-marks relative aspect-[4/3] border border-hairline p-2">
+                <span className="absolute -top-3 left-6 bg-background px-2 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+                  Fig. 02 — Field Operations
+                </span>
+                <div className="relative h-full w-full overflow-hidden">
+                  <Image
+                    src="/HomePageAssets/AboutUs1.jpeg"
+                    alt="SIDEC consulting in the field"
+                    fill
+                    sizes="(max-width: 1024px) 90vw, 32rem"
+                    className="object-cover"
+                  />
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-ink/12 to-transparent" />
                 </div>
               </div>
 
-              {/* Floating Stats Card */}
-              <div className="absolute -bottom-6 -right-6 p-6 rounded-2xl bg-card shadow-xl border hidden md:block">
-                <div className="flex items-center gap-4">
-                  <div className="text-center">
-                    <div className="text-3xl font-bold text-primary">25+</div>
-                    <div className="text-xs text-muted-foreground">
-                      Years Exp.
-                    </div>
+              {/* Mono stat readout */}
+              <div className="absolute -bottom-px right-4 flex border border-hairline bg-card font-mono md:right-8">
+                <div className="px-5 py-3 text-center">
+                  <div className="text-2xl font-bold text-foreground">25+</div>
+                  <div className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
+                    Years
                   </div>
-                  <div className="h-12 w-px bg-border" />
-                  <div className="text-center">
-                    <div className="text-3xl font-bold text-primary">100+</div>
-                    <div className="text-xs text-muted-foreground">
-                      Projects
-                    </div>
+                </div>
+                <div className="hairline-l px-5 py-3 text-center">
+                  <div className="text-2xl font-bold text-foreground">100+</div>
+                  <div className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
+                    Projects
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Content Side */}
+            {/* Content */}
             <div className="order-1 lg:order-2">
-              <Badge variant="outline" className="mb-4">
-                About Us
-              </Badge>
-              <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-                25+ Years of Medical Device Manufacturing Excellence
+              <p className="eyebrow mb-5">About SIDEC</p>
+              <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl text-balance">
+                25+ years of manufacturing excellence
               </h2>
-              <p className="mt-6 text-muted-foreground leading-relaxed">
-                With over two decades of experience in medical device
-                manufacturing, we bring deep expertise in injection molding
-                processes, ISO 13485 quality systems, regulatory compliance, and
-                facility design. Our background includes leadership roles at
-                Fortune 500 medical device companies.
+              <p className="mt-6 leading-relaxed text-muted-foreground">
+                With over two decades in medical device manufacturing, we bring
+                deep expertise in injection molding, ISO 13485 quality systems,
+                regulatory compliance, and facility design — including leadership
+                roles at Fortune 500 medical device companies.
               </p>
 
-              <ul className="mt-8 space-y-4">
+              <ul className="mt-8 space-y-px border-y border-hairline">
                 {[
-                  "Extensive injection molding & scientific molding expertise",
-                  "ISO 13485, FDA 21 CFR 820, EU MDR Expert",
-                  "Global Supplier Quality & Development Experience",
-                ].map((item, index) => (
-                  <li key={index} className="flex items-start gap-3">
-                    <CheckCircle className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                  "Injection molding & scientific molding expertise",
+                  "ISO 13485, FDA 21 CFR 820 & EU MDR specialist",
+                  "Global supplier quality & development experience",
+                ].map((item) => (
+                  <li key={item} className="flex items-center gap-4 py-3">
+                    <Plus className="h-4 w-4 shrink-0 text-signal" />
                     <span className="text-sm">{item}</span>
                   </li>
                 ))}
               </ul>
 
               <div className="mt-10">
-                <Link href="/about">
-                  <Button variant="outline" size="lg">
+                <Button
+                  asChild
+                  variant="outline"
+                  size="lg"
+                  className="rounded-sm border-hairline font-mono text-xs uppercase tracking-[0.12em]"
+                >
+                  <Link href="/about">
                     Learn More About Us
                     <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
-                </Link>
+                  </Link>
+                </Button>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Process Section - Cytovale Inspired */}
-      <section className="section-padding bg-muted/30">
-        <div className="container-wide">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <Badge variant="outline" className="mb-4">
-              Our Approach
-            </Badge>
-            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-              A Proven Process for Success
+      {/* ============ PROCESS ============ */}
+      <section className="section-padding surface-ink relative overflow-hidden">
+        <div className="grid-dots absolute inset-0 opacity-50" aria-hidden />
+        <div className="container-wide relative">
+          <div className="max-w-2xl">
+            <p className="eyebrow-plain mb-5 text-signal">
+              <span aria-hidden>// </span>Methodology
+            </p>
+            <h2 className="font-display text-3xl font-bold tracking-tight text-ink-foreground sm:text-4xl">
+              A proven process for measurable results
             </h2>
-            <p className="mt-4 text-muted-foreground">
-              We follow a structured approach to ensure your project delivers
-              measurable results.
+            <p className="mt-4 text-ink-muted">
+              A structured, repeatable approach engineered to deliver outcomes
+              you can document and defend.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-4 gap-8">
-            {[
-              {
-                step: "01",
-                title: "Discovery",
-                description:
-                  "Comprehensive assessment of your current state, challenges, and objectives.",
-              },
-              {
-                step: "02",
-                title: "Solution Design",
-                description:
-                  "Develop tailored strategies and action plans aligned with your goals.",
-              },
-              {
-                step: "03",
-                title: "Implementation",
-                description:
-                  "Execute the plan with hands-on support and expert guidance.",
-              },
-              {
-                step: "04",
-                title: "Validation",
-                description:
-                  "Verify results, document outcomes, and ensure sustainable success.",
-              },
-            ].map((phase, index) => (
-              <div key={index} className="relative">
-                <div className="text-6xl font-bold text-primary/10 mb-4">
-                  {phase.step}
+          <div className="mt-14 grid gap-px bg-white/10 border border-white/10 md:grid-cols-4">
+            {PROCESS.map((phase) => (
+              <div key={phase.step} className="group surface-ink p-7">
+                <div className="flex items-center gap-3">
+                  <span className="h-3 w-px bg-signal" />
+                  <span className="font-display text-4xl font-bold text-white/15 transition-colors group-hover:text-signal/70">
+                    {phase.step}
+                  </span>
                 </div>
-                <h3 className="text-xl font-semibold mb-2">{phase.title}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">
+                <h3 className="mt-6 font-display text-lg font-semibold text-ink-foreground">
+                  {phase.title}
+                </h3>
+                <p className="mt-2 text-sm leading-relaxed text-ink-muted">
                   {phase.description}
                 </p>
-                {index < 3 && (
-                  <div className="hidden md:block absolute top-8 right-0 translate-x-1/2">
-                    <ArrowRight className="h-5 w-5 text-primary/30" />
-                  </div>
-                )}
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Latest Resources/Blog Section */}
+      {/* ============ RESOURCES / BLOG ============ */}
       <section className="section-padding">
         <div className="container-wide">
-          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12">
-            <div>
-              <Badge variant="outline" className="mb-4">
-                Resources & Insights
-              </Badge>
-              <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-                Latest from Our Blog
+          <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+            <div className="max-w-xl">
+              <p className="eyebrow mb-5">Resources & Insights</p>
+              <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">
+                Latest from the field
               </h2>
-              <p className="mt-2 text-muted-foreground max-w-xl">
+              <p className="mt-3 text-muted-foreground">
                 Industry insights, best practices, and expert guidance for
                 medical device manufacturing professionals.
               </p>
             </div>
-            <Link href="/resources">
-              <Button variant="outline" className="shrink-0">
+            <Button asChild variant="outline" className="shrink-0 rounded-sm border-hairline font-mono text-xs uppercase tracking-[0.12em]">
+              <Link href="/resources">
                 View All Resources
                 <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </Link>
+              </Link>
+            </Button>
           </div>
 
-          {/* Blog Posts Grid - Dynamic Content */}
           {latestPosts.length > 0 ? (
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {latestPosts.map((post) => (
                 <BlogPostCard
                   key={post.id}
@@ -545,8 +525,7 @@ export default async function HomePage() {
               ))}
             </div>
           ) : (
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {/* Placeholder cards when no posts exist */}
+            <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {[
                 {
                   title: "ISO 13485:2016 Implementation Guide",
@@ -555,7 +534,7 @@ export default async function HomePage() {
                 },
                 {
                   title: "Scientific Molding Best Practices",
-                  excerpt: "Learn the fundamentals of scientific molding and how to optimize your injection molding processes for consistency.",
+                  excerpt: "The fundamentals of scientific molding and how to optimize your injection molding processes for consistency.",
                   category: "Process Development",
                 },
                 {
@@ -564,49 +543,48 @@ export default async function HomePage() {
                   category: "Regulatory Compliance",
                 },
               ].map((post, index) => (
-                <Card
-                  key={index}
-                  className="group overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
-                >
-                  <div className="aspect-video bg-gradient-to-br from-primary/10 via-accent/5 to-primary/5 flex items-center justify-center">
-                    <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center">
-                      <Lightbulb className="h-6 w-6 text-primary" />
+                <Card key={index} className="card-technical group gap-0 overflow-hidden rounded-none py-0">
+                  <div className="grid-blueprint relative flex aspect-video items-center justify-center bg-muted/40">
+                    <span className="absolute left-3 top-3 font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
+                      {String(index + 1).padStart(2, "0")} / Draft
+                    </span>
+                    <div className="flex h-12 w-12 items-center justify-center border border-hairline text-signal">
+                      <Lightbulb className="h-6 w-6" />
                     </div>
                   </div>
-                  <CardHeader className="pb-2">
-                    <div className="flex items-center gap-2 mb-2">
-                      <Badge variant="secondary" className="text-xs">
+                  <CardHeader className="pt-5">
+                    <div className="mb-2 flex items-center gap-3">
+                      <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-signal">
                         {post.category}
-                      </Badge>
-                      <span className="text-xs text-muted-foreground">
+                      </span>
+                      <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
                         Coming Soon
                       </span>
                     </div>
-                    <CardTitle className="text-lg group-hover:text-primary transition-colors line-clamp-2">
+                    <CardTitle className="font-display text-lg leading-snug transition-colors group-hover:text-signal line-clamp-2">
                       {post.title}
                     </CardTitle>
                   </CardHeader>
-                  <CardContent>
-                    <CardDescription className="line-clamp-2">
+                  <CardContent className="pb-6">
+                    <p className="text-sm leading-relaxed text-muted-foreground line-clamp-2">
                       {post.excerpt}
-                    </CardDescription>
+                    </p>
                   </CardContent>
                 </Card>
               ))}
             </div>
           )}
 
-          {/* Newsletter CTA */}
           <NewsletterForm />
         </div>
       </section>
 
-      {/* CTA Section */}
+      {/* ============ CTA ============ */}
       <CTASection
-        title="Ready to Elevate Your Manufacturing Operations?"
+        title="Ready to elevate your manufacturing operations?"
         description="Let's discuss how our expertise can help your medical device company achieve manufacturing excellence and regulatory compliance."
         primaryButtonText="Schedule a Consultation"
-        primaryButtonHref="/contact"
+        primaryButtonHref="/schedule"
         secondaryButtonText="View Services"
         secondaryButtonHref="/services"
       />

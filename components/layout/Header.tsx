@@ -144,23 +144,22 @@ export function Header() {
                         : "opacity-0 invisible -translate-y-2"
                     )}
                   >
-                    <div className="w-[800px] rounded-2xl border bg-card p-6 shadow-xl">
-                      <div className="mb-4 flex items-center justify-between">
+                    <div className="w-[800px] rounded-sm border border-hairline bg-card p-6 shadow-xl">
+                      <div className="mb-4 flex items-center justify-between border-b border-hairline pb-4">
                         <div>
-                          <h3 className="font-semibold text-foreground">
+                          <p className="eyebrow-plain text-muted-foreground">
+                            Capabilities Index
+                          </p>
+                          <h3 className="mt-1 font-display font-semibold text-foreground">
                             Our Services
                           </h3>
-                          <p className="text-sm text-muted-foreground">
-                            Comprehensive consulting for medical device
-                            manufacturing
-                          </p>
                         </div>
-                        <Link href="/services">
-                          <Button variant="ghost" size="sm" className="group">
+                        <Button asChild variant="ghost" size="sm" className="group">
+                          <Link href="/services">
                             View All
                             <ArrowRight className="ml-1 h-3 w-3 transition-transform group-hover:translate-x-1" />
-                          </Button>
-                        </Link>
+                          </Link>
+                        </Button>
                       </div>
                       <div className="grid grid-cols-2 gap-3">
                         {SERVICE_AREAS.map((service) => {
@@ -169,15 +168,15 @@ export function Header() {
                             <Link
                               key={service.id}
                               href={service.href}
-                              className="group flex gap-4 rounded-xl p-3 transition-colors hover:bg-muted"
+                              className="group flex gap-4 rounded-sm p-3 transition-colors hover:bg-muted"
                             >
-                              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-sm border border-hairline text-primary transition-colors group-hover:border-signal/60 group-hover:text-signal">
                                 {IconComponent && (
                                   <IconComponent className="h-5 w-5" />
                                 )}
                               </div>
                               <div className="flex-1 min-w-0">
-                                <p className="font-medium text-sm text-foreground group-hover:text-primary transition-colors">
+                                <p className="font-medium text-sm text-foreground group-hover:text-signal transition-colors">
                                   {service.shortTitle}
                                 </p>
                                 <p className="text-xs text-muted-foreground line-clamp-2 mt-0.5">
@@ -212,20 +211,20 @@ export function Header() {
           <div className="hidden lg:flex items-center gap-3">
             <button
               onClick={() => setSearchOpen(true)}
-              className="flex items-center gap-2 text-sm text-muted-foreground border rounded-lg px-3 py-1.5 hover:bg-muted transition-colors"
+              className="flex items-center gap-2 rounded-sm border border-hairline px-3 py-1.5 font-mono text-xs uppercase tracking-[0.08em] text-muted-foreground transition-colors hover:border-signal/50 hover:text-foreground"
             >
               <Search className="h-4 w-4" />
-              <span>Search...</span>
-              <kbd className="ml-1 pointer-events-none inline-flex h-5 items-center rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground">
+              <span>Search</span>
+              <kbd className="ml-1 pointer-events-none inline-flex h-5 items-center rounded-sm border border-hairline px-1.5 font-mono text-[10px] font-medium text-muted-foreground">
                 ⌘K
               </kbd>
             </button>
-            <Link href="/schedule">
-              <Button className="btn-glow">
+            <Button asChild variant="technical" size="default">
+              <Link href="/schedule">
                 Schedule Consultation
                 <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </Link>
+              </Link>
+            </Button>
           </div>
 
           {/* Mobile Search + Menu */}
@@ -330,12 +329,12 @@ export function Header() {
                 {/* Mobile CTA */}
                 <div className="p-4 border-t">
                   <SheetClose asChild>
-                    <Link href="/schedule" className="block">
-                      <Button className="w-full btn-glow" size="lg">
+                    <Button asChild className="w-full" variant="technical" size="lg">
+                      <Link href="/schedule">
                         Schedule Consultation
                         <ArrowRight className="ml-2 h-4 w-4" />
-                      </Button>
-                    </Link>
+                      </Link>
+                    </Button>
                   </SheetClose>
                 </div>
               </div>

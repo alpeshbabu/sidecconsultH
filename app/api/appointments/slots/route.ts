@@ -1,47 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-
-// Default business timezone - can be overridden in settings
-const DEFAULT_TIMEZONE = "America/New_York";
-
-/**
- * Get the UTC offset in hours for a timezone on a specific date
- * Returns positive for timezones behind UTC (e.g., +8 for Pacific = UTC-8)
- */
-function getTimezoneOffsetHours(timezone: string, year: number, month: number, day: number): number {
-  // Create a date at noon to avoid DST edge cases
-  const date = new Date(Date.UTC(year, month - 1, day, 12, 0, 0));
-  
-  // Format in both UTC and target timezone
-  const utcFormatter = new Intl.DateTimeFormat("en-US", {
-    timeZone: "UTC",
-    hour: "numeric",
-    hour12: false,
-  });
-  
-  const tzFormatter = new Intl.DateTimeFormat("en-US", {
-    timeZone: timezone,
-    hour: "numeric",
-    hour12: false,
-  });
-  
-  const utcHour = parseInt(utcFormatter.format(date), 10);
-  const tzHour = parseInt(tzFormatter.format(date), 10);
-  
-  // Calculate offset: how many hours to ADD to local time to get UTC
-  // e.g., Pacific (UTC-8): when UTC is 12, Pacific is 4, so offset = 12 - 4 = 8
-  // To convert 8 AM Pacific to UTC: 8 + 8 = 16:00 UTC
-  let offset = utcHour - tzHour;
-  
-  // Handle day boundary (e.g., if tzHour is 20 and utcHour is 4 next day)
-  if (offset < -12) offset += 24;
-  if (offset > 12) offset -= 24;
-  
-  return offset;
-}
+import {
+  DEFAULT_TIMEZONE,
+  formatZonedTime,
+  timeZoneAbbreviation,
+  timeZoneLabel,
+  zonedHourMinute,
+  zonedWallTimeToUtc,
+} from "@/lib/timezone";
 
 // GET /api/appointments/slots?date=YYYY-MM-DD
-// Returns dynamically generated slots for a specific date
+// Returns dynamically generated slots for a specific date, in the business timezone.
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
@@ -69,116 +38,100 @@ export async function GET(request: NextRequest) {
     const [startHour, startMin] = startTime.split(":").map(Number);
     const [endHour, endMin] = endTime.split(":").map(Number);
 
+    const settingsResponse = {
+      startTime,
+      endTime,
+      slotDurationMinutes,
+      timezone: BUSINESS_TIMEZONE,
+      timezoneLabel: timeZoneLabel(BUSINESS_TIMEZONE),
+    };
+
     // If no date provided, return settings only
     if (!dateParam) {
       return NextResponse.json({
         success: true,
-        data: {
-          settings: {
-            startTime,
-            endTime,
-            slotDurationMinutes,
-            timezone: BUSINESS_TIMEZONE,
-          },
-          slots: [],
-        },
+        data: { settings: settingsResponse, slots: [] },
       });
     }
 
-    // Parse the date
+    // Parse the date and resolve the business-hours window to canonical UTC.
     const [year, month, day] = dateParam.split("-").map(Number);
-    
-    // Get timezone offset in hours (positive means behind UTC, e.g., Pacific = +8)
-    const offsetHours = getTimezoneOffsetHours(BUSINESS_TIMEZONE, year, month, day);
-    
-    // Convert business timezone times to UTC
-    // 8 AM Pacific + 8 hours offset = 16:00 UTC
-    const startUTCHour = startHour + offsetHours;
-    const endUTCHour = endHour + offsetHours;
-    
-    // Create start and end of the slot range in UTC
-    const slotStartUTC = new Date(Date.UTC(year, month - 1, day, startUTCHour, startMin, 0, 0));
-    const slotEndUTC = new Date(Date.UTC(year, month - 1, day, endUTCHour, endMin, 0, 0));
-    
-    // Adjust for slots that span into next day in UTC
-    // (e.g., 5 PM Pacific on Jan 20 = 1 AM UTC on Jan 21)
-    
-    // Create date range for fetching booked appointments
-    const dateStart = new Date(slotStartUTC.getTime() - 24 * 60 * 60 * 1000); // 1 day before
-    const dateEnd = new Date(slotEndUTC.getTime() + 24 * 60 * 60 * 1000); // 1 day after
+    const slotStartUTC = zonedWallTimeToUtc(
+      year,
+      month,
+      day,
+      startHour,
+      startMin,
+      BUSINESS_TIMEZONE
+    );
+    const slotEndUTC = zonedWallTimeToUtc(
+      year,
+      month,
+      day,
+      endHour,
+      endMin,
+      BUSINESS_TIMEZONE
+    );
 
-    // Fetch booked appointments for this date range
+    // Fetch booked appointments overlapping a generous window around the day.
+    const dateStart = new Date(slotStartUTC.getTime() - 24 * 60 * 60 * 1000);
+    const dateEnd = new Date(slotEndUTC.getTime() + 24 * 60 * 60 * 1000);
+
     const bookedAppointments = await prisma.appointment.findMany({
       where: {
-        bookedAt: {
-          gte: dateStart,
-          lte: dateEnd,
-        },
-        status: {
-          not: "CANCELLED",
-        },
+        bookedAt: { gte: dateStart, lte: dateEnd },
+        status: { not: "CANCELLED" },
       },
-      select: {
-        bookedAt: true,
-      },
+      select: { bookedAt: true },
     });
 
     const bookedTimes = new Set(
       bookedAppointments.map((a) => a.bookedAt.getTime())
     );
 
-    // Generate slots for the day
+    // Hide slots that have already elapsed (relevant for "today").
+    const now = Date.now();
+
     const slots: {
       id: string;
       startAt: string;
       endAt: string;
       isBooked: boolean;
-      localTime: string; // For debugging/display
+      localTime: string;
     }[] = [];
 
+    const slotMs = slotDurationMinutes * 60000;
     let current = new Date(slotStartUTC);
-    while (current.getTime() + slotDurationMinutes * 60000 <= slotEndUTC.getTime()) {
-      const slotEnd = new Date(current.getTime() + slotDurationMinutes * 60000);
-      const isBooked = bookedTimes.has(current.getTime());
+    while (current.getTime() + slotMs <= slotEndUTC.getTime()) {
+      const slotEnd = new Date(current.getTime() + slotMs);
 
-      // Format the time in business timezone for display
-      const localTimeFormatter = new Intl.DateTimeFormat("en-US", {
-        timeZone: BUSINESS_TIMEZONE,
-        hour: "numeric",
-        minute: "2-digit",
-        hour12: true,
-      });
-      
-      const localTime = localTimeFormatter.format(current);
-      
-      // Get hour and minute in business timezone for the slot ID
-      const hourFormatter = new Intl.DateTimeFormat("en-US", {
-        timeZone: BUSINESS_TIMEZONE,
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: false,
-      });
-      const [localHourStr, localMinStr] = hourFormatter.format(current).split(":");
+      if (current.getTime() > now) {
+        const [localHourStr, localMinStr] = zonedHourMinute(
+          current,
+          BUSINESS_TIMEZONE
+        );
+        slots.push({
+          id: `${dateParam}-${localHourStr}${localMinStr}`,
+          startAt: current.toISOString(),
+          endAt: slotEnd.toISOString(),
+          isBooked: bookedTimes.has(current.getTime()),
+          localTime: formatZonedTime(current, BUSINESS_TIMEZONE),
+        });
+      }
 
-      slots.push({
-        id: `${dateParam}-${localHourStr}${localMinStr}`,
-        startAt: current.toISOString(),
-        endAt: slotEnd.toISOString(),
-        isBooked,
-        localTime,
-      });
-
-      current = new Date(slotEnd);
+      current = slotEnd;
     }
 
     return NextResponse.json({
       success: true,
       data: {
         settings: {
-          startTime,
-          endTime,
-          slotDurationMinutes,
-          timezone: BUSINESS_TIMEZONE,
+          ...settingsResponse,
+          // Abbreviation (PST/PDT) is date-specific because of DST.
+          timezoneAbbreviation: timeZoneAbbreviation(
+            slotStartUTC,
+            BUSINESS_TIMEZONE
+          ),
         },
         slots,
       },

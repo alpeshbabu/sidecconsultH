@@ -39,14 +39,12 @@ export function TrackedButton({
     }
   };
 
-  // If href is provided, render as Link
+  // If href is provided, render as a Link styled as a Button (asChild → single <a>)
   if (href) {
     return (
-      <Link href={href}>
-        <Button {...props} onClick={handleClick}>
-          {children}
-        </Button>
-      </Link>
+      <Button asChild onClick={handleClick} {...props}>
+        <Link href={href}>{children}</Link>
+      </Button>
     );
   }
 

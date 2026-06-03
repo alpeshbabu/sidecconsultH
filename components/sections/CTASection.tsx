@@ -21,46 +21,49 @@ export function CTASection({
   primaryButtonHref = "/schedule",
   secondaryButtonText,
   secondaryButtonHref,
-  variant = "default",
   className,
 }: CTASectionProps) {
   return (
     <section
       className={cn(
-        "section-padding",
-        variant === "default" && "bg-primary text-primary-foreground",
-        variant === "gradient" &&
-          "bg-gradient-to-br from-primary via-primary to-accent text-primary-foreground",
+        "surface-ink relative overflow-hidden section-padding",
         className
       )}
     >
-      <div className="container-wide">
+      {/* blueprint grid + glow */}
+      <div className="grid-blueprint absolute inset-0 opacity-60" aria-hidden />
+      <div
+        className="pointer-events-none absolute -right-32 -top-32 h-120 w-120 rounded-full bg-signal/10 blur-3xl"
+        aria-hidden
+      />
+
+      <div className="container-wide relative">
         <div className="mx-auto max-w-3xl text-center">
-          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">
+          <p className="eyebrow-plain mb-6 text-signal">
+            <span aria-hidden>// </span>Engagement Inquiry
+          </p>
+          <h2 className="font-display text-3xl font-bold tracking-tight text-ink-foreground sm:text-4xl lg:text-5xl text-balance">
             {title}
           </h2>
-          <p className="mt-4 text-lg opacity-90 md:text-xl">{description}</p>
-          <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link href={primaryButtonHref}>
-              <Button
-                size="lg"
-                variant="secondary"
-                className="btn-glow w-full sm:w-auto"
-              >
+          <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-ink-muted">
+            {description}
+          </p>
+          <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+            <Button asChild size="lg" variant="signal" className="h-12 w-full px-8 sm:w-auto">
+              <Link href={primaryButtonHref}>
                 {primaryButtonText}
                 <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </Link>
-            {secondaryButtonText && secondaryButtonHref && (
-              <Link href={secondaryButtonHref}>
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="w-full sm:w-auto bg-transparent border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10"
-                >
-                  {secondaryButtonText}
-                </Button>
               </Link>
+            </Button>
+            {secondaryButtonText && secondaryButtonHref && (
+              <Button
+                asChild
+                size="lg"
+                variant="outline"
+                className="h-12 w-full rounded-sm border-white/20 bg-transparent px-8 font-mono text-xs uppercase tracking-[0.12em] text-ink-foreground hover:bg-white/10 hover:text-ink-foreground sm:w-auto"
+              >
+                <Link href={secondaryButtonHref}>{secondaryButtonText}</Link>
+              </Button>
             )}
           </div>
         </div>

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { Inter, JetBrains_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Outfit } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
 import { WebVitalsReporter, GoogleAnalytics, CookieConsent } from "@/components/shared";
 import { ChatbotWidget } from "@/components/chatbot";
@@ -8,14 +8,21 @@ import { SessionProvider, ThemeProvider } from "@/components/providers";
 import { createOrganizationSchema, getJsonLd } from "@/lib/structured-data";
 import "./globals.css";
 
-const inter = Inter({
-  variable: "--font-inter",
+const geistSans = Geist({
+  variable: "--font-geist-sans",
   subsets: ["latin"],
   display: "swap",
 });
 
-const jetbrainsMono = JetBrains_Mono({
-  variable: "--font-jetbrains-mono",
+const outfit = Outfit({
+  variable: "--font-outfit",
+  subsets: ["latin"],
+  display: "swap",
+  weight: ["400", "500", "600", "700", "800"],
+});
+
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
   subsets: ["latin"],
   display: "swap",
 });
@@ -102,7 +109,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${inter.variable} ${jetbrainsMono.variable} font-sans antialiased`}
+        className={`${geistSans.variable} ${outfit.variable} ${geistMono.variable} font-sans antialiased`}
         suppressHydrationWarning
       >
         <ThemeProvider>

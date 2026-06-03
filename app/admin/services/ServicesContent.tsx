@@ -9,8 +9,6 @@ import {
   EyeOff,
   Edit,
   Trash2,
-  Sparkles,
-  ArrowUpDown,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -165,24 +163,25 @@ export function ServicesContent() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Services</h1>
+          <span className="eyebrow mb-2">Service Catalog</span>
+          <h1 className="font-display text-3xl font-bold tracking-tight">Services</h1>
           <p className="text-muted-foreground mt-1">
             Manage consulting service offerings displayed on the public website
           </p>
         </div>
-        <Link href="/admin/services/new">
-          <Button>
+        <Button asChild variant="technical">
+          <Link href="/admin/services/new">
             <Plus className="mr-2 h-4 w-4" />
             Add Service
-          </Button>
-        </Link>
+          </Link>
+        </Button>
       </div>
 
       {/* Filters */}
-      <Card>
+      <Card className="card-technical rounded-none">
         <CardHeader>
-          <CardTitle className="text-lg">Filters</CardTitle>
-          <CardDescription>
+          <CardTitle className="font-display text-lg tracking-tight">Filters</CardTitle>
+          <CardDescription className="font-mono text-xs uppercase tracking-[0.12em]">
             Search and filter services
           </CardDescription>
         </CardHeader>
@@ -199,7 +198,7 @@ export function ServicesContent() {
                     setSearch(e.target.value);
                     setPage(1);
                   }}
-                  className="pl-9"
+                  className="pl-9 rounded-sm border-hairline focus-visible:ring-signal"
                 />
               </div>
             </div>
@@ -212,7 +211,7 @@ export function ServicesContent() {
                 setPage(1);
               }}
             >
-              <SelectTrigger>
+              <SelectTrigger className="rounded-sm border-hairline focus-visible:ring-signal">
                 <SelectValue placeholder="All categories" />
               </SelectTrigger>
               <SelectContent>
@@ -232,7 +231,7 @@ export function ServicesContent() {
                 setPage(1);
               }}
             >
-              <SelectTrigger>
+              <SelectTrigger className="rounded-sm border-hairline focus-visible:ring-signal">
                 <SelectValue placeholder="All status" />
               </SelectTrigger>
               <SelectContent>
@@ -246,36 +245,36 @@ export function ServicesContent() {
       </Card>
 
       {/* Services Table */}
-      <Card>
+      <Card className="card-technical rounded-none">
         <CardContent className="p-0">
           <Table>
             <TableHeader>
-              <TableRow>
-                <TableHead className="w-[50px]">Order</TableHead>
-                <TableHead>Service</TableHead>
-                <TableHead>Category</TableHead>
-                <TableHead>Offerings</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Updated</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+              <TableRow className="hairline-b hover:bg-transparent">
+                <TableHead className="w-[50px] font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">Order</TableHead>
+                <TableHead className="font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">Service</TableHead>
+                <TableHead className="font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">Category</TableHead>
+                <TableHead className="font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">Offerings</TableHead>
+                <TableHead className="font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">Status</TableHead>
+                <TableHead className="font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">Updated</TableHead>
+                <TableHead className="text-right font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {loading ? (
                 <TableRow>
-                  <TableCell colSpan={7} className="h-24 text-center">
+                  <TableCell colSpan={7} className="h-24 text-center font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">
                     Loading services...
                   </TableCell>
                 </TableRow>
               ) : services.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={7} className="h-24 text-center">
+                  <TableCell colSpan={7} className="h-24 text-center font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">
                     No services found.
                   </TableCell>
                 </TableRow>
               ) : (
                 services.map((service) => (
-                  <TableRow key={service.id}>
+                  <TableRow key={service.id} className="hairline-b hover:bg-muted/40">
                     <TableCell className="font-mono text-sm text-muted-foreground">
                       {service.sortOrder}
                     </TableCell>
@@ -293,7 +292,7 @@ export function ServicesContent() {
                       </div>
                     </TableCell>
                     <TableCell>
-                      <Badge variant="outline">{service.categoryName}</Badge>
+                      <Badge variant="outline" className="rounded-sm border-hairline font-mono text-[10px] uppercase tracking-[0.1em] text-muted-foreground">{service.categoryName}</Badge>
                     </TableCell>
                     <TableCell>
                       <div className="text-sm">
@@ -308,18 +307,18 @@ export function ServicesContent() {
                         variant="ghost"
                         size="sm"
                         onClick={() => toggleStatus(service)}
-                        className="h-8 gap-2"
+                        className="h-8 gap-2 rounded-sm hover:text-signal"
                       >
                         {service.isActive ? (
-                          <>
-                            <Eye className="h-3.5 w-3.5" />
-                            <span className="text-green-600">Active</span>
-                          </>
+                          <span className="inline-flex items-center gap-1.5 rounded-sm border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.1em] text-emerald-600">
+                            <Eye className="h-3 w-3" />
+                            Active
+                          </span>
                         ) : (
-                          <>
-                            <EyeOff className="h-3.5 w-3.5" />
-                            <span className="text-muted-foreground">Inactive</span>
-                          </>
+                          <span className="inline-flex items-center gap-1.5 rounded-sm border border-hairline px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.1em] text-muted-foreground">
+                            <EyeOff className="h-3 w-3" />
+                            Inactive
+                          </span>
                         )}
                       </Button>
                     </TableCell>
@@ -328,16 +327,16 @@ export function ServicesContent() {
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
-                        <Link href={`/admin/services/${service.id}`}>
-                          <Button variant="ghost" size="sm">
+                        <Button variant="ghost" size="sm" asChild className="rounded-sm hover:text-signal">
+                          <Link href={`/admin/services/${service.id}`}>
                             <Edit className="h-4 w-4" />
-                          </Button>
-                        </Link>
+                          </Link>
+                        </Button>
                         <Button
                           variant="ghost"
                           size="sm"
                           onClick={() => handleDelete(service.id, service.title)}
-                          className="text-destructive hover:text-destructive"
+                          className="rounded-sm text-destructive hover:text-destructive"
                         >
                           <Trash2 className="h-4 w-4" />
                         </Button>
@@ -359,10 +358,11 @@ export function ServicesContent() {
             size="sm"
             disabled={page === 1}
             onClick={() => setPage(page - 1)}
+            className="rounded-sm border-hairline font-mono text-xs uppercase tracking-[0.12em]"
           >
             Previous
           </Button>
-          <div className="text-sm text-muted-foreground">
+          <div className="font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">
             Page {page} of {totalPages}
           </div>
           <Button
@@ -370,6 +370,7 @@ export function ServicesContent() {
             size="sm"
             disabled={page === totalPages}
             onClick={() => setPage(page + 1)}
+            className="rounded-sm border-hairline font-mono text-xs uppercase tracking-[0.12em]"
           >
             Next
           </Button>

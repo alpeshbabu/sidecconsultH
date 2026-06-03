@@ -14,10 +14,7 @@ import {
   Users,
   Bot,
 } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 import { prisma } from "@/lib/db";
 import {
   MonthlyActivityChart,
@@ -357,6 +354,33 @@ const serviceDisplayNames: Record<string, string> = {
   "general": "General Inquiry",
 };
 
+// Mono chip helper for inquiry status badges
+function inquiryStatusChipClass(status: string): string {
+  switch (status) {
+    case "NEW":
+      return "border border-destructive/30 bg-destructive/10 text-destructive";
+    case "IN_PROGRESS":
+      return "border border-primary/30 bg-primary/10 text-primary";
+    default:
+      return "border border-hairline text-muted-foreground";
+  }
+}
+
+// Mono chip helper for post status badges
+function postStatusChipClass(status: string): string {
+  switch (status) {
+    case "PUBLISHED":
+      return "border border-primary/30 bg-primary/10 text-primary";
+    case "DRAFT":
+      return "border border-hairline bg-muted/20 text-muted-foreground";
+    default:
+      return "border border-hairline text-muted-foreground";
+  }
+}
+
+const sectionLabelClass =
+  "font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground";
+
 export default async function AdminDashboardPage() {
   const data = await getDashboardData();
   const {
@@ -377,181 +401,162 @@ export default async function AdminDashboardPage() {
     ? Math.round((stats.convertedChats / stats.totalChats) * 100)
     : 0;
 
+  // Stat card config
+  const statCards = [
+    {
+      label: "Total Inquiries",
+      value: stats.totalInquiries,
+      caption: "All time submissions",
+      icon: MessageSquare,
+    },
+    {
+      label: "Published Posts",
+      value: stats.publishedPosts,
+      caption: `${stats.draftPosts} drafts pending`,
+      icon: FileText,
+    },
+    {
+      label: "Appointments",
+      value: stats.totalAppointments,
+      caption: `${stats.appointmentsThisMonth} this month`,
+      icon: Calendar,
+    },
+    {
+      label: "Subscribers",
+      value: stats.activeSubscribers,
+      caption: `+${stats.newSubscribers} this month`,
+      icon: Users,
+    },
+    {
+      label: "Chat Sessions",
+      value: stats.totalChats,
+      caption: `${stats.activeChats} active now`,
+      icon: Bot,
+    },
+    {
+      label: "Chat Conversions",
+      value: stats.convertedChats,
+      caption: `${chatConversionRate}% conversion rate`,
+      icon: ArrowRight,
+    },
+  ];
+
   return (
     <div className="space-y-6">
       {/* Welcome Section */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">
+          <p className="eyebrow mb-3">Admin Overview</p>
+          <h1 className="font-display text-2xl font-bold tracking-tight">
             Welcome back, Admin
           </h1>
-          <p className="text-muted-foreground">
+          <p className="mt-1 text-muted-foreground">
             Here&apos;s what&apos;s happening with your website today.
           </p>
         </div>
         <div className="flex gap-2">
-          <Link href="/admin/posts/new">
-            <Button>
+          <Button asChild variant="technical">
+            <Link href="/admin/posts/new">
               <Plus className="mr-2 h-4 w-4" />
               New Post
-            </Button>
-          </Link>
+            </Link>
+          </Button>
         </div>
       </div>
 
-      {/* Stats Grid - 2 rows of 4 */}
+      {/* Stats Grid */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        {/* Total Inquiries */}
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Total Inquiries
-            </CardTitle>
-            <MessageSquare className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.totalInquiries}</div>
-            <p className="text-xs text-muted-foreground mt-1">
-              All time submissions
-            </p>
-          </CardContent>
-        </Card>
-
-        {/* New Inquiries */}
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              New Inquiries
-            </CardTitle>
-            {stats.inquiryTrend >= 0 ? (
-              <TrendingUp className="h-4 w-4 text-green-600" />
-            ) : (
-              <TrendingDown className="h-4 w-4 text-red-600" />
-            )}
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.newInquiries}</div>
-            <div className="flex items-center gap-1 mt-1">
-              <p className="text-xs text-muted-foreground">
-                Last 30 days
-              </p>
-              {stats.inquiryTrend !== 0 && (
-                <span className={`text-xs font-medium ${stats.inquiryTrend >= 0 ? "text-green-600" : "text-red-600"}`}>
-                  {stats.inquiryTrend > 0 ? "+" : ""}{stats.inquiryTrend}%
-                </span>
+        {/* New Inquiries (with trend) */}
+        <div className="card-technical rounded-none p-5">
+          <div className="flex items-start justify-between">
+            <div className="flex items-center gap-2">
+              <span className="h-3 w-px bg-signal" />
+              <span className={sectionLabelClass}>New Inquiries</span>
+            </div>
+            <div className="flex h-9 w-9 items-center justify-center border border-hairline text-primary">
+              {stats.inquiryTrend >= 0 ? (
+                <TrendingUp className="h-4 w-4 text-green-600" />
+              ) : (
+                <TrendingDown className="h-4 w-4 text-red-600" />
               )}
             </div>
-          </CardContent>
-        </Card>
+          </div>
+          <div className="mt-4 font-display text-3xl font-bold tracking-tight">
+            {stats.newInquiries}
+          </div>
+          <div className="mt-1 flex items-center gap-2">
+            <p className="font-mono text-[11px] uppercase tracking-[0.1em] text-muted-foreground">
+              Last 30 days
+            </p>
+            {stats.inquiryTrend !== 0 && (
+              <span
+                className={`font-mono text-[11px] font-medium ${stats.inquiryTrend >= 0 ? "text-green-600" : "text-red-600"}`}
+              >
+                {stats.inquiryTrend > 0 ? "+" : ""}{stats.inquiryTrend}%
+              </span>
+            )}
+          </div>
+        </div>
 
-        {/* Unread Inquiries */}
-        <Card className={stats.unreadInquiries > 0 ? "border-destructive/50" : ""}>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Unread Inquiries
-            </CardTitle>
-            <Mail className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className={`text-2xl font-bold ${stats.unreadInquiries > 0 ? "text-destructive" : ""}`}>
-              {stats.unreadInquiries}
+        {/* Unread Inquiries (alert-aware) */}
+        <div
+          className={`card-technical rounded-none p-5 ${stats.unreadInquiries > 0 ? "border-destructive/50" : ""}`}
+        >
+          <div className="flex items-start justify-between">
+            <div className="flex items-center gap-2">
+              <span className="h-3 w-px bg-signal" />
+              <span className={sectionLabelClass}>Unread Inquiries</span>
             </div>
-            <p className="text-xs text-muted-foreground mt-1">
-              Awaiting review
-            </p>
-          </CardContent>
-        </Card>
+            <div className="flex h-9 w-9 items-center justify-center border border-hairline text-primary">
+              <Mail className="h-4 w-4" />
+            </div>
+          </div>
+          <div
+            className={`mt-4 font-display text-3xl font-bold tracking-tight ${stats.unreadInquiries > 0 ? "text-destructive" : ""}`}
+          >
+            {stats.unreadInquiries}
+          </div>
+          <p className="mt-1 font-mono text-[11px] uppercase tracking-[0.1em] text-muted-foreground">
+            Awaiting review
+          </p>
+        </div>
 
-        {/* Published Posts */}
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Published Posts
-            </CardTitle>
-            <FileText className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.publishedPosts}</div>
-            <p className="text-xs text-muted-foreground mt-1">
-              {stats.draftPosts} drafts pending
-            </p>
-          </CardContent>
-        </Card>
-
-        {/* Appointments */}
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Appointments
-            </CardTitle>
-            <Calendar className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.totalAppointments}</div>
-            <p className="text-xs text-muted-foreground mt-1">
-              {stats.appointmentsThisMonth} this month
-            </p>
-          </CardContent>
-        </Card>
-
-        {/* Active Subscribers */}
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Subscribers
-            </CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.activeSubscribers}</div>
-            <p className="text-xs text-muted-foreground mt-1">
-              +{stats.newSubscribers} this month
-            </p>
-          </CardContent>
-        </Card>
-
-        {/* Chat Sessions */}
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Chat Sessions
-            </CardTitle>
-            <Bot className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.totalChats}</div>
-            <p className="text-xs text-muted-foreground mt-1">
-              {stats.activeChats} active now
-            </p>
-          </CardContent>
-        </Card>
-
-        {/* Chat Conversions */}
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Chat Conversions
-            </CardTitle>
-            <ArrowRight className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.convertedChats}</div>
-            <p className="text-xs text-muted-foreground mt-1">
-              {chatConversionRate}% conversion rate
-            </p>
-          </CardContent>
-        </Card>
+        {/* Remaining stat cards */}
+        {statCards.map((card) => {
+          const Icon = card.icon;
+          return (
+            <div key={card.label} className="card-technical rounded-none p-5">
+              <div className="flex items-start justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="h-3 w-px bg-signal" />
+                  <span className={sectionLabelClass}>{card.label}</span>
+                </div>
+                <div className="flex h-9 w-9 items-center justify-center border border-hairline text-primary">
+                  <Icon className="h-4 w-4" />
+                </div>
+              </div>
+              <div className="mt-4 font-display text-3xl font-bold tracking-tight">
+                {card.value}
+              </div>
+              <p className="mt-1 font-mono text-[11px] uppercase tracking-[0.1em] text-muted-foreground">
+                {card.caption}
+              </p>
+            </div>
+          );
+        })}
       </div>
 
       {/* Monthly Activity Chart */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg">Monthly Activity</CardTitle>
-          <CardDescription>
+      <div className="card-technical rounded-none">
+        <div className="p-5 hairline-b">
+          <h2 className="font-display text-lg font-semibold tracking-tight">
+            Monthly Activity
+          </h2>
+          <p className="mt-1 text-sm text-muted-foreground">
             Inquiries, appointments, subscribers, and chats over the last 6 months
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
+          </p>
+        </div>
+        <div className="p-5">
           {monthlyActivity.length > 0 &&
           monthlyActivity.some(
             (m) => m.inquiries + m.appointments + m.subscribers + m.chats > 0
@@ -559,37 +564,46 @@ export default async function AdminDashboardPage() {
             <MonthlyActivityChart data={monthlyActivity} />
           ) : (
             <div className="flex items-center justify-center h-[300px] text-muted-foreground">
-              <p className="text-sm">
+              <p className="font-mono text-xs uppercase tracking-[0.12em]">
                 No activity data yet. Charts will appear as data accumulates.
               </p>
             </div>
           )}
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
       {/* Recent Inquiries + Inquiry Status */}
       <div className="grid gap-6 lg:grid-cols-3">
         {/* Recent Inquiries - Takes 2 columns */}
-        <Card className="lg:col-span-2">
-          <CardHeader className="flex flex-row items-center justify-between">
+        <div className="card-technical rounded-none lg:col-span-2">
+          <div className="flex flex-row items-center justify-between p-5 hairline-b">
             <div>
-              <CardTitle className="text-lg">Recent Inquiries</CardTitle>
-              <CardDescription>Latest contact form submissions</CardDescription>
+              <h2 className="font-display text-lg font-semibold tracking-tight">
+                Recent Inquiries
+              </h2>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Latest contact form submissions
+              </p>
             </div>
-            <Link href="/admin/inquiries">
-              <Button variant="ghost" size="sm">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="rounded-sm hover:text-signal"
+              asChild
+            >
+              <Link href="/admin/inquiries">
                 View all
                 <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </Link>
-          </CardHeader>
-          <CardContent>
+              </Link>
+            </Button>
+          </div>
+          <div className="p-5">
             {recentInquiries.length > 0 ? (
-              <div className="space-y-3">
+              <div className="space-y-px border border-hairline">
                 {recentInquiries.map((inquiry) => (
                   <div
                     key={inquiry.id}
-                    className="flex items-center justify-between p-3 rounded-lg border bg-card hover:bg-muted/50 transition-colors"
+                    className="flex items-center justify-between p-3 transition-colors hover:bg-muted/20"
                   >
                     <div className="flex items-center gap-3 flex-1 min-w-0">
                       {!inquiry.isRead && (
@@ -603,16 +617,12 @@ export default async function AdminDashboardPage() {
                       </div>
                     </div>
                     <div className="flex items-center gap-3 ml-4">
-                      <Badge
-                        variant={
-                          inquiry.status === "NEW" ? "destructive" :
-                          inquiry.status === "IN_PROGRESS" ? "default" : "secondary"
-                        }
-                        className="text-xs"
+                      <span
+                        className={`rounded-sm px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.1em] ${inquiryStatusChipClass(inquiry.status)}`}
                       >
                         {inquiry.status.replace("_", " ")}
-                      </Badge>
-                      <span className="text-xs text-muted-foreground whitespace-nowrap hidden sm:inline">
+                      </span>
+                      <span className="font-mono text-[11px] text-muted-foreground whitespace-nowrap hidden sm:inline">
                         {formatRelativeTime(inquiry.createdAt)}
                       </span>
                     </div>
@@ -626,61 +636,73 @@ export default async function AdminDashboardPage() {
                 <p className="text-sm">Inquiries will appear here when visitors submit the contact form.</p>
               </div>
             )}
-          </CardContent>
-        </Card>
+          </div>
+        </div>
 
         {/* Inquiry Status Donut Chart */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg">Inquiry Status</CardTitle>
-            <CardDescription>Breakdown by current status</CardDescription>
-          </CardHeader>
-          <CardContent>
+        <div className="card-technical rounded-none">
+          <div className="p-5 hairline-b">
+            <h2 className="font-display text-lg font-semibold tracking-tight">
+              Inquiry Status
+            </h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Breakdown by current status
+            </p>
+          </div>
+          <div className="p-5">
             <InquiryStatusChart data={inquiryStatusBreakdown} />
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
 
       {/* Conversion Funnel + Top Services + Chat Engagement */}
       <div className="grid gap-6 lg:grid-cols-3">
         {/* Conversion Funnel */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg">Conversion Funnel</CardTitle>
-            <CardDescription>From inquiry to appointment</CardDescription>
-          </CardHeader>
-          <CardContent>
+        <div className="card-technical rounded-none">
+          <div className="p-5 hairline-b">
+            <h2 className="font-display text-lg font-semibold tracking-tight">
+              Conversion Funnel
+            </h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              From inquiry to appointment
+            </p>
+          </div>
+          <div className="p-5">
             <ConversionFunnel
               totalInquiries={stats.totalInquiries}
               respondedInquiries={stats.respondedInquiries}
               totalAppointments={stats.totalAppointments}
             />
-          </CardContent>
-        </Card>
+          </div>
+        </div>
 
         {/* Top Services */}
-        <Card>
-          <CardHeader>
+        <div className="card-technical rounded-none">
+          <div className="p-5 hairline-b">
             <div className="flex items-center gap-2">
               <BarChart3 className="h-5 w-5 text-muted-foreground" />
-              <CardTitle className="text-lg">Top Services</CardTitle>
+              <h2 className="font-display text-lg font-semibold tracking-tight">
+                Top Services
+              </h2>
             </div>
-            <CardDescription>Most requested service areas</CardDescription>
-          </CardHeader>
-          <CardContent>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Most requested service areas
+            </p>
+          </div>
+          <div className="p-5">
             {serviceInterests.length > 0 ? (
               <div className="space-y-3">
                 {serviceInterests.map((item) => (
-                  <div key={item.service} className="space-y-1">
+                  <div key={item.service} className="space-y-1.5">
                     <div className="flex items-center justify-between text-sm">
                       <span className="truncate flex-1">
                         {serviceDisplayNames[item.service] || item.service}
                       </span>
-                      <span className="font-medium ml-2">{item.count}</span>
+                      <span className="font-mono text-xs ml-2">{item.count}</span>
                     </div>
-                    <div className="h-2 w-full bg-muted rounded-full overflow-hidden">
+                    <div className="h-2 w-full overflow-hidden rounded-none border border-hairline bg-muted/20">
                       <div
-                        className="h-full bg-primary rounded-full transition-all"
+                        className="h-full bg-primary transition-all"
                         style={{ width: `${(item.count / maxServiceCount) * 100}%` }}
                       />
                     </div>
@@ -690,99 +712,112 @@ export default async function AdminDashboardPage() {
             ) : (
               <div className="text-center py-8 text-muted-foreground">
                 <BarChart3 className="h-10 w-10 mx-auto mb-2 opacity-50" />
-                <p className="text-sm">No data yet</p>
+                <p className="font-mono text-xs uppercase tracking-[0.12em]">No data yet</p>
               </div>
             )}
-          </CardContent>
-        </Card>
+          </div>
+        </div>
 
         {/* Chat Engagement */}
-        <Card>
-          <CardHeader>
+        <div className="card-technical rounded-none">
+          <div className="p-5 hairline-b">
             <div className="flex items-center gap-2">
               <Bot className="h-5 w-5 text-muted-foreground" />
-              <CardTitle className="text-lg">Chat Engagement</CardTitle>
+              <h2 className="font-display text-lg font-semibold tracking-tight">
+                Chat Engagement
+              </h2>
             </div>
-            <CardDescription>AI chatbot performance</CardDescription>
-          </CardHeader>
-          <CardContent>
+            <p className="mt-1 text-sm text-muted-foreground">
+              AI chatbot performance
+            </p>
+          </div>
+          <div className="p-5">
             {stats.totalChats > 0 ? (
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">Total Sessions</span>
-                  <span className="font-bold">{stats.totalChats}</span>
+              <div className="divide-y divide-[var(--hairline-color)] border border-hairline">
+                <div className="flex items-center justify-between px-4 py-3">
+                  <span className="font-mono text-[11px] uppercase tracking-[0.1em] text-muted-foreground">
+                    Total Sessions
+                  </span>
+                  <span className="font-display font-bold">{stats.totalChats}</span>
                 </div>
-                <Separator />
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">Active Now</span>
-                  <span className="font-bold text-green-600">{stats.activeChats}</span>
+                <div className="flex items-center justify-between px-4 py-3">
+                  <span className="font-mono text-[11px] uppercase tracking-[0.1em] text-muted-foreground">
+                    Active Now
+                  </span>
+                  <span className="font-display font-bold text-green-600">{stats.activeChats}</span>
                 </div>
-                <Separator />
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">Converted</span>
-                  <span className="font-bold">{stats.convertedChats}</span>
+                <div className="flex items-center justify-between px-4 py-3">
+                  <span className="font-mono text-[11px] uppercase tracking-[0.1em] text-muted-foreground">
+                    Converted
+                  </span>
+                  <span className="font-display font-bold">{stats.convertedChats}</span>
                 </div>
-                <Separator />
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">Conversion Rate</span>
-                  <span className="font-bold">{chatConversionRate}%</span>
+                <div className="flex items-center justify-between px-4 py-3">
+                  <span className="font-mono text-[11px] uppercase tracking-[0.1em] text-muted-foreground">
+                    Conversion Rate
+                  </span>
+                  <span className="font-display font-bold">{chatConversionRate}%</span>
                 </div>
-                <Separator />
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">This Month</span>
-                  <span className="font-bold">{stats.chatsThisMonth}</span>
+                <div className="flex items-center justify-between px-4 py-3">
+                  <span className="font-mono text-[11px] uppercase tracking-[0.1em] text-muted-foreground">
+                    This Month
+                  </span>
+                  <span className="font-display font-bold">{stats.chatsThisMonth}</span>
                 </div>
               </div>
             ) : (
               <div className="text-center py-8 text-muted-foreground">
                 <Bot className="h-10 w-10 mx-auto mb-2 opacity-50" />
-                <p className="text-sm">No chat data yet</p>
+                <p className="font-mono text-xs uppercase tracking-[0.12em]">No chat data yet</p>
               </div>
             )}
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
 
       {/* Recent Posts */}
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
+      <div className="card-technical rounded-none">
+        <div className="flex flex-row items-center justify-between p-5 hairline-b">
           <div>
-            <CardTitle className="text-lg">Recent Posts</CardTitle>
-            <CardDescription>Latest blog articles</CardDescription>
+            <h2 className="font-display text-lg font-semibold tracking-tight">
+              Recent Posts
+            </h2>
+            <p className="mt-1 text-sm text-muted-foreground">Latest blog articles</p>
           </div>
-          <Link href="/admin/posts">
-            <Button variant="ghost" size="sm">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="rounded-sm hover:text-signal"
+            asChild
+          >
+            <Link href="/admin/posts">
               View all
               <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
-          </Link>
-        </CardHeader>
-        <CardContent>
+            </Link>
+          </Button>
+        </div>
+        <div className="p-5">
           {recentPosts.length > 0 ? (
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {recentPosts.map((post) => (
                 <div
                   key={post.id}
-                  className="flex flex-col p-4 rounded-lg border bg-card hover:bg-muted/50 transition-colors"
+                  className="flex flex-col card-technical rounded-none p-4"
                 >
                   <div className="flex items-start justify-between gap-2 mb-2">
-                    <Badge
-                      variant={
-                        post.status === "PUBLISHED" ? "default" :
-                        post.status === "DRAFT" ? "secondary" : "outline"
-                      }
-                      className="text-xs"
+                    <span
+                      className={`rounded-sm px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.1em] ${postStatusChipClass(post.status)}`}
                     >
                       {post.status}
-                    </Badge>
+                    </span>
                     {post.category && (
-                      <Badge variant="outline" className="text-xs">
+                      <span className="rounded-sm border border-hairline px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.1em] text-muted-foreground">
                         {post.category.name}
-                      </Badge>
+                      </span>
                     )}
                   </div>
                   <p className="font-medium line-clamp-2 flex-1">{post.title}</p>
-                  <p className="text-xs text-muted-foreground mt-2">
+                  <p className="mt-2 font-mono text-[11px] text-muted-foreground">
                     {post.status === "PUBLISHED" && post.publishedAt
                       ? `Published ${formatDate(post.publishedAt)}`
                       : `Created ${formatDate(post.createdAt)}`
@@ -795,66 +830,78 @@ export default async function AdminDashboardPage() {
             <div className="text-center py-8 text-muted-foreground">
               <FileText className="h-10 w-10 mx-auto mb-2 opacity-50" />
               <p>No posts yet</p>
-              <Link href="/admin/posts/new">
-                <Button variant="link" className="mt-2">
+              <Button variant="link" className="mt-2 hover:text-signal" asChild>
+                <Link href="/admin/posts/new">
                   Create your first post
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             </div>
           )}
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
       {/* Quick Actions */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg">Quick Actions</CardTitle>
-        </CardHeader>
-        <CardContent>
+      <div className="card-technical rounded-none">
+        <div className="p-5 hairline-b">
+          <h2 className="font-display text-lg font-semibold tracking-tight">
+            Quick Actions
+          </h2>
+        </div>
+        <div className="p-5">
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <Link href="/admin/posts/new">
-              <Button variant="outline" className="w-full h-auto py-4">
-                <div className="flex flex-col items-center gap-2">
-                  <FileText className="h-6 w-6" />
-                  <span>Create Blog Post</span>
-                </div>
-              </Button>
+            <Link
+              href="/admin/posts/new"
+              className="group card-technical rounded-none flex flex-col items-center gap-3 py-6"
+            >
+              <span className="flex h-11 w-11 items-center justify-center border border-hairline text-primary transition-colors group-hover:border-signal/60 group-hover:text-signal">
+                <FileText className="h-5 w-5" />
+              </span>
+              <span className="font-display text-sm font-semibold transition-colors group-hover:text-signal">
+                Create Blog Post
+              </span>
             </Link>
-            <Link href="/admin/inquiries">
-              <Button variant="outline" className="w-full h-auto py-4 relative">
-                <div className="flex flex-col items-center gap-2">
-                  <MessageSquare className="h-6 w-6" />
-                  <span>View Inquiries</span>
-                </div>
-                {stats.unreadInquiries > 0 && (
-                  <Badge
-                    variant="destructive"
-                    className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0 flex items-center justify-center"
-                  >
-                    {stats.unreadInquiries}
-                  </Badge>
-                )}
-              </Button>
+            <Link
+              href="/admin/inquiries"
+              className="group card-technical rounded-none relative flex flex-col items-center gap-3 py-6"
+            >
+              <span className="flex h-11 w-11 items-center justify-center border border-hairline text-primary transition-colors group-hover:border-signal/60 group-hover:text-signal">
+                <MessageSquare className="h-5 w-5" />
+              </span>
+              <span className="font-display text-sm font-semibold transition-colors group-hover:text-signal">
+                View Inquiries
+              </span>
+              {stats.unreadInquiries > 0 && (
+                <span className="absolute -top-2 -right-2 flex h-6 w-6 items-center justify-center rounded-sm border border-destructive/30 bg-destructive/10 font-mono text-[10px] font-medium text-destructive">
+                  {stats.unreadInquiries}
+                </span>
+              )}
             </Link>
-            <Link href="/admin/categories">
-              <Button variant="outline" className="w-full h-auto py-4">
-                <div className="flex flex-col items-center gap-2">
-                  <Plus className="h-6 w-6" />
-                  <span>Manage Categories</span>
-                </div>
-              </Button>
+            <Link
+              href="/admin/categories"
+              className="group card-technical rounded-none flex flex-col items-center gap-3 py-6"
+            >
+              <span className="flex h-11 w-11 items-center justify-center border border-hairline text-primary transition-colors group-hover:border-signal/60 group-hover:text-signal">
+                <Plus className="h-5 w-5" />
+              </span>
+              <span className="font-display text-sm font-semibold transition-colors group-hover:text-signal">
+                Manage Categories
+              </span>
             </Link>
-            <Link href="/" target="_blank">
-              <Button variant="outline" className="w-full h-auto py-4">
-                <div className="flex flex-col items-center gap-2">
-                  <Eye className="h-6 w-6" />
-                  <span>View Website</span>
-                </div>
-              </Button>
+            <Link
+              href="/"
+              target="_blank"
+              className="group card-technical rounded-none flex flex-col items-center gap-3 py-6"
+            >
+              <span className="flex h-11 w-11 items-center justify-center border border-hairline text-primary transition-colors group-hover:border-signal/60 group-hover:text-signal">
+                <Eye className="h-5 w-5" />
+              </span>
+              <span className="font-display text-sm font-semibold transition-colors group-hover:text-signal">
+                View Website
+              </span>
             </Link>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 }

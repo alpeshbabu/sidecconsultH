@@ -268,17 +268,18 @@ export function CategoriesContent() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Categories</h1>
+          <span className="eyebrow mb-2">Taxonomy</span>
+          <h1 className="font-display text-2xl font-bold tracking-tight">Categories</h1>
           <p className="text-muted-foreground">
             Organize your blog posts into categories
           </p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" onClick={fetchCategories} disabled={isLoading}>
+          <Button variant="outline" onClick={fetchCategories} disabled={isLoading} className="rounded-sm border-hairline font-mono text-xs uppercase tracking-[0.12em]">
             <RefreshCw className={cn("mr-2 h-4 w-4", isLoading && "animate-spin")} />
             Refresh
           </Button>
-          <Button onClick={() => openDialog()}>
+          <Button variant="technical" onClick={() => openDialog()}>
             <Plus className="mr-2 h-4 w-4" />
             New Category
           </Button>
@@ -286,16 +287,16 @@ export function CategoriesContent() {
       </div>
 
       {/* Categories Table */}
-      <Card>
+      <Card className="card-technical rounded-none">
         <CardContent className="p-0">
           <Table>
             <TableHeader>
-              <TableRow>
+              <TableRow className="hairline-b hover:bg-transparent">
                 <TableHead className="w-[50px]"></TableHead>
-                <TableHead>Name</TableHead>
-                <TableHead>Slug</TableHead>
-                <TableHead className="hidden md:table-cell">Description</TableHead>
-                <TableHead className="text-center">Posts</TableHead>
+                <TableHead className="font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">Name</TableHead>
+                <TableHead className="font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">Slug</TableHead>
+                <TableHead className="hidden md:table-cell font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">Description</TableHead>
+                <TableHead className="text-center font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">Posts</TableHead>
                 <TableHead className="w-[50px]"></TableHead>
               </TableRow>
             </TableHeader>
@@ -303,28 +304,28 @@ export function CategoriesContent() {
               {isLoading ? (
                 <TableRow>
                   <TableCell colSpan={6} className="h-32 text-center">
-                    <RefreshCw className="h-6 w-6 animate-spin mx-auto text-muted-foreground" />
+                    <RefreshCw className="h-6 w-6 animate-spin mx-auto text-signal" />
                   </TableCell>
                 </TableRow>
               ) : categories.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={6} className="h-32 text-center">
-                    <FolderOpen className="h-10 w-10 mx-auto mb-2 text-muted-foreground opacity-50" />
-                    <p className="text-muted-foreground">No categories yet</p>
-                    <Button variant="link" className="mt-2" onClick={() => openDialog()}>
+                    <FolderOpen className="h-10 w-10 mx-auto mb-2 text-signal opacity-70" />
+                    <p className="font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">No categories yet</p>
+                    <Button variant="link" className="mt-2 text-signal" onClick={() => openDialog()}>
                       Create your first category
                     </Button>
                   </TableCell>
                 </TableRow>
               ) : (
                 categories.map((category, index) => (
-                  <TableRow key={category.id}>
+                  <TableRow key={category.id} className="hairline-b hover:bg-muted/40">
                     <TableCell>
                       <div className="flex flex-col gap-1">
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="h-6 w-6"
+                          className="h-6 w-6 rounded-sm hover:text-signal"
                           onClick={() => moveCategory(index, "up")}
                           disabled={index === 0}
                         >
@@ -336,7 +337,7 @@ export function CategoriesContent() {
                       <span className="font-medium">{category.name}</span>
                     </TableCell>
                     <TableCell>
-                      <code className="text-sm bg-muted px-2 py-1 rounded">
+                      <code className="font-mono text-xs bg-muted/40 border border-hairline px-2 py-1 rounded-sm">
                         {category.slug}
                       </code>
                     </TableCell>
@@ -346,19 +347,19 @@ export function CategoriesContent() {
                       </span>
                     </TableCell>
                     <TableCell className="text-center">
-                      <Badge variant="secondary">
+                      <Badge variant="secondary" className="rounded-sm border border-hairline font-mono text-[10px] uppercase tracking-[0.1em] text-muted-foreground">
                         {category._count.posts}
                       </Badge>
                     </TableCell>
                     <TableCell>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon" className="h-8 w-8">
+                          <Button variant="ghost" size="icon" className="h-8 w-8 rounded-sm hover:text-signal">
                             <MoreHorizontal className="h-4 w-4" />
                           </Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                        <DropdownMenuContent align="end" className="rounded-sm border-hairline">
+                          <DropdownMenuLabel className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">Actions</DropdownMenuLabel>
                           <DropdownMenuSeparator />
                           <DropdownMenuItem onClick={() => openDialog(category)}>
                             <Edit className="mr-2 h-4 w-4" />
@@ -385,9 +386,9 @@ export function CategoriesContent() {
 
       {/* Edit/Create Dialog */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-[425px] rounded-sm border-hairline">
           <DialogHeader>
-            <DialogTitle>
+            <DialogTitle className="font-display tracking-tight">
               {editingCategory ? "Edit Category" : "New Category"}
             </DialogTitle>
             <DialogDescription>
@@ -400,7 +401,7 @@ export function CategoriesContent() {
           <div className="space-y-4 py-4">
             {/* Name */}
             <div className="space-y-2">
-              <Label htmlFor="name">
+              <Label htmlFor="name" className="font-mono text-xs uppercase tracking-[0.12em]">
                 Name <span className="text-destructive">*</span>
               </Label>
               <Input
@@ -408,7 +409,7 @@ export function CategoriesContent() {
                 value={formData.name}
                 onChange={(e) => handleNameChange(e.target.value)}
                 placeholder="Category name"
-                className={cn(errors.name && "border-destructive")}
+                className={cn("rounded-sm border-hairline focus-visible:ring-signal", errors.name && "border-destructive")}
               />
               {errors.name && (
                 <p className="text-sm text-destructive">{errors.name}</p>
@@ -417,7 +418,7 @@ export function CategoriesContent() {
 
             {/* Slug */}
             <div className="space-y-2">
-              <Label htmlFor="slug">
+              <Label htmlFor="slug" className="font-mono text-xs uppercase tracking-[0.12em]">
                 Slug <span className="text-destructive">*</span>
               </Label>
               <div className="flex gap-2">
@@ -431,7 +432,7 @@ export function CategoriesContent() {
                     }
                   }}
                   placeholder="category-slug"
-                  className={cn("flex-1", errors.slug && "border-destructive")}
+                  className={cn("flex-1 rounded-sm border-hairline focus-visible:ring-signal", errors.slug && "border-destructive")}
                 />
                 <Button
                   type="button"
@@ -443,6 +444,7 @@ export function CategoriesContent() {
                     }))
                   }
                   title="Generate from name"
+                  className="rounded-sm border-hairline hover:text-signal"
                 >
                   <Sparkles className="h-4 w-4" />
                 </Button>
@@ -454,7 +456,7 @@ export function CategoriesContent() {
 
             {/* Description */}
             <div className="space-y-2">
-              <Label htmlFor="description">Description</Label>
+              <Label htmlFor="description" className="font-mono text-xs uppercase tracking-[0.12em]">Description</Label>
               <Textarea
                 id="description"
                 value={formData.description}
@@ -462,16 +464,16 @@ export function CategoriesContent() {
                   setFormData((prev) => ({ ...prev, description: e.target.value }))
                 }
                 placeholder="Optional category description"
-                className="min-h-[80px]"
+                className="min-h-[80px] rounded-sm border-hairline focus-visible:ring-signal"
               />
             </div>
           </div>
 
           <DialogFooter>
-            <Button variant="outline" onClick={closeDialog}>
+            <Button variant="outline" onClick={closeDialog} className="rounded-sm border-hairline font-mono text-xs uppercase tracking-[0.12em]">
               Cancel
             </Button>
-            <Button onClick={saveCategory} disabled={isSaving}>
+            <Button variant="technical" onClick={saveCategory} disabled={isSaving}>
               {isSaving ? (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               ) : editingCategory ? (

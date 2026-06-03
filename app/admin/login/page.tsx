@@ -55,30 +55,39 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-muted/30 p-4">
+    <div className="relative min-h-screen flex flex-col items-center justify-center bg-muted/20 p-4">
       {/* Background Pattern */}
-      <div className="fixed inset-0 -z-10">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5" />
+      <div className="fixed inset-0 -z-10" aria-hidden>
+        <div className="grid-blueprint absolute inset-0 opacity-70" />
+        <div className="absolute inset-x-0 top-0 h-px bg-signal/40" />
       </div>
 
       {/* Back to Website */}
       <div className="absolute top-4 left-4">
-        <Link href="/">
-          <Button variant="ghost" size="sm">
+        <Button
+          variant="outline"
+          size="sm"
+          asChild
+          className="rounded-sm border-hairline font-mono text-xs uppercase tracking-[0.12em]"
+        >
+          <Link href="/">
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Website
-          </Button>
-        </Link>
+          </Link>
+        </Button>
       </div>
 
       {/* Login Card */}
-      <Card className="w-full max-w-md">
+      <Card className="card-technical w-full max-w-md rounded-none">
         <CardHeader className="text-center">
           {/* Logo */}
-          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-primary text-primary-foreground">
+          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-sm border border-hairline text-signal">
             <Sparkles className="h-7 w-7" />
           </div>
-          <CardTitle className="text-2xl">Welcome Back</CardTitle>
+          <p className="eyebrow-plain mb-2 text-signal">
+            <span aria-hidden>// </span>Secure Access
+          </p>
+          <CardTitle className="font-display text-2xl">Welcome Back</CardTitle>
           <CardDescription>
             Sign in to access the admin dashboard
           </CardDescription>
@@ -87,13 +96,13 @@ export default function AdminLoginPage() {
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Error Message */}
             {error && (
-              <div className="p-3 rounded-lg bg-destructive/10 text-destructive text-sm text-center">
+              <div className="rounded-sm border border-destructive/30 bg-destructive/10 p-3 text-center font-mono text-xs text-destructive">
                 {error}
               </div>
             )}
 
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email" className="font-mono text-xs uppercase tracking-[0.1em] text-muted-foreground">Email</Label>
               <Input
                 id="email"
                 type="email"
@@ -103,12 +112,13 @@ export default function AdminLoginPage() {
                 disabled={isLoading}
                 required
                 autoComplete="email"
+                className="rounded-sm border-hairline focus-visible:ring-signal"
               />
             </div>
 
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password" className="font-mono text-xs uppercase tracking-[0.1em] text-muted-foreground">Password</Label>
               </div>
               <div className="relative">
                 <Input
@@ -120,7 +130,7 @@ export default function AdminLoginPage() {
                   disabled={isLoading}
                   required
                   autoComplete="current-password"
-                  className="pr-10"
+                  className="rounded-sm border-hairline pr-10 focus-visible:ring-signal"
                 />
                 <Button
                   type="button"
@@ -139,7 +149,7 @@ export default function AdminLoginPage() {
               </div>
             </div>
 
-            <Button type="submit" className="w-full" disabled={isLoading}>
+            <Button type="submit" variant="technical" className="h-11 w-full" disabled={isLoading}>
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -152,17 +162,17 @@ export default function AdminLoginPage() {
           </form>
 
           {/* Security Notice */}
-          <div className="mt-6 p-4 rounded-lg bg-muted text-center">
-            <p className="text-xs text-muted-foreground">
-              This is a secure admin area. All login attempts are logged.
+          <div className="mt-6 border border-hairline bg-muted/40 p-4 text-center">
+            <p className="font-mono text-[11px] uppercase tracking-[0.1em] text-muted-foreground">
+              Secure admin area · All login attempts are logged
             </p>
           </div>
         </CardContent>
       </Card>
 
       {/* Footer */}
-      <p className="mt-8 text-center text-sm text-muted-foreground">
-        © {new Date().getFullYear()} SIDEC Consulting. All rights reserved.
+      <p className="mt-8 text-center font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
+        © {new Date().getFullYear()} SIDEC Consulting
       </p>
     </div>
   );

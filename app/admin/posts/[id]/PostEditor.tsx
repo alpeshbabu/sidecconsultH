@@ -26,13 +26,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
   Select,
   SelectContent,
   SelectItem,
@@ -363,20 +356,32 @@ export function PostEditor({ post, categories, allTags, isNew }: PostEditorProps
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="flex items-center gap-4">
-          <Link href="/admin/posts">
-            <Button variant="ghost" size="icon">
+          <Button variant="ghost" size="icon" className="rounded-sm hover:text-signal" asChild>
+            <Link href="/admin/posts">
               <ArrowLeft className="h-5 w-5" />
-            </Button>
-          </Link>
+            </Link>
+          </Button>
           <div>
-            <h1 className="text-2xl font-bold tracking-tight">
+            <p className="font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground mb-1">
+              {isNew ? "Create" : "Edit"}
+            </p>
+            <h1 className="font-display text-2xl font-bold tracking-tight">
               {isNew ? "New Post" : "Edit Post"}
             </h1>
             {post && (
               <div className="flex items-center gap-2 mt-1">
-                <Badge variant={post.status === "PUBLISHED" ? "default" : "secondary"}>
+                <span
+                  className={cn(
+                    "rounded-sm font-mono text-[10px] uppercase tracking-[0.1em] px-2 py-0.5 inline-flex items-center border",
+                    post.status === "PUBLISHED"
+                      ? "bg-emerald-500/10 text-emerald-600 border-emerald-500/30"
+                      : post.status === "ARCHIVED"
+                      ? "bg-muted text-muted-foreground border-hairline"
+                      : "bg-amber-500/10 text-amber-600 border-amber-500/30"
+                  )}
+                >
                   {post.status}
-                </Badge>
+                </span>
                 {post.publishedAt && (
                   <span className="text-sm text-muted-foreground">
                     Published {new Date(post.publishedAt).toLocaleDateString()}
@@ -388,15 +393,16 @@ export function PostEditor({ post, categories, allTags, isNew }: PostEditorProps
         </div>
         <div className="flex items-center gap-2">
           {!isNew && post?.status === "PUBLISHED" && (
-            <Link href={`/resources/${post.slug}`} target="_blank">
-              <Button variant="outline">
+            <Button variant="outline" className="rounded-sm border-hairline font-mono text-xs uppercase tracking-[0.12em]" asChild>
+              <Link href={`/resources/${post.slug}`} target="_blank">
                 <ExternalLink className="mr-2 h-4 w-4" />
                 View Live
-              </Button>
-            </Link>
+              </Link>
+            </Button>
           )}
           <Button
             variant="outline"
+            className="rounded-sm border-hairline font-mono text-xs uppercase tracking-[0.12em]"
             onClick={() => savePost(false)}
             disabled={isSaving || !hasChanges}
           >
@@ -407,7 +413,7 @@ export function PostEditor({ post, categories, allTags, isNew }: PostEditorProps
             )}
             Save Draft
           </Button>
-          <Button onClick={() => savePost(true)} disabled={isSaving}>
+          <Button variant="technical" onClick={() => savePost(true)} disabled={isSaving}>
             {isSaving ? (
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
             ) : (
@@ -420,9 +426,9 @@ export function PostEditor({ post, categories, allTags, isNew }: PostEditorProps
 
       {/* Unsaved changes warning */}
       {hasChanges && (
-        <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-lg p-3 flex items-center gap-2 text-amber-800 dark:text-amber-200">
+        <div className="bg-amber-500/10 border border-amber-500/30 rounded-sm p-3 flex items-center gap-2 text-amber-600 dark:text-amber-400">
           <AlertTriangle className="h-4 w-4 flex-shrink-0" />
-          <span className="text-sm">You have unsaved changes</span>
+          <span className="font-mono text-xs uppercase tracking-[0.12em]">You have unsaved changes</span>
         </div>
       )}
 
@@ -430,10 +436,10 @@ export function PostEditor({ post, categories, allTags, isNew }: PostEditorProps
         {/* Main Content */}
         <div className="lg:col-span-2 space-y-6">
           {/* Title & Slug */}
-          <Card>
-            <CardContent className="pt-6 space-y-4">
+          <div className="card-technical rounded-none">
+            <div className="p-6 space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="title">
+                <Label htmlFor="title" className="font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">
                   Title <span className="text-destructive">*</span>
                 </Label>
                 <Input
@@ -441,7 +447,7 @@ export function PostEditor({ post, categories, allTags, isNew }: PostEditorProps
                   value={formData.title}
                   onChange={(e) => handleTitleChange(e.target.value)}
                   placeholder="Enter post title..."
-                  className={cn(errors.title && "border-destructive")}
+                  className={cn("rounded-sm border-hairline focus-visible:ring-signal", errors.title && "border-destructive")}
                 />
                 {errors.title && (
                   <p className="text-sm text-destructive">{errors.title}</p>
@@ -449,7 +455,7 @@ export function PostEditor({ post, categories, allTags, isNew }: PostEditorProps
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="slug">
+                <Label htmlFor="slug" className="font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">
                   Slug <span className="text-destructive">*</span>
                 </Label>
                 <div className="flex gap-2">
@@ -461,13 +467,14 @@ export function PostEditor({ post, categories, allTags, isNew }: PostEditorProps
                       id="slug"
                       value={formData.slug}
                       onChange={(e) => updateField("slug", e.target.value)}
-                      className={cn("pl-24", errors.slug && "border-destructive")}
+                      className={cn("pl-24 rounded-sm border-hairline focus-visible:ring-signal", errors.slug && "border-destructive")}
                       placeholder="post-slug"
                     />
                   </div>
                   <Button
                     type="button"
                     variant="outline"
+                    className="rounded-sm border-hairline hover:text-signal"
                     onClick={() => updateField("slug", generateSlug(formData.title))}
                     title="Generate from title"
                   >
@@ -478,21 +485,23 @@ export function PostEditor({ post, categories, allTags, isNew }: PostEditorProps
                   <p className="text-sm text-destructive">{errors.slug}</p>
                 )}
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
 
           {/* Content */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <FileText className="h-5 w-5" />
+          <div className="card-technical rounded-none">
+            <div className="p-6 pb-0">
+              <h2 className="font-display text-lg font-semibold tracking-tight flex items-center gap-2">
+                <span className="flex h-7 w-7 items-center justify-center border border-hairline text-signal">
+                  <FileText className="h-4 w-4" />
+                </span>
                 Content
-              </CardTitle>
-              <CardDescription>
+              </h2>
+              <p className="text-sm text-muted-foreground mt-1.5">
                 Write your post content. You can use markdown formatting.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
+              </p>
+            </div>
+            <div className="p-6 space-y-4">
               <div className="space-y-2">
                 <Textarea
                   id="content"
@@ -500,7 +509,7 @@ export function PostEditor({ post, categories, allTags, isNew }: PostEditorProps
                   onChange={(e) => updateField("content", e.target.value)}
                   placeholder="Write your post content here..."
                   className={cn(
-                    "min-h-[400px] font-mono text-sm",
+                    "min-h-[400px] font-mono text-sm rounded-sm border-hairline focus-visible:ring-signal",
                     errors.content && "border-destructive"
                   )}
                 />
@@ -510,58 +519,58 @@ export function PostEditor({ post, categories, allTags, isNew }: PostEditorProps
               </div>
 
               {/* Stats */}
-              <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                <span className="flex items-center gap-1">
+              <div className="flex items-center gap-4 font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">
+                <span className="flex items-center gap-1.5">
                   <FileText className="h-4 w-4" />
                   {wordCount} words
                 </span>
-                <span className="flex items-center gap-1">
+                <span className="flex items-center gap-1.5">
                   <Clock className="h-4 w-4" />
                   {readingTime} min read
                 </span>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
 
           {/* Excerpt */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Excerpt</CardTitle>
-              <CardDescription>
+          <div className="card-technical rounded-none">
+            <div className="p-6 pb-0">
+              <h2 className="font-display text-lg font-semibold tracking-tight">Excerpt</h2>
+              <p className="text-sm text-muted-foreground mt-1.5">
                 A brief summary that appears in blog listings and social shares.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
+              </p>
+            </div>
+            <div className="p-6">
               <Textarea
                 id="excerpt"
                 value={formData.excerpt}
                 onChange={(e) => updateField("excerpt", e.target.value)}
                 placeholder="Enter a brief summary..."
-                className="min-h-[100px]"
+                className="min-h-[100px] rounded-sm border-hairline focus-visible:ring-signal"
                 maxLength={300}
               />
-              <p className="text-sm text-muted-foreground mt-2">
+              <p className="font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground mt-2">
                 {formData.excerpt.length}/300 characters
               </p>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </div>
 
         {/* Sidebar */}
         <div className="space-y-6">
           {/* Status & Category */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Settings</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
+          <div className="card-technical rounded-none">
+            <div className="p-6 pb-0">
+              <h2 className="font-display text-lg font-semibold tracking-tight">Settings</h2>
+            </div>
+            <div className="p-6 space-y-4">
               <div className="space-y-2">
-                <Label>Status</Label>
+                <Label className="font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">Status</Label>
                 <Select
                   value={formData.status}
                   onValueChange={(value) => updateField("status", value)}
                 >
-                  <SelectTrigger>
+                  <SelectTrigger className="rounded-sm border-hairline focus-visible:ring-signal">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -573,12 +582,12 @@ export function PostEditor({ post, categories, allTags, isNew }: PostEditorProps
               </div>
 
               <div className="space-y-2">
-                <Label>Category</Label>
+                <Label className="font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">Category</Label>
                 <Select
                   value={formData.categoryId || "none"}
                   onValueChange={(value) => updateField("categoryId", value === "none" ? "" : value)}
                 >
-                  <SelectTrigger>
+                  <SelectTrigger className="rounded-sm border-hairline focus-visible:ring-signal">
                     <SelectValue placeholder="Select category" />
                   </SelectTrigger>
                   <SelectContent>
@@ -591,21 +600,23 @@ export function PostEditor({ post, categories, allTags, isNew }: PostEditorProps
                   </SelectContent>
                 </Select>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
 
           {/* Tags */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <TagIcon className="h-5 w-5" />
+          <div className="card-technical rounded-none">
+            <div className="p-6 pb-0">
+              <h2 className="font-display text-lg font-semibold tracking-tight flex items-center gap-2">
+                <span className="flex h-7 w-7 items-center justify-center border border-hairline text-signal">
+                  <TagIcon className="h-4 w-4" />
+                </span>
                 Tags
-              </CardTitle>
-              <CardDescription>
+              </h2>
+              <p className="text-sm text-muted-foreground mt-1.5">
                 Add tags for cross-cutting classification
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-3">
+              </p>
+            </div>
+            <div className="p-6 space-y-3">
               {/* Selected tags */}
               {selectedTags.length > 0 && (
                 <div className="flex flex-wrap gap-1.5">
@@ -613,13 +624,13 @@ export function PostEditor({ post, categories, allTags, isNew }: PostEditorProps
                     <Badge
                       key={tag.id}
                       variant="secondary"
-                      className="gap-1 pr-1"
+                      className="gap-1 pr-1 rounded-sm font-mono text-[10px] uppercase tracking-[0.1em]"
                     >
                       {tag.name}
                       <button
                         type="button"
                         onClick={() => removeTag(tag.id)}
-                        className="ml-0.5 rounded-full hover:bg-muted-foreground/20 p-0.5"
+                        className="ml-0.5 rounded-sm hover:bg-muted-foreground/20 p-0.5"
                       >
                         <X className="h-3 w-3" />
                       </button>
@@ -638,11 +649,11 @@ export function PostEditor({ post, categories, allTags, isNew }: PostEditorProps
                     setShowTagDropdown(true);
                   }}
                   onFocus={() => setShowTagDropdown(true)}
-                  className="text-sm"
+                  className="text-sm rounded-sm border-hairline focus-visible:ring-signal"
                 />
 
                 {showTagDropdown && (tagSearchQuery || filteredTags.length > 0) && (
-                  <div className="absolute z-50 mt-1 w-full rounded-md border bg-popover shadow-md max-h-48 overflow-y-auto">
+                  <div className="absolute z-50 mt-1 w-full rounded-sm border border-hairline bg-popover shadow-md max-h-48 overflow-y-auto">
                     {filteredTags.map((tag) => (
                       <button
                         key={tag.id}
@@ -660,7 +671,7 @@ export function PostEditor({ post, categories, allTags, isNew }: PostEditorProps
                     {tagSearchQuery.trim() && !tagSearchHasExactMatch && (
                       <button
                         type="button"
-                        className="flex w-full items-center gap-2 px-3 py-2 text-sm text-primary hover:bg-accent transition-colors border-t"
+                        className="flex w-full items-center gap-2 px-3 py-2 text-sm text-signal hover:bg-accent transition-colors hairline-t"
                         onClick={() => {
                           createAndAddTag();
                           setShowTagDropdown(false);
@@ -683,20 +694,22 @@ export function PostEditor({ post, categories, allTags, isNew }: PostEditorProps
                   </div>
                 )}
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
 
           {/* Featured Image */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <ImageIcon className="h-5 w-5" />
+          <div className="card-technical rounded-none">
+            <div className="p-6 pb-0">
+              <h2 className="font-display text-lg font-semibold tracking-tight flex items-center gap-2">
+                <span className="flex h-7 w-7 items-center justify-center border border-hairline text-signal">
+                  <ImageIcon className="h-4 w-4" />
+                </span>
                 Featured Image
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
+              </h2>
+            </div>
+            <div className="p-6 space-y-4">
               {formData.featuredImage ? (
-                <div className="relative aspect-video bg-muted rounded-lg overflow-hidden group">
+                <div className="relative aspect-video bg-muted rounded-sm overflow-hidden group">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={formData.featuredImage}
@@ -719,20 +732,20 @@ export function PostEditor({ post, categories, allTags, isNew }: PostEditorProps
               ) : (
                 <div
                   className={cn(
-                    "aspect-video bg-muted rounded-lg flex flex-col items-center justify-center cursor-pointer border-2 border-dashed border-muted-foreground/25 hover:border-primary/50 hover:bg-muted/80 transition-colors",
+                    "aspect-video bg-muted/20 rounded-sm flex flex-col items-center justify-center cursor-pointer border border-dashed border-hairline hover:border-signal/60 hover:bg-muted/40 transition-colors",
                     isUploading && "pointer-events-none opacity-50"
                   )}
                   onClick={() => fileInputRef.current?.click()}
                 >
                   {isUploading ? (
                     <>
-                      <Loader2 className="h-10 w-10 text-primary animate-spin" />
-                      <p className="mt-2 text-sm text-muted-foreground">Uploading...</p>
+                      <Loader2 className="h-10 w-10 text-signal animate-spin" />
+                      <p className="mt-2 font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">Uploading...</p>
                     </>
                   ) : (
                     <>
-                      <Upload className="h-10 w-10 text-muted-foreground opacity-50" />
-                      <p className="mt-2 text-sm text-muted-foreground">
+                      <Upload className="h-10 w-10 text-signal opacity-70" />
+                      <p className="mt-2 font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">
                         Click to upload image
                       </p>
                       <p className="text-xs text-muted-foreground">
@@ -762,7 +775,7 @@ export function PostEditor({ post, categories, allTags, isNew }: PostEditorProps
                 <Button
                   type="button"
                   variant="outline"
-                  className="w-full"
+                  className="w-full rounded-sm border-hairline font-mono text-xs uppercase tracking-[0.12em]"
                   onClick={() => fileInputRef.current?.click()}
                   disabled={isUploading}
                 >
@@ -783,9 +796,9 @@ export function PostEditor({ post, categories, allTags, isNew }: PostEditorProps
               {/* Or enter URL */}
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">
-                  <span className="w-full border-t" />
+                  <span className="w-full border-t border-hairline" />
                 </div>
-                <div className="relative flex justify-center text-xs uppercase">
+                <div className="relative flex justify-center font-mono text-[10px] uppercase tracking-[0.12em]">
                   <span className="bg-card px-2 text-muted-foreground">Or enter URL</span>
                 </div>
               </div>
@@ -795,57 +808,61 @@ export function PostEditor({ post, categories, allTags, isNew }: PostEditorProps
                 value={formData.featuredImage}
                 onChange={(e) => updateField("featuredImage", e.target.value)}
                 placeholder="https://example.com/image.jpg"
+                className="rounded-sm border-hairline focus-visible:ring-signal"
               />
-            </CardContent>
-          </Card>
+            </div>
+          </div>
 
           {/* SEO */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Eye className="h-5 w-5" />
+          <div className="card-technical rounded-none">
+            <div className="p-6 pb-0">
+              <h2 className="font-display text-lg font-semibold tracking-tight flex items-center gap-2">
+                <span className="flex h-7 w-7 items-center justify-center border border-hairline text-signal">
+                  <Eye className="h-4 w-4" />
+                </span>
                 SEO Settings
-              </CardTitle>
-              <CardDescription>
+              </h2>
+              <p className="text-sm text-muted-foreground mt-1.5">
                 Optimize for search engines
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
+              </p>
+            </div>
+            <div className="p-6 space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="metaTitle">Meta Title</Label>
+                <Label htmlFor="metaTitle" className="font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">Meta Title</Label>
                 <Input
                   id="metaTitle"
                   value={formData.metaTitle}
                   onChange={(e) => updateField("metaTitle", e.target.value)}
                   placeholder={formData.title || "Enter meta title..."}
                   maxLength={60}
+                  className="rounded-sm border-hairline focus-visible:ring-signal"
                 />
-                <p className="text-xs text-muted-foreground">
+                <p className="font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">
                   {formData.metaTitle.length}/60 characters
                 </p>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="metaDescription">Meta Description</Label>
+                <Label htmlFor="metaDescription" className="font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">Meta Description</Label>
                 <Textarea
                   id="metaDescription"
                   value={formData.metaDescription}
                   onChange={(e) => updateField("metaDescription", e.target.value)}
                   placeholder={formData.excerpt || "Enter meta description..."}
-                  className="min-h-[80px]"
+                  className="min-h-[80px] rounded-sm border-hairline focus-visible:ring-signal"
                   maxLength={160}
                 />
-                <p className="text-xs text-muted-foreground">
+                <p className="font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">
                   {formData.metaDescription.length}/160 characters
                 </p>
               </div>
 
-              <Separator />
+              <Separator className="bg-hairline" />
 
               {/* SEO Preview */}
               <div className="space-y-2">
-                <Label className="text-xs">Search Preview</Label>
-                <div className="p-3 bg-muted/50 rounded-lg space-y-1">
+                <Label className="font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">Search Preview</Label>
+                <div className="p-3 bg-muted/20 rounded-sm border border-hairline space-y-1">
                   <p className="text-blue-600 dark:text-blue-400 text-sm font-medium line-clamp-1">
                     {formData.metaTitle || formData.title || "Post Title"}
                   </p>
@@ -857,8 +874,8 @@ export function PostEditor({ post, categories, allTags, isNew }: PostEditorProps
                   </p>
                 </div>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </div>
       </div>
     </div>

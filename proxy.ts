@@ -11,23 +11,63 @@ const PUBLIC_ADMIN_PAGES = [
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  const isAdminRoute = pathname.startsWith("/admin");
-  const isAdminApiRoute = pathname.startsWith("/api/admin");
-  const isAuthApiRoute = pathname.startsWith("/api/auth");
-  const isPublicAdminPage = PUBLIC_ADMIN_PAGES.some(
-    (route) => pathname === route || pathname.startsWith(route + "/")
-  );
-
   // Allow auth API routes to pass through (NextAuth handlers)
-  if (isAuthApiRoute) {
+  if (pathname.startsWith("/api/auth")) {
     return NextResponse.next();
   }
 
-  // Check for session token cookie (NextAuth v5 / Auth.js)
+  // Lightweight cookie-existence check (Edge-safe). Role is verified later in
+  // layouts/handlers via auth() — the proxy only distinguishes logged-in vs not.
   const sessionToken =
     request.cookies.get("authjs.session-token")?.value ||
     request.cookies.get("__Secure-authjs.session-token")?.value;
   const isLoggedIn = !!sessionToken;
+
+  const withPathname = () => {
+    const response = NextResponse.next();
+    response.headers.set("x-pathname", pathname);
+    return response;
+  };
+
+  // ---------------------------------------------------------------------------
+  // Client portal
+  // ---------------------------------------------------------------------------
+  const isPortalRoute = pathname.startsWith("/portal");
+  const isPortalApiRoute = pathname.startsWith("/api/portal");
+  if (isPortalRoute || isPortalApiRoute) {
+    const isPortalPublicPage =
+      pathname === "/portal/login" || pathname.startsWith("/portal/auth");
+    const isPortalPublicApi = pathname.startsWith("/api/portal/auth");
+
+    if (isPortalPublicPage || isPortalPublicApi) {
+      // Don't show the login/verify pages to an already-authenticated user.
+      if (isPortalPublicPage && isLoggedIn) {
+        return NextResponse.redirect(new URL("/portal", request.url));
+      }
+      return withPathname();
+    }
+
+    if (!isLoggedIn) {
+      if (isPortalApiRoute) {
+        return NextResponse.json(
+          { success: false, error: "Authentication required" },
+          { status: 401 }
+        );
+      }
+      return NextResponse.redirect(new URL("/portal/login", request.url));
+    }
+
+    return withPathname();
+  }
+
+  // ---------------------------------------------------------------------------
+  // Admin
+  // ---------------------------------------------------------------------------
+  const isAdminRoute = pathname.startsWith("/admin");
+  const isAdminApiRoute = pathname.startsWith("/api/admin");
+  const isPublicAdminPage = PUBLIC_ADMIN_PAGES.some(
+    (route) => pathname === route || pathname.startsWith(route + "/")
+  );
 
   // Redirect logged-in users away from public auth pages
   if (isPublicAdminPage && isLoggedIn) {
@@ -49,12 +89,15 @@ export function proxy(request: NextRequest) {
     );
   }
 
-  // Forward the pathname as a request header for server-side auth checks
-  const response = NextResponse.next();
-  response.headers.set("x-pathname", pathname);
-  return response;
+  return withPathname();
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/api/admin/:path*", "/api/auth/:path*"],
+  matcher: [
+    "/admin/:path*",
+    "/api/admin/:path*",
+    "/api/auth/:path*",
+    "/portal/:path*",
+    "/api/portal/:path*",
+  ],
 };

@@ -19,9 +19,9 @@ function ChatsLoading() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <div className="h-8 w-48 bg-muted animate-pulse rounded" />
+        <div className="h-8 w-48 bg-muted animate-pulse rounded-sm" />
       </div>
-      <div className="h-96 bg-muted animate-pulse rounded-lg" />
+      <div className="h-96 bg-muted animate-pulse rounded-sm" />
     </div>
   );
 }

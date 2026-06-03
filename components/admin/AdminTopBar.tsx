@@ -186,7 +186,7 @@ export function AdminTopBar({
     <>
     <header
       className={cn(
-        "fixed top-0 z-30 h-16 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 transition-all duration-300",
+        "fixed top-0 z-30 h-16 border-b border-hairline bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 transition-all duration-300",
         sidebarCollapsed ? "left-[70px]" : "left-[260px]",
         "right-0 left-0 lg:left-[260px]",
         sidebarCollapsed && "lg:left-[70px]"
@@ -210,8 +210,11 @@ export function AdminTopBar({
           </Button>
 
           {/* Page Title */}
-          <div>
-            <h1 className="text-lg font-semibold">{pageTitle}</h1>
+          <div className="flex items-center gap-2.5">
+            <span className="hidden h-4 w-px bg-signal sm:block" />
+            <h1 className="font-display text-lg font-semibold tracking-tight">
+              {pageTitle}
+            </h1>
           </div>
         </div>
 
@@ -222,7 +225,7 @@ export function AdminTopBar({
             <Input
               type="search"
               placeholder="Search..."
-              className="w-full pl-10 bg-muted/50"
+              className="w-full rounded-sm border-hairline bg-muted/50 pl-10 focus-visible:ring-signal"
             />
           </div>
         </div>
@@ -307,8 +310,8 @@ export function AdminTopBar({
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="flex items-center gap-2 px-2">
-                <Avatar className="h-8 w-8">
-                  <AvatarFallback className="bg-primary/10 text-primary text-sm">
+                <Avatar className="h-8 w-8 rounded-sm">
+                  <AvatarFallback className="rounded-sm bg-signal/10 font-mono text-xs text-signal">
                     {user.initials}
                   </AvatarFallback>
                 </Avatar>
@@ -376,9 +379,9 @@ export function AdminTopBar({
                   href={item.href}
                   onClick={onMenuClick}
                   className={cn(
-                    "flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-medium transition-colors",
+                    "flex items-center gap-3 rounded-sm px-3 py-3 text-sm font-medium transition-colors",
                     isActive
-                      ? "bg-primary text-primary-foreground"
+                      ? "border border-signal/40 bg-signal/10 text-foreground"
                       : "text-muted-foreground hover:bg-muted hover:text-foreground"
                   )}
                 >
@@ -389,11 +392,11 @@ export function AdminTopBar({
             })}
           </nav>
           <div className="border-t px-3 py-3">
-            <Link href="/" target="_blank" onClick={onMenuClick}>
-              <Button variant="outline" className="w-full text-xs" size="sm">
+            <Button asChild variant="outline" className="w-full text-xs" size="sm">
+              <Link href="/" target="_blank" onClick={onMenuClick}>
                 View Website
-              </Button>
-            </Link>
+              </Link>
+            </Button>
           </div>
         </div>
       </>

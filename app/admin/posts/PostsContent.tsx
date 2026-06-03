@@ -21,10 +21,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import {
-  Card,
-  CardContent,
-} from "@/components/ui/card";
-import {
   Table,
   TableBody,
   TableCell,
@@ -78,12 +74,24 @@ interface PaginationInfo {
   hasMore: boolean;
 }
 
-// Status config
+// Status config — mono chips keeping color semantics
 const statusConfig = {
-  DRAFT: { label: "Draft", color: "secondary" as const },
-  PUBLISHED: { label: "Published", color: "default" as const },
-  ARCHIVED: { label: "Archived", color: "outline" as const },
+  DRAFT: {
+    label: "Draft",
+    className: "bg-amber-500/10 text-amber-600 border border-amber-500/30",
+  },
+  PUBLISHED: {
+    label: "Published",
+    className: "bg-emerald-500/10 text-emerald-600 border border-emerald-500/30",
+  },
+  ARCHIVED: {
+    label: "Archived",
+    className: "bg-muted text-muted-foreground border border-hairline",
+  },
 };
+
+const statusChipClass =
+  "rounded-sm font-mono text-[10px] uppercase tracking-[0.1em] px-2 py-0.5 inline-flex items-center";
 
 export function PostsContent() {
   // State
@@ -217,28 +225,36 @@ export function PostsContent() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Blog Posts</h1>
+          <p className="font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground mb-1">
+            Content
+          </p>
+          <h1 className="font-display text-2xl font-bold tracking-tight">Blog Posts</h1>
           <p className="text-muted-foreground">
             Create and manage blog articles
           </p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" onClick={fetchPosts} disabled={isLoading}>
+          <Button
+            variant="outline"
+            onClick={fetchPosts}
+            disabled={isLoading}
+            className="rounded-sm border-hairline font-mono text-xs uppercase tracking-[0.12em]"
+          >
             <RefreshCw className={cn("mr-2 h-4 w-4", isLoading && "animate-spin")} />
             Refresh
           </Button>
-          <Link href="/admin/posts/new">
-            <Button>
+          <Button asChild variant="technical">
+            <Link href="/admin/posts/new">
               <Plus className="mr-2 h-4 w-4" />
               New Post
-            </Button>
-          </Link>
+            </Link>
+          </Button>
         </div>
       </div>
 
       {/* Filters */}
-      <Card>
-        <CardContent className="p-4">
+      <div className="card-technical rounded-none">
+        <div className="p-4">
           <div className="flex flex-col sm:flex-row gap-4">
             {/* Search */}
             <div className="relative flex-1">
@@ -247,7 +263,7 @@ export function PostsContent() {
                 placeholder="Search posts..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10"
+                className="pl-10 rounded-sm border-hairline focus-visible:ring-signal"
               />
             </div>
 
@@ -256,7 +272,7 @@ export function PostsContent() {
               setStatusFilter(value);
               setPagination((prev) => ({ ...prev, page: 1 }));
             }}>
-              <SelectTrigger className="w-full sm:w-[150px]">
+              <SelectTrigger className="w-full sm:w-[150px] rounded-sm border-hairline focus-visible:ring-signal">
                 <Filter className="mr-2 h-4 w-4" />
                 <SelectValue placeholder="Status" />
               </SelectTrigger>
@@ -273,7 +289,7 @@ export function PostsContent() {
               setCategoryFilter(value);
               setPagination((prev) => ({ ...prev, page: 1 }));
             }}>
-              <SelectTrigger className="w-full sm:w-[180px]">
+              <SelectTrigger className="w-full sm:w-[180px] rounded-sm border-hairline focus-visible:ring-signal">
                 <SelectValue placeholder="Category" />
               </SelectTrigger>
               <SelectContent>
@@ -292,7 +308,7 @@ export function PostsContent() {
               setSortBy(newSortBy);
               setSortOrder(newSortOrder as "asc" | "desc");
             }}>
-              <SelectTrigger className="w-full sm:w-[180px]">
+              <SelectTrigger className="w-full sm:w-[180px] rounded-sm border-hairline focus-visible:ring-signal">
                 <SelectValue placeholder="Sort by" />
               </SelectTrigger>
               <SelectContent>
@@ -304,50 +320,52 @@ export function PostsContent() {
               </SelectContent>
             </Select>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
       {/* Table */}
-      <Card>
-        <CardContent className="p-0">
+      <div className="border border-hairline bg-card">
+        <div className="p-0">
           <Table>
             <TableHeader>
-              <TableRow>
-                <TableHead>Title</TableHead>
-                <TableHead className="hidden md:table-cell">Category</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="hidden sm:table-cell">Published</TableHead>
-                <TableHead className="hidden lg:table-cell">Updated</TableHead>
+              <TableRow className="hairline-b hover:bg-transparent">
+                <TableHead className="font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">Title</TableHead>
+                <TableHead className="hidden md:table-cell font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">Category</TableHead>
+                <TableHead className="font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">Status</TableHead>
+                <TableHead className="hidden sm:table-cell font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">Published</TableHead>
+                <TableHead className="hidden lg:table-cell font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">Updated</TableHead>
                 <TableHead className="w-[50px]"></TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {isLoading ? (
-                <TableRow>
+                <TableRow className="hover:bg-transparent">
                   <TableCell colSpan={6} className="h-32 text-center">
-                    <RefreshCw className="h-6 w-6 animate-spin mx-auto text-muted-foreground" />
+                    <RefreshCw className="h-6 w-6 animate-spin mx-auto text-signal" />
                   </TableCell>
                 </TableRow>
               ) : posts.length === 0 ? (
-                <TableRow>
+                <TableRow className="hover:bg-transparent">
                   <TableCell colSpan={6} className="h-32 text-center">
-                    <FileText className="h-10 w-10 mx-auto mb-2 text-muted-foreground opacity-50" />
-                    <p className="text-muted-foreground">No posts found</p>
-                    <Link href="/admin/posts/new">
-                      <Button variant="link" className="mt-2">
+                    <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center border border-hairline text-signal">
+                      <FileText className="h-5 w-5" />
+                    </div>
+                    <p className="font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">No posts found</p>
+                    <Button variant="link" className="mt-2 hover:text-signal" asChild>
+                      <Link href="/admin/posts/new">
                         Create your first post
-                      </Button>
-                    </Link>
+                      </Link>
+                    </Button>
                   </TableCell>
                 </TableRow>
               ) : (
                 posts.map((post) => (
-                  <TableRow key={post.id}>
+                  <TableRow key={post.id} className="hairline-b hover:bg-muted/40">
                     <TableCell>
                       <div className="max-w-md">
                         <Link
                           href={`/admin/posts/${post.id}`}
-                          className="font-medium hover:text-primary transition-colors line-clamp-1"
+                          className="font-medium hover:text-signal transition-colors line-clamp-1"
                         >
                           {post.title}
                         </Link>
@@ -361,23 +379,23 @@ export function PostsContent() {
                     <TableCell className="hidden md:table-cell">
                       <div className="flex flex-wrap gap-1">
                         {post.category ? (
-                          <Badge variant="outline" className="text-xs">
+                          <Badge variant="outline" className="rounded-sm border-hairline font-mono text-[10px] uppercase tracking-[0.1em]">
                             {post.category.name}
                           </Badge>
                         ) : (
                           <span className="text-muted-foreground text-sm">—</span>
                         )}
                         {post.tags?.map((tag) => (
-                          <Badge key={tag.id} variant="secondary" className="text-xs">
+                          <Badge key={tag.id} variant="secondary" className="rounded-sm font-mono text-[10px] uppercase tracking-[0.1em]">
                             {tag.name}
                           </Badge>
                         ))}
                       </div>
                     </TableCell>
                     <TableCell>
-                      <Badge variant={statusConfig[post.status].color}>
+                      <span className={cn(statusChipClass, statusConfig[post.status].className)}>
                         {statusConfig[post.status].label}
-                      </Badge>
+                      </span>
                     </TableCell>
                     <TableCell className="hidden sm:table-cell text-sm text-muted-foreground">
                       {formatDate(post.publishedAt)}
@@ -388,12 +406,12 @@ export function PostsContent() {
                     <TableCell>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon" className="h-8 w-8">
+                          <Button variant="ghost" size="icon" className="h-8 w-8 rounded-sm hover:text-signal">
                             <MoreHorizontal className="h-4 w-4" />
                           </Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                        <DropdownMenuContent align="end" className="rounded-sm border-hairline">
+                          <DropdownMenuLabel className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">Actions</DropdownMenuLabel>
                           <DropdownMenuSeparator />
                           <DropdownMenuItem asChild>
                             <Link href={`/admin/posts/${post.id}`}>
@@ -442,12 +460,12 @@ export function PostsContent() {
               )}
             </TableBody>
           </Table>
-        </CardContent>
+        </div>
 
         {/* Pagination */}
         {pagination.totalPages > 1 && (
-          <div className="flex items-center justify-between p-4 border-t">
-            <p className="text-sm text-muted-foreground">
+          <div className="flex items-center justify-between p-4 hairline-t">
+            <p className="font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">
               Showing {((pagination.page - 1) * pagination.limit) + 1} to{" "}
               {Math.min(pagination.page * pagination.limit, pagination.total)} of{" "}
               {pagination.total} posts
@@ -456,17 +474,19 @@ export function PostsContent() {
               <Button
                 variant="outline"
                 size="sm"
+                className="rounded-sm border-hairline hover:text-signal"
                 onClick={() => setPagination((prev) => ({ ...prev, page: prev.page - 1 }))}
                 disabled={pagination.page === 1}
               >
                 <ChevronLeft className="h-4 w-4" />
               </Button>
-              <span className="text-sm">
+              <span className="font-mono text-xs uppercase tracking-[0.12em] text-signal">
                 Page {pagination.page} of {pagination.totalPages}
               </span>
               <Button
                 variant="outline"
                 size="sm"
+                className="rounded-sm border-hairline hover:text-signal"
                 onClick={() => setPagination((prev) => ({ ...prev, page: prev.page + 1 }))}
                 disabled={!pagination.hasMore}
               >
@@ -475,7 +495,7 @@ export function PostsContent() {
             </div>
           </div>
         )}
-      </Card>
+      </div>
     </div>
   );
 }

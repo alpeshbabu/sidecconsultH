@@ -30,33 +30,33 @@ export function MonthlyActivityChart({ data }: MonthlyActivityChartProps) {
       <AreaChart data={data} margin={{ top: 5, right: 10, left: 0, bottom: 0 }}>
         <defs>
           <linearGradient id="fillInquiries" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="5%" stopColor="var(--color-chart-1)" stopOpacity={0.3} />
-            <stop offset="95%" stopColor="var(--color-chart-1)" stopOpacity={0} />
+            <stop offset="5%" stopColor="var(--color-signal)" stopOpacity={0.3} />
+            <stop offset="95%" stopColor="var(--color-signal)" stopOpacity={0} />
           </linearGradient>
           <linearGradient id="fillAppointments" x1="0" y1="0" x2="0" y2="1">
             <stop offset="5%" stopColor="var(--color-chart-4)" stopOpacity={0.3} />
             <stop offset="95%" stopColor="var(--color-chart-4)" stopOpacity={0} />
           </linearGradient>
           <linearGradient id="fillSubscribers" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="5%" stopColor="var(--color-chart-3)" stopOpacity={0.3} />
-            <stop offset="95%" stopColor="var(--color-chart-3)" stopOpacity={0} />
+            <stop offset="5%" stopColor="var(--color-primary)" stopOpacity={0.3} />
+            <stop offset="95%" stopColor="var(--color-primary)" stopOpacity={0} />
           </linearGradient>
           <linearGradient id="fillChats" x1="0" y1="0" x2="0" y2="1">
             <stop offset="5%" stopColor="var(--color-chart-5)" stopOpacity={0.3} />
             <stop offset="95%" stopColor="var(--color-chart-5)" stopOpacity={0} />
           </linearGradient>
         </defs>
-        <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
+        <CartesianGrid strokeDasharray="3 3" stroke="var(--color-hairline)" />
         <XAxis
           dataKey="label"
-          tick={{ fontSize: 12 }}
+          tick={{ fontSize: 11, fontFamily: "var(--font-mono)" }}
           className="fill-muted-foreground"
           tickLine={false}
           axisLine={false}
         />
         <YAxis
           allowDecimals={false}
-          tick={{ fontSize: 12 }}
+          tick={{ fontSize: 11, fontFamily: "var(--font-mono)" }}
           className="fill-muted-foreground"
           tickLine={false}
           axisLine={false}
@@ -65,10 +65,11 @@ export function MonthlyActivityChart({ data }: MonthlyActivityChartProps) {
         <Tooltip
           contentStyle={{
             backgroundColor: "var(--color-card)",
-            border: "1px solid var(--color-border)",
-            borderRadius: "8px",
+            border: "1px solid var(--color-hairline)",
+            borderRadius: "0px",
             color: "var(--color-card-foreground)",
             fontSize: "12px",
+            fontFamily: "var(--font-mono)",
           }}
         />
         <Legend wrapperStyle={{ fontSize: "12px" }} />
@@ -76,7 +77,7 @@ export function MonthlyActivityChart({ data }: MonthlyActivityChartProps) {
           type="monotone"
           dataKey="inquiries"
           name="Inquiries"
-          stroke="var(--color-chart-1)"
+          stroke="var(--color-signal)"
           fill="url(#fillInquiries)"
           strokeWidth={2}
         />
@@ -92,7 +93,7 @@ export function MonthlyActivityChart({ data }: MonthlyActivityChartProps) {
           type="monotone"
           dataKey="subscribers"
           name="Subscribers"
-          stroke="var(--color-chart-3)"
+          stroke="var(--color-primary)"
           fill="url(#fillSubscribers)"
           strokeWidth={2}
         />

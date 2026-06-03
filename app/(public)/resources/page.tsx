@@ -6,11 +6,8 @@ import {
   BookOpen,
   FileText,
   Rss,
-  Sparkles,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MainLayout } from "@/components/layout";
 import { CTASection } from "@/components/sections";
 import { BlogPostCard } from "@/components/blog";
@@ -128,35 +125,34 @@ export default async function ResourcesPage() {
     <MainLayout>
       {/* Hero Section */}
       <section className="relative overflow-hidden">
-        <div className="absolute inset-0 -z-10">
-          <div className="absolute inset-0 gradient-hero" />
-          <div className="absolute left-1/2 top-0 -translate-x-1/2 w-[1000px] h-[1000px] rounded-full bg-primary/5 blur-3xl" />
+        <div className="absolute inset-0 -z-10" aria-hidden>
+          <div className="grid-blueprint absolute inset-0 opacity-70" />
+          <div className="absolute inset-x-0 top-0 h-px bg-signal/40" />
         </div>
 
         <div className="container-wide py-16 md:py-24">
           <div className="mx-auto max-w-3xl text-center">
-            <Badge
-              variant="outline"
-              className="mb-6 px-4 py-1.5 border-primary/30 bg-primary/5"
-            >
-              <Sparkles className="h-3.5 w-3.5 mr-2 text-primary" />
-              Resources & Insights
-            </Badge>
-            <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
+            <p className="eyebrow mb-5 justify-center">Resources & Insights</p>
+            <h1 className="font-display text-4xl font-bold tracking-tight text-balance sm:text-5xl lg:text-6xl">
               Expert Knowledge for{" "}
-              <span className="text-gradient">Manufacturing Excellence</span>
+              <span className="text-signal">Manufacturing Excellence</span>
             </h1>
             <p className="mt-6 text-lg text-muted-foreground md:text-xl">
               Practical guides, industry insights, and best practices from 25+
               years of medical device manufacturing experience.
             </p>
-            <div className="mt-6">
-              <Link href="/feed.xml" target="_blank">
-                <Button variant="outline" size="sm">
+            <div className="mt-8">
+              <Button
+                asChild
+                variant="outline"
+                size="sm"
+                className="rounded-sm border-hairline font-mono text-xs uppercase tracking-[0.12em]"
+              >
+                <Link href="/feed.xml" target="_blank">
                   <Rss className="h-4 w-4 mr-2" />
                   RSS Feed
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             </div>
           </div>
         </div>
@@ -166,10 +162,11 @@ export default async function ResourcesPage() {
         <>
           {/* Featured Posts */}
           {featuredPosts.length > 0 && (
-            <section className="border-b bg-muted/30 py-12">
+            <section className="hairline-t bg-muted/20 py-12">
               <div className="container-wide">
-                <div className="flex items-center justify-between mb-8">
-                  <h2 className="text-2xl font-bold tracking-tight">
+                <div className="mb-8">
+                  <p className="eyebrow mb-5">Featured</p>
+                  <h2 className="font-display text-2xl font-bold tracking-tight sm:text-3xl">
                     Featured Articles
                   </h2>
                 </div>
@@ -236,49 +233,51 @@ export default async function ResourcesPage() {
         /* Empty State - No Published Posts */
         <section className="section-padding">
           <div className="container-wide">
-            <Card className="max-w-2xl mx-auto text-center">
-              <CardHeader>
-                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
-                  <BookOpen className="h-8 w-8 text-primary" />
-                </div>
-                <CardTitle className="text-2xl">Coming Soon</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground mb-6">
-                  We&apos;re working on bringing you expert insights, practical
-                  guides, and industry best practices for medical device
-                  manufacturing. Check back soon!
-                </p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="card-technical rounded-none mx-auto max-w-2xl p-8 text-center md:p-10">
+              <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center border border-hairline text-signal">
+                <BookOpen className="h-8 w-8" />
+              </div>
+              <h2 className="font-display text-2xl font-bold tracking-tight">
+                Coming Soon
+              </h2>
+              <p className="text-muted-foreground mt-4 mb-8">
+                We&apos;re working on bringing you expert insights, practical
+                guides, and industry best practices for medical device
+                manufacturing. Check back soon!
+              </p>
+              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                <Button asChild variant="technical">
                   <Link href="/schedule">
-                    <Button>
-                      Get Notified
-                      <ArrowRight className="ml-2 h-4 w-4" />
-                    </Button>
+                    Get Notified
+                    <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
-                  <Link href="/services">
-                    <Button variant="outline">Explore Services</Button>
-                  </Link>
-                </div>
-              </CardContent>
-            </Card>
+                </Button>
+                <Button
+                  asChild
+                  variant="outline"
+                  className="rounded-sm border-hairline font-mono text-xs uppercase tracking-[0.12em]"
+                >
+                  <Link href="/services">Explore Services</Link>
+                </Button>
+              </div>
+            </div>
 
             {/* Categories Preview */}
             {categories.length > 0 && (
               <div className="mt-16">
-                <h2 className="text-xl font-semibold text-center mb-8">
+                <p className="eyebrow mb-5 justify-center">Topics</p>
+                <h2 className="font-display text-xl font-semibold text-center mb-8">
                   Topics We&apos;ll Cover
                 </h2>
-                <div className="flex flex-wrap justify-center gap-3">
+                <div className="flex flex-wrap justify-center gap-2">
                   {categories.map((category) => (
-                    <Badge
+                    <span
                       key={category.id}
-                      variant="outline"
-                      className="px-4 py-2 text-sm"
+                      className="inline-flex items-center gap-2 rounded-sm border border-hairline px-4 py-2 font-mono text-xs uppercase tracking-[0.1em] text-muted-foreground"
                     >
-                      <FileText className="h-3.5 w-3.5 mr-2" />
+                      <FileText className="h-3.5 w-3.5 text-signal" />
                       {category.name}
-                    </Badge>
+                    </span>
                   ))}
                 </div>
               </div>
@@ -288,16 +287,17 @@ export default async function ResourcesPage() {
       )}
 
       {/* Newsletter CTA */}
-      <section className="section-padding bg-muted/30">
-        <div className="container-wide">
+      <section className="section-padding surface-ink relative overflow-hidden hairline-t">
+        <div className="grid-dots absolute inset-0 opacity-50" aria-hidden />
+        <div className="container-wide relative">
           <div className="max-w-2xl mx-auto text-center">
-            <Badge variant="outline" className="mb-4">
-              Stay Updated
-            </Badge>
-            <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">
+            <p className="eyebrow-plain mb-5 text-signal">
+              <span aria-hidden>// </span>Stay Updated
+            </p>
+            <h2 className="font-display text-2xl font-bold tracking-tight text-ink-foreground sm:text-3xl">
               Subscribe to Our Newsletter
             </h2>
-            <p className="mt-4 text-muted-foreground">
+            <p className="mt-4 text-ink-muted">
               Get the latest insights on medical device manufacturing,
               regulatory updates, and industry best practices delivered to your
               inbox.
@@ -306,11 +306,11 @@ export default async function ResourcesPage() {
               <input
                 type="email"
                 placeholder="Enter your email"
-                className="flex h-11 w-full rounded-lg border border-input bg-background px-4 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                className="flex h-11 w-full rounded-sm border border-white/20 bg-white/5 px-4 py-2 text-sm text-ink-foreground placeholder:text-ink-muted focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-signal"
               />
-              <Button className="shrink-0">Subscribe</Button>
+              <Button variant="signal" className="h-11 shrink-0">Subscribe</Button>
             </div>
-            <p className="mt-3 text-xs text-muted-foreground">
+            <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.14em] text-ink-muted">
               No spam, unsubscribe anytime.
             </p>
           </div>

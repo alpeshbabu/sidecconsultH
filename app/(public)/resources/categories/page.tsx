@@ -1,15 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, FileText, Sparkles } from "lucide-react";
+import { ArrowRight, ArrowUpRight, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { MainLayout } from "@/components/layout";
 import { CTASection } from "@/components/sections";
 import { prisma } from "@/lib/db";
@@ -55,22 +47,16 @@ export default async function CategoriesPage() {
     <MainLayout>
       {/* Hero Section */}
       <section className="relative overflow-hidden">
-        <div className="absolute inset-0 -z-10">
-          <div className="absolute inset-0 gradient-hero" />
-          <div className="absolute left-1/2 top-0 -translate-x-1/2 w-[1000px] h-[1000px] rounded-full bg-primary/5 blur-3xl" />
+        <div className="absolute inset-0 -z-10" aria-hidden>
+          <div className="grid-blueprint absolute inset-0 opacity-70" />
+          <div className="absolute inset-x-0 top-0 h-px bg-signal/40" />
         </div>
 
         <div className="container-wide py-16 md:py-24">
           <div className="mx-auto max-w-3xl text-center">
-            <Badge
-              variant="outline"
-              className="mb-6 px-4 py-1.5 border-primary/30 bg-primary/5"
-            >
-              <Sparkles className="h-3.5 w-3.5 mr-2 text-primary" />
-              Browse by Topic
-            </Badge>
-            <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
-              Resource Categories
+            <p className="eyebrow mb-5 justify-center">Browse by Topic</p>
+            <h1 className="font-display text-4xl font-bold tracking-tight text-balance sm:text-5xl">
+              Resource <span className="text-signal">Categories</span>
             </h1>
             <p className="mt-6 text-lg text-muted-foreground">
               Explore our expert insights organized by topic. From quality
@@ -91,60 +77,58 @@ export default async function CategoriesPage() {
                   href={`/resources?category=${category.slug}`}
                   className="group"
                 >
-                  <Card className="h-full transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:border-primary/50">
-                    <CardHeader>
-                      <div className="flex items-start justify-between">
-                        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
-                          <FileText className="h-6 w-6" />
-                        </div>
-                        <Badge variant="secondary">
-                          {category.postCount}{" "}
-                          {category.postCount === 1 ? "article" : "articles"}
-                        </Badge>
+                  <div className="card-technical rounded-none flex h-full flex-col p-6">
+                    <div className="flex items-start justify-between">
+                      <div className="flex h-12 w-12 items-center justify-center border border-hairline text-primary transition-colors group-hover:border-signal/60 group-hover:text-signal">
+                        <FileText className="h-6 w-6" />
                       </div>
-                      <CardTitle className="text-xl group-hover:text-primary transition-colors">
-                        {category.name}
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      {category.description && (
-                        <CardDescription className="mb-4">
-                          {category.description}
-                        </CardDescription>
-                      )}
-                      <div className="flex items-center text-sm font-medium text-primary opacity-0 group-hover:opacity-100 transition-opacity">
-                        Browse articles
-                        <ArrowRight className="ml-1 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                      </div>
-                    </CardContent>
-                  </Card>
+                      <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
+                        {category.postCount}{" "}
+                        {category.postCount === 1 ? "article" : "articles"}
+                      </span>
+                    </div>
+                    <h3 className="mt-6 font-display text-xl font-semibold transition-colors group-hover:text-signal">
+                      {category.name}
+                    </h3>
+                    {category.description && (
+                      <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                        {category.description}
+                      </p>
+                    )}
+                    <div className="mt-auto flex items-center pt-6 font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground transition-colors group-hover:text-signal">
+                      Browse articles
+                      <ArrowUpRight className="ml-1 h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                    </div>
+                  </div>
                 </Link>
               ))}
             </div>
           ) : (
-            <div className="text-center py-12">
-              <p className="text-lg text-muted-foreground mb-6">
+            <div className="border border-hairline px-6 py-16 text-center">
+              <p className="mb-6 font-mono text-xs uppercase tracking-[0.14em] text-muted-foreground">
                 Categories will be available soon as we add more content.
               </p>
-              <Link href="/resources">
-                <Button>
+              <Button asChild variant="technical">
+                <Link href="/resources">
                   View All Resources
                   <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             </div>
           )}
         </div>
       </section>
 
       {/* Back to Resources */}
-      <section className="border-t py-8">
+      <section className="hairline-t py-8">
         <div className="container-wide flex justify-center">
-          <Link href="/resources">
-            <Button variant="outline">
-              ← Back to All Resources
-            </Button>
-          </Link>
+          <Button
+            asChild
+            variant="outline"
+            className="rounded-sm border-hairline font-mono text-xs uppercase tracking-[0.12em]"
+          >
+            <Link href="/resources">← Back to All Resources</Link>
+          </Button>
         </div>
       </section>
 

@@ -30,7 +30,7 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://sidecconsult.com";
 const PRIMARY_COLOR = "#2563eb";
 
 function formatDateTime(date: Date, timeZone?: string | null): string {
-  const tz = timeZone || "America/New_York";
+  const tz = timeZone || "America/Los_Angeles";
   return new Date(date).toLocaleString("en-US", {
     weekday: "long",
     year: "numeric",
@@ -44,7 +44,7 @@ function formatDateTime(date: Date, timeZone?: string | null): string {
 }
 
 function formatTime(date: Date, timeZone?: string | null): string {
-  const tz = timeZone || "America/New_York";
+  const tz = timeZone || "America/Los_Angeles";
   return new Date(date).toLocaleString("en-US", {
     hour: "numeric",
     minute: "2-digit",
@@ -288,6 +288,64 @@ export function newsletterWelcomeEmail(email: string) {
       <p style="margin:24px 0 0;text-align:center;">
         <a href="${SITE_URL}/resources" style="display:inline-block;background-color:${PRIMARY_COLOR};color:#ffffff;padding:12px 24px;border-radius:6px;text-decoration:none;font-size:14px;font-weight:600;">Explore Resources</a>
       </p>
+    `),
+  };
+}
+
+// =============================================================================
+// CLIENT PORTAL
+// =============================================================================
+
+function ctaButton(href: string, label: string): string {
+  return `<p style="margin:24px 0 0;text-align:center;">
+    <a href="${href}" style="display:inline-block;background-color:${PRIMARY_COLOR};color:#ffffff;padding:12px 24px;border-radius:6px;text-decoration:none;font-size:14px;font-weight:600;">${label}</a>
+  </p>`;
+}
+
+export function magicLinkEmail({ name, link }: { name?: string | null; link: string }) {
+  return {
+    subject: "Your secure sign-in link — SIDEC Consulting Client Portal",
+    html: emailWrapper(`
+      <h2 style="margin:0 0 16px;color:#111827;font-size:22px;">Sign in to your portal</h2>
+      <p style="margin:0 0 16px;color:#374151;font-size:15px;line-height:1.6;">Hi ${name || "there"}, click the button below to securely sign in to the SIDEC Consulting client portal. This link expires in 15 minutes and can only be used once.</p>
+      ${ctaButton(link, "Sign In to Portal")}
+      <p style="margin:24px 0 0;color:#6b7280;font-size:13px;line-height:1.6;">If you didn't request this, you can safely ignore this email. For your security, never share this link.</p>
+    `),
+  };
+}
+
+export function portalInviteEmail({ name, link }: { name?: string | null; link: string }) {
+  return {
+    subject: "You've been invited to the SIDEC Consulting Client Portal",
+    html: emailWrapper(`
+      <h2 style="margin:0 0 16px;color:#111827;font-size:22px;">Welcome${name ? `, ${name}` : ""}!</h2>
+      <p style="margin:0 0 16px;color:#374151;font-size:15px;line-height:1.6;">You now have access to the SIDEC Consulting client portal, where you can track your project milestones, exchange documents securely, and message our team.</p>
+      <p style="margin:0 0 16px;color:#374151;font-size:15px;line-height:1.6;">Click below to sign in. The link expires in 15 minutes — you can always request a new one from the portal sign-in page.</p>
+      ${ctaButton(link, "Access Your Portal")}
+    `),
+  };
+}
+
+export function portalNewMessageEmail({ recipientName, projectTitle, snippet, link }: { recipientName?: string | null; projectTitle: string; snippet: string; link: string }) {
+  return {
+    subject: `New message on "${projectTitle}" — SIDEC Consulting`,
+    html: emailWrapper(`
+      <h2 style="margin:0 0 16px;color:#111827;font-size:22px;">New message</h2>
+      <p style="margin:0 0 16px;color:#374151;font-size:15px;line-height:1.6;">Hi ${recipientName || "there"}, you have a new message on <strong>${projectTitle}</strong>:</p>
+      <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f9fafb;border-radius:6px;margin:16px 0;"><tr><td style="padding:16px;color:#374151;font-size:14px;line-height:1.6;font-style:italic;">${snippet}</td></tr></table>
+      ${ctaButton(link, "View & Reply")}
+    `),
+  };
+}
+
+export function portalNewDocumentEmail({ recipientName, projectTitle, fileName, link }: { recipientName?: string | null; projectTitle: string; fileName: string; link: string }) {
+  return {
+    subject: `New document on "${projectTitle}" — SIDEC Consulting`,
+    html: emailWrapper(`
+      <h2 style="margin:0 0 16px;color:#111827;font-size:22px;">New document available</h2>
+      <p style="margin:0 0 16px;color:#374151;font-size:15px;line-height:1.6;">Hi ${recipientName || "there"}, a new document has been added to <strong>${projectTitle}</strong>:</p>
+      <p style="margin:0 0 16px;color:#111827;font-size:15px;font-weight:600;">${fileName}</p>
+      ${ctaButton(link, "Open Portal")}
     `),
   };
 }

@@ -21,7 +21,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 
 interface ServiceEditorProps {
@@ -243,9 +242,9 @@ export function ServiceEditor({ serviceId }: ServiceEditorProps) {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-96">
+      <div className="flex items-center justify-center h-96 border border-hairline bg-muted/20">
         <div className="text-center">
-          <div className="text-lg font-medium">Loading service...</div>
+          <div className="font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">Loading service...</div>
         </div>
       </div>
     );
@@ -260,12 +259,14 @@ export function ServiceEditor({ serviceId }: ServiceEditorProps) {
             variant="ghost"
             size="sm"
             onClick={() => router.push("/admin/services")}
+            className="rounded-sm hover:text-signal"
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back
           </Button>
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">
+            <span className="eyebrow mb-2">{isNew ? "New Service" : "Edit Service"}</span>
+            <h1 className="font-display text-3xl font-bold tracking-tight">
               {isNew ? "Add New Service" : "Edit Service"}
             </h1>
             <p className="text-muted-foreground mt-1">
@@ -279,10 +280,11 @@ export function ServiceEditor({ serviceId }: ServiceEditorProps) {
           <Button
             variant="outline"
             onClick={() => router.push("/admin/services")}
+            className="rounded-sm border-hairline font-mono text-xs uppercase tracking-[0.12em]"
           >
             Cancel
           </Button>
-          <Button onClick={handleSubmit} disabled={saving}>
+          <Button variant="technical" onClick={handleSubmit} disabled={saving}>
             <Save className="mr-2 h-4 w-4" />
             {saving ? "Saving..." : "Save Service"}
           </Button>
@@ -291,22 +293,22 @@ export function ServiceEditor({ serviceId }: ServiceEditorProps) {
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Basic Information */}
-        <Card>
+        <Card className="card-technical rounded-none">
           <CardHeader>
-            <CardTitle>Basic Information</CardTitle>
-            <CardDescription>
+            <CardTitle className="font-display tracking-tight">Basic Information</CardTitle>
+            <CardDescription className="font-mono text-xs uppercase tracking-[0.12em]">
               Essential service details and identification
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             {/* Category */}
             <div className="space-y-2">
-              <Label htmlFor="category">Category *</Label>
+              <Label htmlFor="category" className="font-mono text-xs uppercase tracking-[0.12em]">Category *</Label>
               <Select
                 value={formData.categorySlug}
                 onValueChange={handleCategoryChange}
               >
-                <SelectTrigger id="category">
+                <SelectTrigger id="category" className="rounded-sm border-hairline focus-visible:ring-signal">
                   <SelectValue placeholder="Select a category" />
                 </SelectTrigger>
                 <SelectContent>
@@ -321,7 +323,7 @@ export function ServiceEditor({ serviceId }: ServiceEditorProps) {
 
             {/* Service ID */}
             <div className="space-y-2">
-              <Label htmlFor="serviceId">Service ID *</Label>
+              <Label htmlFor="serviceId" className="font-mono text-xs uppercase tracking-[0.12em]">Service ID *</Label>
               <Input
                 id="serviceId"
                 value={formData.serviceId}
@@ -330,6 +332,7 @@ export function ServiceEditor({ serviceId }: ServiceEditorProps) {
                 }
                 placeholder="e.g., manufacturing-engineering"
                 disabled={!isNew}
+                className="rounded-sm border-hairline focus-visible:ring-signal"
               />
               <p className="text-sm text-muted-foreground">
                 Unique identifier used in URLs. Cannot be changed after creation.
@@ -338,14 +341,14 @@ export function ServiceEditor({ serviceId }: ServiceEditorProps) {
 
             {/* Icon */}
             <div className="space-y-2">
-              <Label htmlFor="icon">Icon</Label>
+              <Label htmlFor="icon" className="font-mono text-xs uppercase tracking-[0.12em]">Icon</Label>
               <Select
                 value={formData.icon}
                 onValueChange={(value) =>
                   setFormData({ ...formData, icon: value })
                 }
               >
-                <SelectTrigger id="icon">
+                <SelectTrigger id="icon" className="rounded-sm border-hairline focus-visible:ring-signal">
                   <SelectValue placeholder="Select an icon" />
                 </SelectTrigger>
                 <SelectContent>
@@ -360,7 +363,7 @@ export function ServiceEditor({ serviceId }: ServiceEditorProps) {
 
             {/* Title */}
             <div className="space-y-2">
-              <Label htmlFor="title">Service Title *</Label>
+              <Label htmlFor="title" className="font-mono text-xs uppercase tracking-[0.12em]">Service Title *</Label>
               <Input
                 id="title"
                 value={formData.title}
@@ -368,12 +371,13 @@ export function ServiceEditor({ serviceId }: ServiceEditorProps) {
                   setFormData({ ...formData, title: e.target.value })
                 }
                 placeholder="e.g., Manufacturing Engineering & Operations"
+                className="rounded-sm border-hairline focus-visible:ring-signal"
               />
             </div>
 
             {/* Tagline */}
             <div className="space-y-2">
-              <Label htmlFor="tagline">Tagline</Label>
+              <Label htmlFor="tagline" className="font-mono text-xs uppercase tracking-[0.12em]">Tagline</Label>
               <Input
                 id="tagline"
                 value={formData.tagline}
@@ -381,12 +385,13 @@ export function ServiceEditor({ serviceId }: ServiceEditorProps) {
                   setFormData({ ...formData, tagline: e.target.value })
                 }
                 placeholder="e.g., Build World-Class Manufacturing Capabilities"
+                className="rounded-sm border-hairline focus-visible:ring-signal"
               />
             </div>
 
             {/* Description */}
             <div className="space-y-2">
-              <Label htmlFor="description">Description *</Label>
+              <Label htmlFor="description" className="font-mono text-xs uppercase tracking-[0.12em]">Description *</Label>
               <Textarea
                 id="description"
                 value={formData.description}
@@ -395,16 +400,17 @@ export function ServiceEditor({ serviceId }: ServiceEditorProps) {
                 }
                 placeholder="Detailed description of the service..."
                 rows={5}
+                className="rounded-sm border-hairline focus-visible:ring-signal"
               />
             </div>
           </CardContent>
         </Card>
 
         {/* Key Offerings */}
-        <Card>
+        <Card className="card-technical rounded-none">
           <CardHeader>
-            <CardTitle>Key Offerings</CardTitle>
-            <CardDescription>
+            <CardTitle className="font-display tracking-tight">Key Offerings</CardTitle>
+            <CardDescription className="font-mono text-xs uppercase tracking-[0.12em]">
               List of what you deliver in this service area
             </CardDescription>
           </CardHeader>
@@ -417,6 +423,7 @@ export function ServiceEditor({ serviceId }: ServiceEditorProps) {
                     handleArrayChange("keyOfferings", index, e.target.value)
                   }
                   placeholder="Enter a key offering..."
+                  className="rounded-sm border-hairline focus-visible:ring-signal"
                 />
                 {formData.keyOfferings.length > 1 && (
                   <Button
@@ -424,6 +431,7 @@ export function ServiceEditor({ serviceId }: ServiceEditorProps) {
                     variant="ghost"
                     size="sm"
                     onClick={() => handleArrayRemove("keyOfferings", index)}
+                    className="rounded-sm hover:text-signal"
                   >
                     <X className="h-4 w-4" />
                   </Button>
@@ -435,6 +443,7 @@ export function ServiceEditor({ serviceId }: ServiceEditorProps) {
               variant="outline"
               size="sm"
               onClick={() => handleArrayAdd("keyOfferings")}
+              className="rounded-sm border-hairline font-mono text-xs uppercase tracking-[0.12em]"
             >
               <Plus className="mr-2 h-4 w-4" />
               Add Offering
@@ -443,10 +452,10 @@ export function ServiceEditor({ serviceId }: ServiceEditorProps) {
         </Card>
 
         {/* Expected Outcomes */}
-        <Card>
+        <Card className="card-technical rounded-none">
           <CardHeader>
-            <CardTitle>Expected Outcomes</CardTitle>
-            <CardDescription>
+            <CardTitle className="font-display tracking-tight">Expected Outcomes</CardTitle>
+            <CardDescription className="font-mono text-xs uppercase tracking-[0.12em]">
               Measurable results clients can expect
             </CardDescription>
           </CardHeader>
@@ -459,6 +468,7 @@ export function ServiceEditor({ serviceId }: ServiceEditorProps) {
                     handleArrayChange("outcomes", index, e.target.value)
                   }
                   placeholder="Enter an expected outcome..."
+                  className="rounded-sm border-hairline focus-visible:ring-signal"
                 />
                 {formData.outcomes.length > 1 && (
                   <Button
@@ -466,6 +476,7 @@ export function ServiceEditor({ serviceId }: ServiceEditorProps) {
                     variant="ghost"
                     size="sm"
                     onClick={() => handleArrayRemove("outcomes", index)}
+                    className="rounded-sm hover:text-signal"
                   >
                     <X className="h-4 w-4" />
                   </Button>
@@ -477,6 +488,7 @@ export function ServiceEditor({ serviceId }: ServiceEditorProps) {
               variant="outline"
               size="sm"
               onClick={() => handleArrayAdd("outcomes")}
+              className="rounded-sm border-hairline font-mono text-xs uppercase tracking-[0.12em]"
             >
               <Plus className="mr-2 h-4 w-4" />
               Add Outcome
@@ -485,17 +497,17 @@ export function ServiceEditor({ serviceId }: ServiceEditorProps) {
         </Card>
 
         {/* Display Settings */}
-        <Card>
+        <Card className="card-technical rounded-none">
           <CardHeader>
-            <CardTitle>Display Settings</CardTitle>
-            <CardDescription>
+            <CardTitle className="font-display tracking-tight">Display Settings</CardTitle>
+            <CardDescription className="font-mono text-xs uppercase tracking-[0.12em]">
               Control how and where this service appears
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             {/* Sort Order */}
             <div className="space-y-2">
-              <Label htmlFor="sortOrder">Sort Order</Label>
+              <Label htmlFor="sortOrder" className="font-mono text-xs uppercase tracking-[0.12em]">Sort Order</Label>
               <Input
                 id="sortOrder"
                 type="number"
@@ -506,6 +518,7 @@ export function ServiceEditor({ serviceId }: ServiceEditorProps) {
                     sortOrder: parseInt(e.target.value) || 0,
                   })
                 }
+                className="rounded-sm border-hairline focus-visible:ring-signal"
               />
               <p className="text-sm text-muted-foreground">
                 Lower numbers appear first. Use this to control the display order.
@@ -514,7 +527,7 @@ export function ServiceEditor({ serviceId }: ServiceEditorProps) {
 
             {/* Active Status */}
             <div className="flex items-center gap-4">
-              <Label htmlFor="isActive">Status</Label>
+              <Label htmlFor="isActive" className="font-mono text-xs uppercase tracking-[0.12em]">Status</Label>
               <div className="flex items-center gap-2">
                 <input
                   type="checkbox"
@@ -523,15 +536,17 @@ export function ServiceEditor({ serviceId }: ServiceEditorProps) {
                   onChange={(e) =>
                     setFormData({ ...formData, isActive: e.target.checked })
                   }
-                  className="h-4 w-4 rounded border-gray-300"
+                  className="h-4 w-4 rounded-sm border-hairline accent-signal"
                 />
                 <Label htmlFor="isActive" className="font-normal">
                   {formData.isActive ? (
-                    <Badge variant="default" className="bg-green-600">
+                    <span className="inline-flex items-center rounded-sm border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.1em] text-emerald-600">
                       Active
-                    </Badge>
+                    </span>
                   ) : (
-                    <Badge variant="secondary">Inactive</Badge>
+                    <span className="inline-flex items-center rounded-sm border border-hairline px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.1em] text-muted-foreground">
+                      Inactive
+                    </span>
                   )}
                 </Label>
               </div>

@@ -69,11 +69,11 @@ export function ProfileCard({
               )}
             </div>
             {linkedIn && (
-              <Link href={linkedIn} target="_blank" rel="noopener noreferrer">
-                <Button variant="ghost" size="icon" className="shrink-0">
+              <Button asChild variant="ghost" size="icon" className="shrink-0">
+                <Link href={linkedIn} target="_blank" rel="noopener noreferrer">
                   <Linkedin className="h-4 w-4" />
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             )}
           </div>
         </CardContent>
@@ -129,28 +129,28 @@ export function ProfileCard({
             {/* Social Links */}
             <div className="mt-6 flex items-center gap-2">
               {linkedIn && (
-                <Link href={linkedIn} target="_blank" rel="noopener noreferrer">
-                  <Button variant="outline" size="sm">
+                <Button asChild variant="outline" size="sm">
+                  <Link href={linkedIn} target="_blank" rel="noopener noreferrer">
                     <Linkedin className="h-4 w-4 mr-2" />
                     LinkedIn
-                  </Button>
-                </Link>
+                  </Link>
+                </Button>
               )}
               {email && (
-                <Link href={`mailto:${email}`}>
-                  <Button variant="outline" size="sm">
+                <Button asChild variant="outline" size="sm">
+                  <Link href={`mailto:${email}`}>
                     <Mail className="h-4 w-4 mr-2" />
                     Contact
-                  </Button>
-                </Link>
+                  </Link>
+                </Button>
               )}
               {website && (
-                <Link href={website} target="_blank" rel="noopener noreferrer">
-                  <Button variant="outline" size="sm">
+                <Button asChild variant="outline" size="sm">
+                  <Link href={website} target="_blank" rel="noopener noreferrer">
                     <ExternalLink className="h-4 w-4 mr-2" />
                     Website
-                  </Button>
-                </Link>
+                  </Link>
+                </Button>
               )}
             </div>
           </div>
@@ -206,25 +206,25 @@ export function ProfileCard({
         {/* Social Links */}
         <div className="flex items-center justify-center gap-2">
           {linkedIn && (
-            <Link href={linkedIn} target="_blank" rel="noopener noreferrer">
-              <Button variant="ghost" size="icon">
+            <Button asChild variant="ghost" size="icon">
+              <Link href={linkedIn} target="_blank" rel="noopener noreferrer">
                 <Linkedin className="h-5 w-5" />
-              </Button>
-            </Link>
+              </Link>
+            </Button>
           )}
           {email && (
-            <Link href={`mailto:${email}`}>
-              <Button variant="ghost" size="icon">
+            <Button asChild variant="ghost" size="icon">
+              <Link href={`mailto:${email}`}>
                 <Mail className="h-5 w-5" />
-              </Button>
-            </Link>
+              </Link>
+            </Button>
           )}
           {website && (
-            <Link href={website} target="_blank" rel="noopener noreferrer">
-              <Button variant="ghost" size="icon">
+            <Button asChild variant="ghost" size="icon">
+              <Link href={website} target="_blank" rel="noopener noreferrer">
                 <ExternalLink className="h-5 w-5" />
-              </Button>
-            </Link>
+              </Link>
+            </Button>
           )}
         </div>
       </CardContent>

@@ -61,7 +61,7 @@ export function Footer() {
                   href={SITE_CONFIG.linkedin}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground transition-colors"
+                  className="flex h-10 w-10 items-center justify-center rounded-sm border border-hairline text-primary transition-colors hover:border-signal/60 hover:text-signal"
                   aria-label="LinkedIn"
                 >
                   <Linkedin className="h-5 w-5" />
@@ -72,7 +72,7 @@ export function Footer() {
 
           {/* Services Column */}
           <div className="lg:col-span-3">
-            <h3 className="font-semibold mb-4">Services</h3>
+            <h3 className="eyebrow-plain mb-5 text-muted-foreground">Services</h3>
             <ul className="space-y-3">
               {SERVICE_AREAS.slice(0, 5).map((service) => (
                 <li key={service.id}>
@@ -97,7 +97,7 @@ export function Footer() {
 
           {/* Company Column */}
           <div className="lg:col-span-2">
-            <h3 className="font-semibold mb-4">Company</h3>
+            <h3 className="eyebrow-plain mb-5 text-muted-foreground">Company</h3>
             <ul className="space-y-3">
               {FOOTER_LINKS.company.map((link) => (
                 <li key={link.href}>
@@ -114,7 +114,7 @@ export function Footer() {
 
           {/* Legal Column */}
           <div className="lg:col-span-3">
-            <h3 className="font-semibold mb-4">Legal</h3>
+            <h3 className="eyebrow-plain mb-5 text-muted-foreground">Legal</h3>
             <ul className="space-y-3">
               {FOOTER_LINKS.legal.map((link) => (
                 <li key={link.href}>
@@ -130,12 +130,12 @@ export function Footer() {
 
             {/* Credentials */}
             <div className="mt-8">
-              <h3 className="font-semibold mb-4">Credentials</h3>
+              <h3 className="eyebrow-plain mb-5 text-muted-foreground">Credentials</h3>
               <div className="flex flex-wrap gap-2">
                 {["ISO 13485", "FDA 21 CFR", "EU MDR", "MDSAP"].map((cert) => (
                   <span
                     key={cert}
-                    className="inline-flex items-center px-2.5 py-1 rounded-md bg-primary/10 text-primary text-xs font-medium"
+                    className="inline-flex items-center rounded-sm border border-hairline px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.1em] text-muted-foreground"
                   >
                     {cert}
                   </span>

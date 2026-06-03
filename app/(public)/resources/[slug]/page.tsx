@@ -10,16 +10,12 @@ import {
   Clock,
   Linkedin,
   Mail,
-  Tag,
   Twitter,
   User,
   ChevronRight,
-  BookOpen,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import { MainLayout, Breadcrumb } from "@/components/layout";
+import { MainLayout } from "@/components/layout";
 import { BlogPostCard } from "@/components/blog";
 import { CTASection } from "@/components/sections";
 import { prisma } from "@/lib/db";
@@ -215,45 +211,36 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           __html: getJsonLd([blogPostingSchema, breadcrumbSchema]),
         }}
       />
-      {/* Hero Section with Featured Image */}
-      <section className="relative">
-        {/* Background Image */}
-        {post.featuredImage && (
-          <div className="absolute inset-0 h-[400px] md:h-[500px]">
-            <Image
-              src={post.featuredImage}
-              alt={post.title}
-              fill
-              className="object-cover"
-              priority
-            />
-            <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/70 to-background" />
-          </div>
-        )}
+      {/* Article Header */}
+      <section className="relative overflow-hidden">
+        {/* Blueprint grid backdrop */}
+        <div className="absolute inset-0 -z-10" aria-hidden>
+          <div className="grid-blueprint absolute inset-0 opacity-60" />
+        </div>
 
         {/* Header Content */}
-        <div className="relative container-wide pt-8 pb-16 md:pt-12 md:pb-24">
+        <div className="relative container-wide pt-8 pb-12 md:pt-12 md:pb-16">
           {/* Breadcrumb */}
-          <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-8">
+          <nav className="mb-8 flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
             <Link
               href="/resources"
-              className="hover:text-foreground transition-colors"
+              className="transition-colors hover:text-foreground"
             >
               Resources
             </Link>
-            <ChevronRight className="h-4 w-4" />
+            <ChevronRight className="h-3.5 w-3.5" />
             {post.category && (
               <>
                 <Link
                   href={`/resources?category=${post.category.slug}`}
-                  className="hover:text-foreground transition-colors"
+                  className="transition-colors hover:text-foreground"
                 >
                   {post.category.name}
                 </Link>
-                <ChevronRight className="h-4 w-4" />
+                <ChevronRight className="h-3.5 w-3.5" />
               </>
             )}
-            <span className="text-foreground truncate max-w-[200px]">
+            <span className="max-w-[200px] truncate text-foreground">
               {post.title}
             </span>
           </nav>
@@ -263,63 +250,70 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             {post.category && (
               <Link
                 href={`/resources?category=${post.category.slug}`}
-                className="inline-block mb-4"
+                className="mb-4 inline-block font-mono text-[11px] uppercase tracking-[0.12em] text-signal transition-colors hover:text-signal/80"
               >
-                <Badge className="px-3 py-1 text-xs font-medium bg-primary/90 hover:bg-primary text-primary-foreground">
-                  {post.category.name}
-                </Badge>
+                {post.category.name}
               </Link>
             )}
 
             {/* Title */}
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-6 leading-tight">
+            <h1 className="mb-6 font-display text-3xl font-bold leading-tight tracking-tight text-balance md:text-4xl lg:text-5xl">
               {post.title}
             </h1>
 
             {/* Excerpt */}
             {post.excerpt && (
-              <p className="text-lg md:text-xl text-muted-foreground mb-8 leading-relaxed max-w-3xl">
+              <p className="mb-8 max-w-3xl text-lg leading-relaxed text-muted-foreground md:text-xl">
                 {post.excerpt}
               </p>
             )}
 
-            {/* Author and Meta */}
-            <div className="flex flex-wrap items-center gap-6">
+            {/* Author and Meta — mono labels */}
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-3 font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
               {/* Author */}
               {post.author?.name && (
-                <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center ring-2 ring-background">
-                    <User className="h-5 w-5 text-primary" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium">{post.author.name}</p>
-                    <p className="text-xs text-muted-foreground">Author</p>
-                  </div>
-                </div>
-              )}
-
-              {/* Divider */}
-              {post.author?.name && (formattedDate || post.readingTime) && (
-                <Separator orientation="vertical" className="h-8" />
+                <span className="flex items-center gap-2">
+                  <User className="h-3.5 w-3.5" />
+                  {post.author.name}
+                </span>
               )}
 
               {/* Date */}
               {formattedDate && (
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <Calendar className="h-4 w-4" />
-                  <span>{formattedDate}</span>
-                </div>
+                <span className="flex items-center gap-2">
+                  <Calendar className="h-3.5 w-3.5" />
+                  {formattedDate}
+                </span>
               )}
 
               {/* Reading Time */}
               {post.readingTime && (
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <Clock className="h-4 w-4" />
-                  <span>{post.readingTime} min read</span>
-                </div>
+                <span className="flex items-center gap-2">
+                  <Clock className="h-3.5 w-3.5" />
+                  {post.readingTime} min read
+                </span>
               )}
             </div>
           </div>
+
+          {/* Featured Image — spec frame */}
+          {post.featuredImage && (
+            <div className="mt-10 max-w-4xl">
+              <div className="corner-marks relative border border-hairline p-2">
+                <div className="relative aspect-video w-full overflow-hidden">
+                  <Image
+                    src={post.featuredImage}
+                    alt={post.title}
+                    fill
+                    sizes="(max-width: 1024px) 90vw, 56rem"
+                    className="object-cover"
+                    priority
+                  />
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-ink/12 to-transparent" />
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </section>
 
@@ -354,40 +348,35 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           </div>
 
           {/* Tags and Share Section */}
-          <div className="mt-16 pt-8 border-t border-border">
-            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+          <div className="mt-16 pt-8 hairline-t">
+            <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
               {/* Category and Tags */}
-              <div className="flex items-center gap-3 flex-wrap">
+              <div className="flex flex-wrap items-center gap-2">
                 {post.category && (
                   <>
-                    <span className="text-sm text-muted-foreground">
-                      Filed under:
+                    <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
+                      Filed under
                     </span>
-                    <Link href={`/resources?category=${post.category.slug}`}>
-                      <Badge
-                        variant="secondary"
-                        className="hover:bg-primary hover:text-primary-foreground transition-colors"
-                      >
-                        <Tag className="h-3 w-3 mr-1.5" />
-                        {post.category.name}
-                      </Badge>
+                    <Link
+                      href={`/resources?category=${post.category.slug}`}
+                      className="rounded-sm border border-hairline px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.1em] text-muted-foreground transition-colors hover:border-signal/60 hover:text-signal"
+                    >
+                      {post.category.name}
                     </Link>
                   </>
                 )}
                 {post.tags && post.tags.length > 0 && (
                   <>
-                    {post.category && (
-                      <Separator orientation="vertical" className="h-5" />
-                    )}
-                    <span className="text-sm text-muted-foreground">Tags:</span>
+                    <span className="ml-2 font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
+                      Tags
+                    </span>
                     {post.tags.map((tag) => (
-                      <Link key={tag.id} href={`/resources?tag=${tag.slug}`}>
-                        <Badge
-                          variant="outline"
-                          className="hover:bg-primary/10 transition-colors"
-                        >
-                          {tag.name}
-                        </Badge>
+                      <Link
+                        key={tag.id}
+                        href={`/resources?tag=${tag.slug}`}
+                        className="rounded-sm border border-hairline px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.1em] text-muted-foreground transition-colors hover:border-signal/60 hover:text-signal"
+                      >
+                        {tag.name}
                       </Link>
                     ))}
                   </>
@@ -395,13 +384,15 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               </div>
 
               {/* Share Buttons */}
-              <div className="flex items-center gap-4">
-                <span className="text-sm text-muted-foreground">Share:</span>
+              <div className="flex items-center gap-3">
+                <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
+                  Share
+                </span>
                 <div className="flex items-center gap-2">
                   <Button
                     variant="outline"
                     size="icon"
-                    className="h-9 w-9 rounded-full hover:bg-[#0077b5] hover:text-white hover:border-[#0077b5] transition-colors"
+                    className="h-9 w-9 rounded-sm border-hairline transition-colors hover:border-signal/60 hover:text-signal"
                     asChild
                   >
                     <a
@@ -416,7 +407,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                   <Button
                     variant="outline"
                     size="icon"
-                    className="h-9 w-9 rounded-full hover:bg-[#1DA1F2] hover:text-white hover:border-[#1DA1F2] transition-colors"
+                    className="h-9 w-9 rounded-sm border-hairline transition-colors hover:border-signal/60 hover:text-signal"
                     asChild
                   >
                     <a
@@ -431,7 +422,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                   <Button
                     variant="outline"
                     size="icon"
-                    className="h-9 w-9 rounded-full hover:bg-primary hover:text-primary-foreground hover:border-primary transition-colors"
+                    className="h-9 w-9 rounded-sm border-hairline transition-colors hover:border-signal/60 hover:text-signal"
                     asChild
                   >
                     <a
@@ -447,12 +438,16 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
             {/* Back Button */}
             <div className="mt-8">
-              <Link href="/resources">
-                <Button variant="outline" className="gap-2">
+              <Button
+                asChild
+                variant="outline"
+                className="gap-2 rounded-sm border-hairline font-mono text-xs uppercase tracking-[0.12em]"
+              >
+                <Link href="/resources">
                   <ArrowLeft className="h-4 w-4" />
                   Back to All Resources
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             </div>
           </div>
         </div>
@@ -460,25 +455,24 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
       {/* Related Posts */}
       {relatedPosts.length > 0 && (
-        <section className="py-16 md:py-24 bg-muted/30">
+        <section className="section-padding bg-muted/20 hairline-t">
           <div className="container-wide">
-            <div className="flex items-center justify-between mb-10">
+            <div className="mb-10 flex items-end justify-between">
               <div>
-                <div className="flex items-center gap-2 mb-2">
-                  <BookOpen className="h-5 w-5 text-primary" />
-                  <span className="text-sm font-medium text-primary uppercase tracking-wide">
-                    Continue Reading
-                  </span>
-                </div>
-                <h2 className="text-2xl md:text-3xl font-bold tracking-tight">
+                <p className="eyebrow mb-4">Continue Reading</p>
+                <h2 className="font-display text-2xl font-bold tracking-tight md:text-3xl">
                   Related Articles
                 </h2>
               </div>
-              <Link href={`/resources?category=${post.category?.slug || ""}`}>
-                <Button variant="outline" className="hidden md:flex">
+              <Button
+                asChild
+                variant="outline"
+                className="hidden shrink-0 rounded-sm border-hairline font-mono text-xs uppercase tracking-[0.12em] md:flex"
+              >
+                <Link href={`/resources?category=${post.category?.slug || ""}`}>
                   View All in {post.category?.name || "Category"}
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             </div>
 
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -499,11 +493,15 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             </div>
 
             <div className="mt-8 text-center md:hidden">
-              <Link href={`/resources?category=${post.category?.slug || ""}`}>
-                <Button variant="outline">
+              <Button
+                asChild
+                variant="outline"
+                className="rounded-sm border-hairline font-mono text-xs uppercase tracking-[0.12em]"
+              >
+                <Link href={`/resources?category=${post.category?.slug || ""}`}>
                   View All in {post.category?.name || "Category"}
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             </div>
           </div>
         </section>

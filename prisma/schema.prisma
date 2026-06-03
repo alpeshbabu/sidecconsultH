@@ -21,6 +21,26 @@ datasource db {
 enum Role {
   ADMIN
   EDITOR
+  CLIENT     // Portal client (passwordless / magic-link login)
+}
+
+enum ProjectStatus {
+  ACTIVE
+  ON_HOLD
+  COMPLETED
+  ARCHIVED
+}
+
+enum MilestoneStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  BLOCKED
+}
+
+enum PortalActorRole {
+  ADMIN
+  CLIENT
 }
 
 enum InquiryStatus {
@@ -58,19 +78,22 @@ enum ChatStatus {
 // MODELS
 // =============================================================================
 
-/// User model for admin authentication
+/// User model for admin authentication and portal clients
 model User {
   id            String    @id @default(cuid())
   email         String    @unique
-  passwordHash  String
+  passwordHash  String?   // null for CLIENT users (passwordless / magic-link)
   name          String?
+  companyName   String?   // for CLIENT users
   role          Role      @default(EDITOR)
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   lastLoginAt   DateTime?
 
   // Relations
-  posts         BlogPost[] @relation("AuthoredPosts")
+  posts         BlogPost[]       @relation("AuthoredPosts")
+  projects      Project[]        // projects owned by a CLIENT user
+  magicTokens   MagicLinkToken[]
 
   @@map("users")
 }
@@ -109,7 +132,7 @@ model AvailabilitySettings {
   startTime           String   @default("08:00") // HH:mm format
   endTime             String   @default("17:00") // HH:mm format
   slotDurationMinutes Int      @default(30)
-  timezone            String   @default("America/New_York") // IANA timezone
+  timezone            String   @default("America/Los_Angeles") // IANA timezone
   createdAt           DateTime @default(now())
   updatedAt           DateTime @updatedAt
 
@@ -310,4 +333,95 @@ model Subscriber {
   @@index([email])
   @@index([isActive])
   @@map("subscribers")
+}
+
+// =============================================================================
+// CLIENT PORTAL
+// =============================================================================
+
+/// A consulting engagement belonging to a CLIENT user
+model Project {
+  id          String        @id @default(cuid())
+  clientId    String
+  client      User          @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  title       String
+  description String?       @db.Text
+  status      ProjectStatus @default(ACTIVE)
+  startDate   DateTime?
+  targetDate  DateTime?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  milestones  Milestone[]
+  documents   PortalDocument[]
+  messages    PortalMessage[]
+
+  @@index([clientId])
+  @@index([status])
+  @@map("projects")
+}
+
+/// A milestone within a project (the engagement timeline)
+model Milestone {
+  id          String          @id @default(cuid())
+  projectId   String
+  project     Project         @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  title       String
+  description String?         @db.Text
+  status      MilestoneStatus @default(PENDING)
+  dueDate     DateTime?
+  completedAt DateTime?
+  sortOrder   Int             @default(0)
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  @@index([projectId])
+  @@map("milestones")
+}
+
+/// A document exchanged within a project (stored in Supabase Storage)
+model PortalDocument {
+  id             String          @id @default(cuid())
+  projectId      String
+  project        Project         @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  fileName       String
+  storagePath    String          // path within the Supabase bucket
+  mimeType       String
+  sizeBytes      Int
+  uploadedById   String          // User id (admin or client)
+  uploadedByRole PortalActorRole
+  createdAt      DateTime        @default(now())
+
+  @@index([projectId])
+  @@map("portal_documents")
+}
+
+/// A message in a project's secure thread
+model PortalMessage {
+  id         String          @id @default(cuid())
+  projectId  String
+  project    Project         @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  authorId   String
+  authorRole PortalActorRole
+  body       String          @db.Text
+  readAt     DateTime?
+  createdAt  DateTime        @default(now())
+
+  @@index([projectId, createdAt])
+  @@map("portal_messages")
+}
+
+/// Single-use, short-lived token for passwordless client login
+model MagicLinkToken {
+  id        String    @id @default(cuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash String    // SHA-256 hash of the raw token
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([userId])
+  @@index([tokenHash])
+  @@map("magic_link_tokens")
 }

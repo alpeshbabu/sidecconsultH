@@ -1,13 +1,6 @@
 import Link from "next/link";
-import { ArrowRight, LucideIcon } from "lucide-react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { ArrowUpRight, LucideIcon } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
 export interface ServiceCardProps {
@@ -22,6 +15,9 @@ export interface ServiceCardProps {
   className?: string;
 }
 
+const techChip =
+  "rounded-sm border border-hairline px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.1em] text-muted-foreground";
+
 export function ServiceCard({
   title,
   shortTitle,
@@ -35,30 +31,25 @@ export function ServiceCard({
 }: ServiceCardProps) {
   if (variant === "compact") {
     return (
-      <Link href={href} className="group block">
-        <Card
-          className={cn(
-            "h-full transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:border-primary/50",
-            className
-          )}
-        >
+      <Link href={href} className="group block h-full">
+        <Card className={cn("card-technical h-full rounded-none", className)}>
           <CardHeader className="pb-3">
             <div className="flex items-center gap-4">
-              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center border border-hairline text-primary transition-colors group-hover:border-signal/60 group-hover:text-signal">
                 <Icon className="h-5 w-5" />
               </div>
-              <CardTitle className="text-base group-hover:text-primary transition-colors">
+              <CardTitle className="font-display text-base transition-colors group-hover:text-signal">
                 {shortTitle || title}
               </CardTitle>
             </div>
           </CardHeader>
           <CardContent>
-            <CardDescription className="text-sm leading-relaxed line-clamp-3">
+            <p className="text-sm leading-relaxed text-muted-foreground line-clamp-3">
               {description}
-            </CardDescription>
-            <div className="mt-4 flex items-center text-sm font-medium text-primary opacity-0 group-hover:opacity-100 transition-opacity">
+            </p>
+            <div className="mt-4 flex items-center font-mono text-[11px] uppercase tracking-[0.12em] text-signal opacity-0 transition-opacity group-hover:opacity-100">
               Learn more
-              <ArrowRight className="ml-1 h-3 w-3 group-hover:translate-x-1 transition-transform" />
+              <ArrowUpRight className="ml-1 h-3 w-3 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
             </div>
           </CardContent>
         </Card>
@@ -68,46 +59,38 @@ export function ServiceCard({
 
   if (variant === "featured") {
     return (
-      <Link href={href} className="group block">
-        <Card
-          className={cn(
-            "h-full overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1",
-            className
-          )}
-        >
+      <Link href={href} className="group block h-full">
+        <Card className={cn("card-technical h-full gap-0 overflow-hidden rounded-none py-0", className)}>
           <div className="grid md:grid-cols-2">
             {/* Visual Side */}
-            <div className="relative bg-gradient-to-br from-primary/20 via-accent/10 to-primary/5 p-8 flex flex-col justify-center">
-              <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-primary text-primary-foreground mb-6">
+            <div className="surface-ink relative flex flex-col justify-center p-8">
+              <div className="grid-blueprint absolute inset-0 opacity-50" aria-hidden />
+              <div className="relative flex h-20 w-20 items-center justify-center border border-white/15 text-signal">
                 <Icon className="h-10 w-10" />
               </div>
-              {badge && (
-                <Badge className="w-fit bg-primary text-primary-foreground">
-                  {badge}
-                </Badge>
-              )}
+              {badge && <span className={cn("relative mt-6 w-fit", techChip, "border-white/20 text-ink-muted")}>{badge}</span>}
             </div>
 
             {/* Content Side */}
-            <div className="p-6 md:p-8 flex flex-col justify-center">
-              <CardTitle className="text-2xl mb-3 group-hover:text-primary transition-colors">
+            <div className="flex flex-col justify-center p-6 md:p-8">
+              <CardTitle className="mb-3 font-display text-2xl transition-colors group-hover:text-signal">
                 {title}
               </CardTitle>
-              <CardDescription className="text-base leading-relaxed">
+              <p className="text-base leading-relaxed text-muted-foreground">
                 {description}
-              </CardDescription>
+              </p>
               {outcomes && outcomes.length > 0 && (
                 <div className="mt-4 flex flex-wrap gap-2">
                   {outcomes.slice(0, 3).map((outcome, index) => (
-                    <Badge key={index} variant="outline" className="text-xs">
+                    <span key={index} className={techChip}>
                       {outcome}
-                    </Badge>
+                    </span>
                   ))}
                 </div>
               )}
-              <div className="mt-6 flex items-center text-sm font-medium text-primary">
+              <div className="mt-6 flex items-center font-mono text-[11px] uppercase tracking-[0.12em] text-signal">
                 Explore service
-                <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                <ArrowUpRight className="ml-2 h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
               </div>
             </div>
           </div>
@@ -118,42 +101,31 @@ export function ServiceCard({
 
   // Default variant
   return (
-    <Link href={href} className="group block">
-      <Card
-        className={cn(
-          "h-full transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:border-primary/50",
-          className
-        )}
-      >
+    <Link href={href} className="group block h-full">
+      <Card className={cn("card-technical h-full rounded-none", className)}>
         <CardHeader>
-          <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+          <div className="mb-4 flex h-14 w-14 items-center justify-center border border-hairline text-primary transition-colors group-hover:border-signal/60 group-hover:text-signal">
             <Icon className="h-7 w-7" />
           </div>
-          {badge && (
-            <Badge variant="secondary" className="w-fit mb-2">
-              {badge}
-            </Badge>
-          )}
-          <CardTitle className="text-xl group-hover:text-primary transition-colors">
+          {badge && <span className={cn("mb-2 w-fit", techChip, "text-signal")}>{badge}</span>}
+          <CardTitle className="font-display text-xl transition-colors group-hover:text-signal">
             {title}
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <CardDescription className="leading-relaxed">
-            {description}
-          </CardDescription>
+          <p className="leading-relaxed text-muted-foreground">{description}</p>
           {outcomes && outcomes.length > 0 && (
             <div className="mt-4 flex flex-wrap gap-1.5">
               {outcomes.slice(0, 4).map((outcome, index) => (
-                <Badge key={index} variant="outline" className="text-xs">
+                <span key={index} className={techChip}>
                   {outcome}
-                </Badge>
+                </span>
               ))}
             </div>
           )}
-          <div className="mt-6 flex items-center text-sm font-medium text-primary opacity-0 group-hover:opacity-100 transition-opacity">
+          <div className="mt-6 flex items-center font-mono text-[11px] uppercase tracking-[0.12em] text-signal opacity-0 transition-opacity group-hover:opacity-100">
             Learn more
-            <ArrowRight className="ml-1 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+            <ArrowUpRight className="ml-1 h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
           </div>
         </CardContent>
       </Card>

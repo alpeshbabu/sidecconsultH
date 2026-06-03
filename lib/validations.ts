@@ -355,3 +355,59 @@ export function createUniqueSlugValidator(
     message: "This slug is already in use",
   });
 }
+
+// ============================================
+// Client Portal Schemas
+// ============================================
+
+const PROJECT_STATUSES = ["ACTIVE", "ON_HOLD", "COMPLETED", "ARCHIVED"] as const;
+const MILESTONE_STATUSES = [
+  "PENDING",
+  "IN_PROGRESS",
+  "COMPLETED",
+  "BLOCKED",
+] as const;
+
+export const clientSchema = z.object({
+  name: z.string().min(2, "Name must be at least 2 characters").max(100),
+  email: z.string().email("Please enter a valid email address").max(255),
+  companyName: z.string().max(200).optional().nullable(),
+  sendInvite: z.boolean().optional(),
+});
+
+export const updateClientSchema = z.object({
+  name: z.string().min(2).max(100).optional(),
+  email: z.string().email().max(255).optional(),
+  companyName: z.string().max(200).optional().nullable(),
+});
+
+export const projectSchema = z.object({
+  clientId: z.string().min(1, "A client is required"),
+  title: z.string().min(2, "Title must be at least 2 characters").max(200),
+  description: z.string().max(5000).optional().nullable(),
+  status: z.enum(PROJECT_STATUSES).default("ACTIVE"),
+  startDate: z.string().datetime().optional().nullable(),
+  targetDate: z.string().datetime().optional().nullable(),
+});
+
+export const updateProjectSchema = z.object({
+  title: z.string().min(2).max(200).optional(),
+  description: z.string().max(5000).optional().nullable(),
+  status: z.enum(PROJECT_STATUSES).optional(),
+  startDate: z.string().datetime().optional().nullable(),
+  targetDate: z.string().datetime().optional().nullable(),
+});
+
+export const milestoneSchema = z.object({
+  title: z.string().min(2, "Title must be at least 2 characters").max(200),
+  description: z.string().max(2000).optional().nullable(),
+  status: z.enum(MILESTONE_STATUSES).default("PENDING"),
+  dueDate: z.string().datetime().optional().nullable(),
+  sortOrder: z.coerce.number().int().min(0).optional(),
+});
+
+export const updateMilestoneSchema = milestoneSchema.partial();
+
+export const portalMessageSchema = z.object({
+  body: z.string().min(1, "Message cannot be empty").max(5000),
+});
