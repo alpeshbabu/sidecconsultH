@@ -128,6 +128,17 @@ export default function ContactPage() {
     },
   });
 
+  // Preselect the service area from a ?service= query param (e.g. funnel CTAs
+  // pointing to /contact?service=ai-readiness). Read from the URL directly to
+  // avoid a useSearchParams Suspense boundary.
+  useEffect(() => {
+    const svc = new URLSearchParams(window.location.search).get("service");
+    if (svc && SERVICE_INTEREST_OPTIONS.some((o) => o.value === svc)) {
+      form.setValue("serviceInterest", svc);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // Track form start on first interaction
   useEffect(() => {
     const handleFormFocus = () => {
@@ -203,13 +214,13 @@ export default function ContactPage() {
           <div className="mx-auto max-w-3xl text-center">
             <p className="eyebrow mb-5 justify-center">Start the Conversation</p>
             <h1 className="font-display text-4xl font-bold tracking-tight text-balance sm:text-5xl lg:text-6xl">
-              Let&apos;s Understand{" "}
-              <span className="text-signal">Your Needs</span>
+              Let&apos;s find where AI{" "}
+              <span className="text-signal">pays off in your plant</span>
             </h1>
             <p className="mt-6 text-lg text-muted-foreground md:text-xl">
-              Every great partnership starts with understanding. Share your
-              challenges and goals, and we&apos;ll work together to find the
-              right solution for your organization.
+              Tell us your challenge — scrap, cycle time, unplanned downtime,
+              inspection cost, or validating AI for an audit — and we&apos;ll help
+              map where AI fits, and where it&apos;s premature.
             </p>
           </div>
         </div>
@@ -398,7 +409,7 @@ export default function ContactPage() {
                                   </FormLabel>
                                   <Select
                                     onValueChange={field.onChange}
-                                    defaultValue={field.value}
+                                    value={field.value}
                                   >
                                     <FormControl>
                                       <SelectTrigger className="rounded-sm focus-visible:ring-signal">
@@ -456,7 +467,7 @@ export default function ContactPage() {
                           {serviceFields.length > 0 && (
                             <div className="border border-hairline bg-muted/20 p-4 space-y-4">
                               <div className="flex items-center gap-2">
-                                <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-signal" aria-hidden>// </span>
+                                <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-signal" aria-hidden>{"// "}</span>
                                 <h4 className="font-display text-sm font-semibold">
                                   Help Us Understand Your{" "}
                                   {SERVICE_INTEREST_OPTIONS.find(

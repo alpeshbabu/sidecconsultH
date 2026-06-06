@@ -85,8 +85,17 @@ interface PaginationInfo {
   hasMore: boolean;
 }
 
-// Service display names
+// Service display names. Current (AI) values plus legacy keys so historical
+// inquiries still render a friendly label.
 const serviceDisplayNames: Record<string, string> = {
+  // Current AI services
+  "ai-readiness": "AI Readiness Assessment",
+  "ai-process": "AI Process Development & Optimization",
+  "ai-validation": "AI Validation & Governance",
+  "ai-quality": "AI Quality & Inspection",
+  "smart-factory": "Smart Factory / Predictive Maintenance",
+  "general": "General Inquiry",
+  // Legacy (pre-pivot) values
   "manufacturing-engineering": "Manufacturing Engineering",
   "quality-regulatory": "Quality & Regulatory",
   "injection-molding": "Process Excellence",
@@ -94,7 +103,6 @@ const serviceDisplayNames: Record<string, string> = {
   "facility-design": "Facility Design",
   "supplier-development": "Supplier Development",
   "strategic-advisory": "Strategic Advisory",
-  "general": "General Inquiry",
 };
 
 // Status config — mono chip color semantics preserved

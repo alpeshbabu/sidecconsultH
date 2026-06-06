@@ -47,14 +47,14 @@ export function NewsletterForm() {
       <div className="grid-blueprint absolute inset-0 opacity-50" aria-hidden />
       <div className="relative mx-auto max-w-md text-center">
         <p className="eyebrow-plain mb-4 text-signal">
-          <span aria-hidden>// </span>Newsletter
+          <span aria-hidden>{"// "}</span>Newsletter
         </p>
         <h3 className="font-display text-2xl font-semibold text-ink-foreground">
-          Stay Updated on Industry Trends
+          AI for Molding, In Your Inbox
         </h3>
         <p className="mx-auto mt-3 max-w-md text-ink-muted">
-          Subscribe for the latest insights on medical device manufacturing and
-          regulatory updates.
+          Practical insights on AI, machine learning, and validation for
+          injection molding manufacturing.
         </p>
 
         {message?.type === "success" ? (

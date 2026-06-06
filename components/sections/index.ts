@@ -7,3 +7,4 @@ export type { ServiceCardProps } from "./ServiceCard";
 export { ProfileCard } from "./ProfileCard";
 export type { ProfileCardProps } from "./ProfileCard";
 export { NewsletterForm } from "./NewsletterForm";
+export { LeadMagnetForm } from "./LeadMagnetForm";

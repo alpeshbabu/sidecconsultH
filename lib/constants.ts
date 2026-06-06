@@ -1,9 +1,9 @@
 // Site Configuration
 export const SITE_CONFIG = {
   name: "SIDEC Consulting",
-  title: "Medical Device Injection Molding Consultant",
+  title: "AI for Injection Molding — Validated, Explainable, Audit-Ready",
   description:
-    "25+ years of expertise in medical device manufacturing, ISO 13485 quality systems, injection molding process development, and facility design.",
+    "25+ years in medical device manufacturing, now bringing AI and machine learning to injection molding — process optimization, quality, predictive maintenance, and the validation and governance to deploy it in regulated plants.",
   url: "https://sidecconsulting.com", // Update with actual domain
   author: "SIDEC Consulting",
   email: "", // To be provided
@@ -16,94 +16,66 @@ export const NAV_LINKS = [
   { label: "Home", href: "/" },
   { label: "Services", href: "/services" },
   { label: "About", href: "/about" },
+  { label: "Case Studies", href: "/case-studies" },
   { label: "Resources", href: "/resources" },
   { label: "Contact", href: "/contact" },
 ] as const;
 
-// Service Areas (from Skills.md)
+// Service Areas — the 4 AI pillars (PRDB §2 / §3.1.1)
 export const SERVICE_AREAS = [
   {
-    id: "manufacturing-engineering",
-    title: "Manufacturing Engineering & Operations",
-    shortTitle: "Manufacturing Engineering",
+    id: "ai-process",
+    title: "AI-Augmented Process Development",
+    shortTitle: "AI Process Development",
     description:
-      "Hiring and developing manufacturing engineering talent, organizational strategy, process optimization, and continuous improvement programs.",
-    icon: "Settings",
-    href: "/services#manufacturing-engineering",
+      "We turn scientific molding and DOE into ML-driven optimization that cuts cycle time, scrap, and energy while holding quality.",
+    icon: "Cpu",
+    href: "/services#ai-process",
   },
   {
-    id: "quality-regulatory",
-    title: "Quality & Regulatory Compliance",
-    shortTitle: "Quality & Regulatory",
+    id: "ai-validation",
+    title: "AI Validation & Governance",
+    shortTitle: "AI Validation & Governance",
     description:
-      "ISO 13485, MDSAP compliance, 510(k) submissions, EU MDR technical files, design controls, and risk management.",
+      "We deploy AI in regulated plants the right way: validated under ISO 13485/QMSR, explainable, and ready for audit.",
     icon: "ShieldCheck",
-    href: "/services#quality-regulatory",
+    href: "/services#ai-validation",
   },
   {
-    id: "injection-molding",
-    title: "Injection Molding Process Excellence",
-    shortTitle: "Process Excellence",
+    id: "ai-quality",
+    title: "AI-Driven Quality & Inspection",
+    shortTitle: "AI Quality & Inspection",
     description:
-      "Scientific molding, DOE studies, process validation (IQ/OQ/PQ), automation, and process troubleshooting.",
-    icon: "Cog",
-    href: "/services#injection-molding",
+      "We catch defects before they happen with predictive models and automated vision, integrated into your existing QMS.",
+    icon: "ScanSearch",
+    href: "/services#ai-quality",
   },
   {
-    id: "equipment-maintenance",
-    title: "Equipment & Mold Maintenance",
-    shortTitle: "Equipment Maintenance",
+    id: "smart-factory",
+    title: "Smart Factory & Data",
+    shortTitle: "Smart Factory & Data",
     description:
-      "Preventive maintenance programs, mold maintenance, equipment lifecycle management, and CMMS implementation.",
-    icon: "Wrench",
-    href: "/services#equipment-maintenance",
-  },
-  {
-    id: "facility-design",
-    title: "Facility Design & Infrastructure",
-    shortTitle: "Facility Design",
-    description:
-      "Greenfield site design, cleanroom development (ISO 7/8), utility systems, and layout optimization.",
-    icon: "Building",
-    href: "/services#facility-design",
-  },
-  {
-    id: "supplier-development",
-    title: "Supplier Development & Global Supply Chain",
-    shortTitle: "Supplier Development",
-    description:
-      "Global supplier strategy, qualification programs, audits, and supply chain optimization.",
-    icon: "Globe",
-    href: "/services#supplier-development",
-  },
-  {
-    id: "strategic-advisory",
-    title: "Strategic Advisory & Expert Services",
-    shortTitle: "Strategic Advisory",
-    description:
-      "Technology transfer, due diligence, M&A support, expert witness services, and custom training programs.",
-    icon: "Lightbulb",
-    href: "/services#strategic-advisory",
+      "Predictive maintenance, IIoT, and the data foundation that has to exist before any AI can deliver.",
+    icon: "Network",
+    href: "/services#smart-factory",
   },
 ] as const;
 
-// Statistics/Metrics for Homepage
+// Statistics/Metrics for Homepage (PRDB §3.1.1)
 export const STATS = [
-  { value: "25+", label: "Years Experience" },
-  { value: "100+", label: "Projects Delivered" },
-  { value: "50+", label: "Companies Served" },
-  { value: "ISO 13485", label: "Expert Certified" },
+  { value: "25+", label: "Years in Injection Molding" },
+  { value: "ISO 13485 / QMSR", label: "Regulated-Manufacturing Depth" },
+  { value: "100+", label: "Process, Quality & Automation Projects" },
+  { value: "DOE + ML", label: "AI Grounded in Scientific Molding" },
 ] as const;
 
-// Contact Form Options
+// Contact Form Options (PRDB §3.1.5)
 export const SERVICE_INTEREST_OPTIONS = [
-  { value: "manufacturing-engineering", label: "Manufacturing Engineering & Operations" },
-  { value: "quality-regulatory", label: "Quality & Regulatory Compliance" },
-  { value: "injection-molding", label: "Injection Molding Process Excellence" },
-  { value: "equipment-maintenance", label: "Equipment & Mold Maintenance" },
-  { value: "facility-design", label: "Facility Design & Infrastructure" },
-  { value: "supplier-development", label: "Supplier Development & Supply Chain" },
-  { value: "strategic-advisory", label: "Strategic Advisory & Expert Services" },
+  { value: "ai-readiness", label: "AI Readiness Assessment" },
+  { value: "ai-process", label: "AI Process Development & Optimization" },
+  { value: "ai-validation", label: "AI Validation & Governance" },
+  { value: "ai-quality", label: "AI Quality & Inspection" },
+  { value: "smart-factory", label: "Smart Factory / Predictive Maintenance" },
   { value: "general", label: "General Inquiry" },
 ] as const;
 
@@ -169,39 +141,32 @@ const FIELD_DEFINITIONS: Record<ServiceFieldKey, ServiceFieldConfig> = {
   },
 };
 
+// NOTE: keyed by SERVICE_INTEREST_OPTIONS values. Uses only existing field
+// definitions for now; richer AI fields (data/sensor maturity, primary pain
+// point) are deferred to TASKSB T3.2 (needs schema columns).
 export const SERVICE_SPECIFIC_FIELDS: Record<string, ServiceFieldConfig[]> = {
-  "manufacturing-engineering": [
-    FIELD_DEFINITIONS.estimatedBudget,
+  "ai-readiness": [
     FIELD_DEFINITIONS.otherSites,
     FIELD_DEFINITIONS.otherSiteLocations,
+    FIELD_DEFINITIONS.estimatedBudget,
   ],
-  "quality-regulatory": [
+  "ai-process": [
+    FIELD_DEFINITIONS.otherSites,
+    FIELD_DEFINITIONS.estimatedBudget,
+  ],
+  "ai-validation": [
     FIELD_DEFINITIONS.regulatoryStandards,
     FIELD_DEFINITIONS.expectedDocuments,
     FIELD_DEFINITIONS.estimatedBudget,
   ],
-  "injection-molding": [
+  "ai-quality": [
+    FIELD_DEFINITIONS.expectedDocuments,
     FIELD_DEFINITIONS.estimatedBudget,
-    FIELD_DEFINITIONS.otherSites,
   ],
-  "equipment-maintenance": [
-    FIELD_DEFINITIONS.estimatedBudget,
-    FIELD_DEFINITIONS.otherSites,
-    FIELD_DEFINITIONS.otherSiteLocations,
-  ],
-  "facility-design": [
-    FIELD_DEFINITIONS.estimatedBudget,
+  "smart-factory": [
     FIELD_DEFINITIONS.otherSites,
     FIELD_DEFINITIONS.otherSiteLocations,
-  ],
-  "supplier-development": [
-    FIELD_DEFINITIONS.supplierAddress,
     FIELD_DEFINITIONS.estimatedBudget,
-    FIELD_DEFINITIONS.otherSites,
-  ],
-  "strategic-advisory": [
-    FIELD_DEFINITIONS.estimatedBudget,
-    FIELD_DEFINITIONS.regulatoryStandards,
   ],
   general: [],
 };
@@ -214,13 +179,12 @@ export const PROJECT_TIMELINE_OPTIONS = [
   { value: "exploring", label: "Just Exploring" },
 ] as const;
 
-// Blog Categories
+// Blog Categories (PRDB §7.2)
 export const BLOG_CATEGORIES = [
-  { id: "manufacturing-engineering", name: "Manufacturing Engineering", slug: "manufacturing-engineering" },
-  { id: "quality-systems", name: "Quality Systems & Compliance", slug: "quality-systems" },
-  { id: "process-development", name: "Process Development", slug: "process-development" },
-  { id: "facility-design", name: "Facility Design", slug: "facility-design" },
-  { id: "equipment-maintenance", name: "Equipment & Mold Maintenance", slug: "equipment-maintenance" },
+  { id: "ai-process-optimization", name: "AI & Process Optimization", slug: "ai-process-optimization" },
+  { id: "ai-validation-compliance", name: "AI Validation & Compliance", slug: "ai-validation-compliance" },
+  { id: "smart-factory-data", name: "Smart Factory & Data", slug: "smart-factory-data" },
+  { id: "quality-inspection", name: "Quality Systems & Inspection", slug: "quality-inspection" },
   { id: "industry-trends", name: "Industry Trends", slug: "industry-trends" },
   { id: "case-studies", name: "Case Studies", slug: "case-studies" },
 ] as const;
@@ -228,13 +192,15 @@ export const BLOG_CATEGORIES = [
 // Footer Links
 export const FOOTER_LINKS = {
   services: [
-    { label: "Manufacturing Engineering", href: "/services#manufacturing-engineering" },
-    { label: "Quality & Regulatory", href: "/services#quality-regulatory" },
-    { label: "Process Excellence", href: "/services#injection-molding" },
-    { label: "Facility Design", href: "/services#facility-design" },
+    { label: "AI Readiness Assessment", href: "/services#ai-readiness" },
+    { label: "AI Process Development", href: "/services#ai-process" },
+    { label: "AI Validation & Governance", href: "/services#ai-validation" },
+    { label: "Smart Factory & Data", href: "/services#smart-factory" },
   ],
   company: [
     { label: "About", href: "/about" },
+    { label: "Case Studies", href: "/case-studies" },
+    { label: "AI Readiness Checklist", href: "/resources/ai-readiness-checklist" },
     { label: "Resources", href: "/resources" },
     { label: "Contact", href: "/contact" },
   ],

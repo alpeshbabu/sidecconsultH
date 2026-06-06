@@ -32,11 +32,11 @@ import { createPersonSchema, getJsonLd } from "@/lib/structured-data";
 export const metadata: Metadata = {
   title: "About",
   description:
-    "25+ years of expertise in medical device manufacturing. Expert in ISO 13485, FDA regulations, injection molding processes, and global supplier development.",
+    "25+ years in medical device injection molding — scientific molding, DOE, and process validation under ISO 13485 — now applied to deploying AI and machine learning on the molding floor, responsibly.",
   openGraph: {
     title: "About | SIDEC Consulting",
     description:
-      "25+ years of expertise in medical device manufacturing, ISO 13485 quality systems, and injection molding process development.",
+      "Deep injection molding and regulated-manufacturing expertise, now applied to AI: process optimization, validation & governance, quality, and smart-factory data.",
     url: "/about",
     images: [
       {
@@ -51,7 +51,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "About | SIDEC Consulting",
     description:
-      "25+ years of expertise in medical device manufacturing, ISO 13485 quality systems, and injection molding process development.",
+      "Deep injection molding and regulated-manufacturing expertise, now applied to AI: process optimization, validation & governance, quality, and smart-factory data.",
     images: ["/AboutPageAssets/aboutus1.jpeg"],
   },
   alternates: {
@@ -67,50 +67,50 @@ const aboutStats = [
   { value: "6", label: "Continents Worked" },
 ] as const;
 
-// Expertise areas with icons
+// Expertise areas with icons — domain depth, now extended with AI
 const expertiseAreas = [
   {
     icon: Factory,
-    title: "Injection Molding",
+    title: "Scientific Molding, Extended with ML",
     items: [
       "Scientific Molding Methodology",
-      "Process Development & Validation",
-      "Design of Experiments (DOE)",
-      "Automation & Robotics Integration",
-      "Material Selection & Compatibility",
+      "DOE accelerated & extended with machine learning",
+      "ML surrogate modeling (predicting quality from parameters)",
+      "Closed-loop / adaptive process control",
+      "Multi-objective optimization: cycle time, scrap, energy & quality",
     ],
   },
   {
     icon: Shield,
-    title: "Quality & Regulatory",
+    title: "AI Validation & Governance",
     items: [
-      "ISO 13485 Quality Systems",
-      "FDA 21 CFR Part 820",
-      "EU MDR (2017/745)",
-      "MDSAP Compliance",
-      "510(k) Submissions",
+      "ML validation under ISO 13485 & FDA QMSR",
+      "Computer Software Assurance (CSA) for AI systems",
+      "Explainable AI (XAI) for auditable models",
+      "Model lifecycle governance: versioning, drift, retraining",
+      "ISO 14971 risk management extended to AI failure modes",
     ],
   },
   {
     icon: FlaskConical,
-    title: "Process Engineering",
+    title: "AI-Driven Quality & Inspection",
     items: [
-      "Process Validation (IQ/OQ/PQ)",
-      "Risk Management (ISO 14971)",
-      "Design Controls",
-      "Statistical Process Control",
-      "Root Cause Analysis",
+      "Vision-based defect detection (short shots, sink, warpage, flash)",
+      "Predictive defect models & early-warning systems",
+      "Build-vs-buy evaluation and QMS integration",
+      "AI-assisted CAPA & nonconformance pattern analysis",
+      "Process validation (IQ/OQ/PQ) & statistical process control",
     ],
   },
   {
     icon: Globe,
-    title: "Global Operations",
+    title: "Smart Factory, Data & Global Ops",
     items: [
-      "Supplier Quality Management",
-      "Global Supply Chain Strategy",
-      "Technology Transfer",
-      "Due Diligence & M&A Support",
-      "Facility Design & Build",
+      "Predictive maintenance (sensor strategy, models, ROI realism)",
+      "IIoT architecture & the data foundation AI requires",
+      "OEE / scrap / energy analytics & dashboards",
+      "LLM operator assistants to capture tribal knowledge",
+      "Supplier quality, technology transfer & facility design",
     ],
   },
 ];
@@ -164,21 +164,21 @@ const careerTimeline = [
 // Deep expertise areas
 const deepExpertise = [
   {
-    area: "Manufacturing Engineering Excellence",
+    area: "Molding-Floor Credibility",
     description:
-      "From Associate Director to Project Engineer—deep hands-on expertise in injection molding, process development, and operational excellence",
+      "From Associate Director to Project Engineer—we've actually validated processes, so our AI is grounded in scientific molding and DOE, not theory",
     icon: Factory,
   },
   {
-    area: "Quality & Regulatory Leadership",
+    area: "Audit-Survivable AI",
     description:
-      "Director-level experience building and managing quality systems that satisfy FDA, ISO, and EU MDR requirements",
+      "Director-level quality experience means we validate ML under ISO 13485/QMSR and document it to satisfy FDA, ISO, and EU MDR auditors",
     icon: Shield,
   },
   {
-    area: "Design Assurance & R&D",
+    area: "ROI Realism",
     description:
-      "Principal Engineer and Director experience ensuring designs are manufacturable, compliant, and optimized for production",
+      "We map where AI pays off and where it's premature—so you invest in the sensors and models that return, not the hype",
     icon: FlaskConical,
   },
 ];
@@ -265,26 +265,26 @@ export default function AboutPage() {
             <div>
               <p className="eyebrow mb-5">About Us</p>
               <h1 className="font-display text-4xl font-bold tracking-tight text-balance sm:text-5xl lg:text-6xl">
-                Your Manufacturing{" "}
-                <span className="text-signal">Excellence Partner</span>
+                The rare team that can deploy AI{" "}
+                <span className="text-signal">and survive the audit</span>
               </h1>
               <p className="mt-2 text-xl text-muted-foreground">
-                Medical Device Manufacturing Experts | 25+ Years Experience
+                Injection Molding × Applied AI | 25+ Years Experience
               </p>
               <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
                 SIDEC Consulting brings over{" "}
                 <span className="font-semibold text-foreground">25 years</span>{" "}
-                of hands-on experience in medical device manufacturing. Our
-                founder has held leadership positions from Project Engineer to
-                Associate Director, building deep expertise across manufacturing
-                engineering, quality systems, design assurance, and R&D.
+                of hands-on experience in medical device injection molding —
+                scientific molding, DOE, process validation, and ISO 13485
+                quality systems, across leadership roles from Project Engineer to
+                Associate Director.
               </p>
               <p className="mt-4 leading-relaxed text-muted-foreground">
-                This unique cross-functional experience—spanning injection
-                molding operations, quality management, design controls, and
-                product development—enables us to understand your challenges
-                from multiple perspectives and deliver comprehensive solutions
-                that work.
+                We now use that foundation to bring AI and machine learning onto
+                the molding floor responsibly — process optimization, quality and
+                inspection, predictive maintenance, and the validation and
+                governance that lets you deploy AI in a regulated plant and defend
+                it in an audit.
               </p>
               <div className="mt-8 flex flex-wrap gap-4">
                 <Button asChild size="lg" variant="technical">
@@ -342,13 +342,13 @@ export default function AboutPage() {
           <div className="mx-auto max-w-2xl text-center">
             <p className="eyebrow mb-5 justify-center">Areas of Expertise</p>
             <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">
-              Deep Technical Knowledge
+              Domain Depth, Now Applied to AI
             </h2>
             <p className="mt-4 text-muted-foreground">
-              Our expertise comes from real-world experience—not textbooks. From
-              running injection molding operations to leading quality
-              organizations to directing R&D teams, we&apos;ve done the work and
-              know what it takes to succeed.
+              Our AI work comes from real-world manufacturing experience—not a
+              data-science lab. Because we&apos;ve run injection molding
+              operations, led quality organizations, and validated processes,
+              the AI we deploy fits how a regulated plant actually works.
             </p>
           </div>
 
@@ -566,7 +566,8 @@ export default function AboutPage() {
               </h2>
               <p className="mt-4 text-muted-foreground">
                 Deep knowledge of global regulatory requirements for medical
-                device manufacturing and quality management systems.
+                device manufacturing — and how to deploy AI/ML inside them under
+                the new FDA QMSR.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
                 {certifications.map((cert, index) => (
@@ -585,11 +586,11 @@ export default function AboutPage() {
                   </h3>
                   <ul className="space-y-2">
                     {[
-                      "510(k) submission preparation and support",
-                      "EU MDR Technical File development",
+                      "Validating AI/ML process control & inspection under QMSR",
+                      "Computer Software Assurance (CSA) for AI-enabled systems",
                       "FDA and Notified Body audit preparation",
-                      "Quality system gap assessments",
-                      "CAPA and complaint handling systems",
+                      "Predetermined Change Control for models that retrain",
+                      "510(k) support, EU MDR technical files & CAPA systems",
                     ].map((item, index) => (
                       <li key={index} className="flex items-start gap-2">
                         <CheckCircle className="mt-0.5 h-4 w-4 shrink-0 text-signal" />
@@ -662,9 +663,11 @@ export default function AboutPage() {
       {/* CTA Section */}
       <CTASection
         title="Let's Work Together"
-        description="Whether you're facing a specific manufacturing challenge or looking to elevate your entire operation, we're here to help you succeed."
-        primaryButtonText="Schedule a Consultation"
-        primaryButtonHref="/contact"
+        description="Whether you're exploring where AI fits or ready to validate a model for production, we bring the molding-floor experience to make it work — and survive an audit."
+        primaryButtonText="Get an AI Readiness Assessment"
+        primaryButtonHref="/contact?service=ai-readiness"
+        secondaryButtonText="Schedule a Consultation"
+        secondaryButtonHref="/schedule"
       />
     </MainLayout>
   );

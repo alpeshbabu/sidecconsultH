@@ -330,7 +330,7 @@ export function ServiceEditor({ serviceId }: ServiceEditorProps) {
                 onChange={(e) =>
                   setFormData({ ...formData, serviceId: e.target.value })
                 }
-                placeholder="e.g., manufacturing-engineering"
+                placeholder="e.g., ai-process"
                 disabled={!isNew}
                 className="rounded-sm border-hairline focus-visible:ring-signal"
               />

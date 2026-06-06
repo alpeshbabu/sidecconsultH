@@ -8,13 +8,10 @@ import {
   Menu,
   X,
   ChevronDown,
-  Settings,
   ShieldCheck,
-  Cog,
-  Wrench,
-  Building,
-  Globe,
-  Lightbulb,
+  Cpu,
+  ScanSearch,
+  Network,
   ArrowRight,
   Search,
 } from "lucide-react";
@@ -31,13 +28,10 @@ import { SearchDialog } from "@/components/search";
 
 // Map icon names to components
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
-  Settings,
+  Cpu,
   ShieldCheck,
-  Cog,
-  Wrench,
-  Building,
-  Globe,
-  Lightbulb,
+  ScanSearch,
+  Network,
 };
 
 export function Header() {
@@ -118,7 +112,9 @@ export function Header() {
                   onMouseEnter={() => setIsServicesOpen(true)}
                   onMouseLeave={() => setIsServicesOpen(false)}
                 >
-                  <button
+                  <Link
+                    href={link.href}
+                    aria-expanded={isServicesOpen}
                     className={cn(
                       "flex items-center gap-1 px-4 py-2 text-sm font-medium rounded-lg transition-colors",
                       isActive(link.href)
@@ -133,7 +129,7 @@ export function Header() {
                         isServicesOpen && "rotate-180"
                       )}
                     />
-                  </button>
+                  </Link>
 
                   {/* Mega Menu */}
                   <div

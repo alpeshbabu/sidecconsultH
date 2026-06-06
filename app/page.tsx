@@ -1,16 +1,18 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import {
-  Settings,
+  Cpu,
   ShieldCheck,
+  ScanSearch,
+  Network,
   Cog,
-  Wrench,
-  Building,
-  Globe,
+  TrendingUp,
+  TrendingDown,
+  Timer,
+  Activity,
   Lightbulb,
   ArrowRight,
   ArrowUpRight,
-  FileCheck,
   Shield,
   Clock,
   Plus,
@@ -38,38 +40,35 @@ export const metadata: Metadata = {
 
 // Map icon names to components
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
-  Settings,
+  Cpu,
   ShieldCheck,
-  Cog,
-  Wrench,
-  Building,
-  Globe,
-  Lightbulb,
+  ScanSearch,
+  Network,
 };
 
-const CERTS = ["ISO 13485", "FDA 21 CFR 820", "EU MDR", "MDSAP"];
+const CERTS = ["ISO 13485", "FDA QMSR", "EU MDR", "ISO 14971"];
 
 const PILLARS = [
   {
-    icon: FileCheck,
-    title: "Regulatory Expertise",
-    spec: "§ 820 / MDR",
-    description:
-      "Navigate FDA, EU MDR, and global requirements with confidence — 510(k) submissions, technical files, and quality-system compliance.",
-  },
-  {
     icon: Cog,
-    title: "Process Mastery",
-    spec: "IQ / OQ / PQ",
+    title: "Molding-Floor Credibility",
+    spec: "Scientific Molding",
     description:
-      "Deep expertise in injection molding, scientific molding principles, and process validation. Engineered for repeatability.",
+      "AI advice from people who've actually validated a process — DOE, scientific molding, IQ/OQ/PQ — not data scientists who've never seen a press.",
   },
   {
-    icon: Globe,
-    title: "Global Experience",
-    spec: "Multi-site",
+    icon: ShieldCheck,
+    title: "Audit-Survivable AI",
+    spec: "ISO 13485 / QMSR",
     description:
-      "Global supplier networks, technology transfer, and international manufacturing operations across multiple continents.",
+      "Models that are validated, explainable, and documented to pass an FDA/ISO audit — the part most AI vendors quietly ignore.",
+  },
+  {
+    icon: TrendingUp,
+    title: "ROI Realism",
+    spec: "Effort vs. ROI",
+    description:
+      "An honest map of where AI pays off and where it's premature — so you invest in the sensors and models that return, not the hype.",
   },
 ];
 
@@ -148,27 +147,27 @@ export default async function HomePage() {
             {/* Left content */}
             <div className="reveal-up">
               <p className="eyebrow mb-6">
-                25+ Years · Medical Device Manufacturing
+                25+ Years · Molding × Applied AI
               </p>
 
               <h1 className="font-display text-4xl font-bold leading-[1.05] tracking-tight text-balance sm:text-5xl md:text-6xl lg:text-[4.25rem]">
-                Precision engineering for{" "}
+                Bring AI to injection molding —{" "}
                 <span className="relative whitespace-nowrap text-signal">
-                  medical devices
+                  without breaking validation
                   <span className="absolute inset-x-0 -bottom-1 h-px bg-signal/50" />
                 </span>
               </h1>
 
               <p className="mt-7 max-w-xl text-lg leading-relaxed text-muted-foreground md:text-xl">
-                Expert consulting for ISO 13485 quality systems, injection
-                molding process development, regulatory compliance, and facility
-                design — built to exacting, audit-ready standards.
+                25+ years in medical device manufacturing. We help molders
+                deploy AI for process optimization, quality, and uptime —
+                validated, explainable, and audit-ready.
               </p>
 
               <div className="mt-10 flex flex-col gap-3 sm:flex-row">
                 <Button asChild size="lg" variant="technical" className="h-12 w-full px-8 sm:w-auto">
                   <Link href="/schedule">
-                    Schedule Consultation
+                    Schedule a Consultation
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
                 </Button>
@@ -178,7 +177,7 @@ export default async function HomePage() {
                   variant="outline"
                   className="h-12 w-full rounded-sm border-hairline px-8 font-mono text-xs uppercase tracking-[0.12em] sm:w-auto"
                 >
-                  <Link href="/services">Explore Services</Link>
+                  <Link href="/services#ai-readiness">Get an AI Readiness Assessment</Link>
                 </Button>
               </div>
 
@@ -243,18 +242,63 @@ export default async function HomePage() {
       {/* ============ STATS ============ */}
       <AnimatedStats stats={STATS} />
 
+      {/* ============ OUTCOMES ============ */}
+      <section className="section-padding hairline-t">
+        <div className="container-wide">
+          <div className="max-w-2xl">
+            <p className="eyebrow mb-5">Outcomes</p>
+            <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">
+              What validated AI delivers
+            </h2>
+            <p className="mt-3 text-muted-foreground">
+              The point of AI on the molding floor isn&rsquo;t a demo — it&rsquo;s
+              measurable improvement you can defend.
+            </p>
+          </div>
+
+          <div className="mt-12 grid gap-px hairline border border-hairline bg-hairline sm:grid-cols-2 lg:grid-cols-4">
+            {[
+              { icon: TrendingDown, value: "12–22%", label: "Less Scrap" },
+              { icon: Timer, value: "8–15%", label: "Faster Cycle Times" },
+              { icon: Activity, value: "Fewer", label: "Unplanned Stoppages" },
+              { icon: ShieldCheck, value: "Audit-Ready", label: "Validated Models" },
+            ].map((m) => {
+              const Icon = m.icon;
+              return (
+                <div key={m.label} className="group bg-background p-7">
+                  <div className="mb-5 flex h-11 w-11 items-center justify-center border border-hairline text-primary transition-colors group-hover:border-signal/60 group-hover:text-signal">
+                    <Icon className="h-5 w-5" />
+                  </div>
+                  <div className="font-display text-3xl font-bold tracking-tight text-foreground">
+                    {m.value}
+                  </div>
+                  <div className="mt-2 font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
+                    {m.label}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          <p className="mt-5 text-xs text-muted-foreground/80">
+            Ranges are typical engagement targets, not guarantees — actual
+            results depend on your process, data, and starting point.
+          </p>
+        </div>
+      </section>
+
       {/* ============ WHY / PILLARS ============ */}
       <section className="section-padding">
         <div className="container-wide">
           <div className="max-w-3xl">
             <p className="eyebrow mb-5">Why SIDEC</p>
             <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl text-balance">
-              The new standard for medical device excellence
+              AI you can deploy in production — and defend in an audit
             </h2>
             <p className="mt-5 text-lg leading-relaxed text-muted-foreground">
-              We bring deep, hands-on industry expertise to help medical device
-              companies achieve manufacturing excellence and regulatory
-              compliance — without compromise.
+              Most &ldquo;AI for manufacturing&rdquo; advice comes from data
+              scientists who&rsquo;ve never validated a process. We come from the
+              molding floor — and layer AI on top of that rigor.
             </p>
           </div>
 
@@ -318,11 +362,11 @@ export default async function HomePage() {
             <div className="max-w-xl">
               <p className="eyebrow mb-5">Capabilities Index</p>
               <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">
-                Comprehensive consulting solutions
+                Four pillars for AI in molding
               </h2>
               <p className="mt-3 text-muted-foreground">
-                End-to-end engineering support, from regulatory compliance to
-                greenfield facility design.
+                From ML-driven process optimization to audit-ready validation —
+                grounded in scientific molding, not hype.
               </p>
             </div>
             <Button asChild variant="outline" className="shrink-0 rounded-sm border-hairline font-mono text-xs uppercase tracking-[0.12em]">
@@ -361,6 +405,39 @@ export default async function HomePage() {
                 </Link>
               );
             })}
+          </div>
+        </div>
+      </section>
+
+      {/* ============ FEATURED BAND — AI READINESS ASSESSMENT ============ */}
+      <section className="section-padding surface-ink relative overflow-hidden">
+        <div className="grid-dots absolute inset-0 opacity-40" aria-hidden />
+        <div className="container-wide relative">
+          <div className="flex flex-col items-start gap-8 md:flex-row md:items-center md:justify-between">
+            <div className="max-w-2xl">
+              <p className="eyebrow-plain mb-4 text-signal">
+                <span aria-hidden>{"// "}</span>Start Here
+              </p>
+              <h2 className="font-display text-2xl font-bold tracking-tight text-ink-foreground sm:text-3xl text-balance">
+                Not sure where AI fits in your operation?
+              </h2>
+              <p className="mt-4 text-ink-muted">
+                Start with an <span className="text-ink-foreground font-medium">AI Readiness Assessment</span> — a
+                fixed-scope audit that maps where AI pays off and where it&rsquo;s premature. You get a
+                data-maturity score, a prioritized opportunity map, a sensor/data gap analysis, and a phased roadmap.
+              </p>
+            </div>
+            <Button
+              asChild
+              size="lg"
+              variant="signal"
+              className="h-12 shrink-0 px-8"
+            >
+              <Link href="/services#ai-readiness">
+                Get an AI Readiness Assessment
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
           </div>
         </div>
       </section>
@@ -408,20 +485,20 @@ export default async function HomePage() {
             <div className="order-1 lg:order-2">
               <p className="eyebrow mb-5">About SIDEC</p>
               <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl text-balance">
-                25+ years of manufacturing excellence
+                Domain expertise, now applied to AI
               </h2>
               <p className="mt-6 leading-relaxed text-muted-foreground">
                 With over two decades in medical device manufacturing, we bring
-                deep expertise in injection molding, ISO 13485 quality systems,
-                regulatory compliance, and facility design — including leadership
-                roles at Fortune 500 medical device companies.
+                deep expertise in injection molding, scientific molding, and
+                process validation under ISO 13485 — and we now use it to bring
+                AI and machine learning onto the molding floor, responsibly.
               </p>
 
               <ul className="mt-8 space-y-px border-y border-hairline">
                 {[
-                  "Injection molding & scientific molding expertise",
-                  "ISO 13485, FDA 21 CFR 820 & EU MDR specialist",
-                  "Global supplier quality & development experience",
+                  "Scientific molding & DOE — extended with ML surrogate models",
+                  "AI validation & governance under ISO 13485 / QMSR",
+                  "Smart-factory, IIoT & predictive-maintenance data foundations",
                 ].map((item) => (
                   <li key={item} className="flex items-center gap-4 py-3">
                     <Plus className="h-4 w-4 shrink-0 text-signal" />
@@ -454,7 +531,7 @@ export default async function HomePage() {
         <div className="container-wide relative">
           <div className="max-w-2xl">
             <p className="eyebrow-plain mb-5 text-signal">
-              <span aria-hidden>// </span>Methodology
+              <span aria-hidden>{"// "}</span>Methodology
             </p>
             <h2 className="font-display text-3xl font-bold tracking-tight text-ink-foreground sm:text-4xl">
               A proven process for measurable results
@@ -496,16 +573,24 @@ export default async function HomePage() {
                 Latest from the field
               </h2>
               <p className="mt-3 text-muted-foreground">
-                Industry insights, best practices, and expert guidance for
-                medical device manufacturing professionals.
+                Practical guidance on AI, machine learning, and validation for
+                injection molding manufacturing professionals.
               </p>
             </div>
-            <Button asChild variant="outline" className="shrink-0 rounded-sm border-hairline font-mono text-xs uppercase tracking-[0.12em]">
-              <Link href="/resources">
-                View All Resources
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
+            <div className="flex shrink-0 flex-col gap-3 sm:flex-row">
+              <Button asChild variant="technical" className="shrink-0">
+                <Link href="/resources/ai-readiness-checklist">
+                  Free AI-Readiness Checklist
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+              <Button asChild variant="outline" className="shrink-0 rounded-sm border-hairline font-mono text-xs uppercase tracking-[0.12em]">
+                <Link href="/resources">
+                  View All Resources
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+            </div>
           </div>
 
           {latestPosts.length > 0 ? (
@@ -581,12 +666,12 @@ export default async function HomePage() {
 
       {/* ============ CTA ============ */}
       <CTASection
-        title="Ready to elevate your manufacturing operations?"
-        description="Let's discuss how our expertise can help your medical device company achieve manufacturing excellence and regulatory compliance."
+        title="Ready to find where AI pays off in your plant?"
+        description="Let's discuss how validated, audit-ready AI can cut scrap, cycle time, and downtime — without breaking your process validation."
         primaryButtonText="Schedule a Consultation"
         primaryButtonHref="/schedule"
-        secondaryButtonText="View Services"
-        secondaryButtonHref="/services"
+        secondaryButtonText="Get an AI Readiness Assessment"
+        secondaryButtonHref="/services#ai-readiness"
       />
     </MainLayout>
   );

@@ -17,18 +17,18 @@ import { prisma } from "@/lib/db";
 export const metadata: Metadata = {
   title: "Resources",
   description:
-    "Expert insights, guides, and best practices for medical device manufacturing, ISO 13485 compliance, injection molding processes, and quality systems.",
+    "Practical insights and guides on AI, machine learning, and validation for injection molding manufacturing — process optimization, quality, predictive maintenance, and compliance.",
   openGraph: {
     title: "Resources | SIDEC Consulting",
     description:
-      "Expert insights and practical guides for medical device manufacturing excellence.",
+      "Practical guidance on AI and machine learning for injection molding manufacturing.",
     url: "/resources",
   },
   twitter: {
     card: "summary_large_image",
     title: "Resources | SIDEC Consulting",
     description:
-      "Expert insights and practical guides for medical device manufacturing excellence.",
+      "Practical guidance on AI and machine learning for injection molding manufacturing.",
   },
   alternates: {
     canonical: "/resources",
@@ -134,12 +134,13 @@ export default async function ResourcesPage() {
           <div className="mx-auto max-w-3xl text-center">
             <p className="eyebrow mb-5 justify-center">Resources & Insights</p>
             <h1 className="font-display text-4xl font-bold tracking-tight text-balance sm:text-5xl lg:text-6xl">
-              Expert Knowledge for{" "}
-              <span className="text-signal">Manufacturing Excellence</span>
+              Practical Knowledge for{" "}
+              <span className="text-signal">AI in Molding</span>
             </h1>
             <p className="mt-6 text-lg text-muted-foreground md:text-xl">
-              Practical guides, industry insights, and best practices from 25+
-              years of medical device manufacturing experience.
+              Guides and insights on AI, machine learning, and validation for
+              injection molding — grounded in 25+ years of manufacturing
+              experience.
             </p>
             <div className="mt-8">
               <Button
@@ -241,9 +242,9 @@ export default async function ResourcesPage() {
                 Coming Soon
               </h2>
               <p className="text-muted-foreground mt-4 mb-8">
-                We&apos;re working on bringing you expert insights, practical
-                guides, and industry best practices for medical device
-                manufacturing. Check back soon!
+                We&apos;re working on bringing you practical insights and guides
+                on AI and machine learning for injection molding manufacturing.
+                Check back soon!
               </p>
               <div className="flex flex-col sm:flex-row gap-3 justify-center">
                 <Button asChild variant="technical">
@@ -292,15 +293,14 @@ export default async function ResourcesPage() {
         <div className="container-wide relative">
           <div className="max-w-2xl mx-auto text-center">
             <p className="eyebrow-plain mb-5 text-signal">
-              <span aria-hidden>// </span>Stay Updated
+              <span aria-hidden>{"// "}</span>Stay Updated
             </p>
             <h2 className="font-display text-2xl font-bold tracking-tight text-ink-foreground sm:text-3xl">
               Subscribe to Our Newsletter
             </h2>
             <p className="mt-4 text-ink-muted">
-              Get the latest insights on medical device manufacturing,
-              regulatory updates, and industry best practices delivered to your
-              inbox.
+              Get practical insights on AI, machine learning, and validation for
+              injection molding manufacturing delivered to your inbox.
             </p>
             <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center max-w-md mx-auto">
               <input
@@ -319,12 +319,12 @@ export default async function ResourcesPage() {
 
       {/* CTA Section */}
       <CTASection
-        title="Have a Manufacturing Challenge?"
-        description="Our team is ready to help you navigate complex manufacturing, quality, and regulatory challenges."
-        primaryButtonText="Schedule Consultation"
-        primaryButtonHref="/contact"
-        secondaryButtonText="View Services"
-        secondaryButtonHref="/services"
+        title="Wondering where AI fits in your plant?"
+        description="Start with a fixed-scope AI Readiness Assessment, or schedule a consultation to talk through your process and data."
+        primaryButtonText="Get an AI Readiness Assessment"
+        primaryButtonHref="/contact?service=ai-readiness"
+        secondaryButtonText="Schedule a Consultation"
+        secondaryButtonHref="/schedule"
       />
     </MainLayout>
   );

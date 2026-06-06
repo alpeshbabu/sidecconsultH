@@ -35,13 +35,19 @@ const defaultLabelMap: Record<string, string> = {
   categories: "Categories",
   inquiries: "Inquiries",
   login: "Login",
-  "manufacturing-engineering": "Manufacturing Engineering",
-  "quality-compliance": "Quality & Compliance",
-  "injection-molding": "Injection Molding",
-  "equipment-maintenance": "Equipment & Maintenance",
-  "facility-design": "Facility Design",
-  "supply-chain": "Supply Chain",
-  "strategic-advisory": "Strategic Advisory",
+  // AI service pillars
+  "ai-readiness": "AI Readiness Assessment",
+  "ai-process": "AI Process Development",
+  "ai-validation": "AI Validation & Governance",
+  "ai-quality": "AI Quality & Inspection",
+  "smart-factory": "Smart Factory & Data",
+  // Blog categories
+  "ai-process-optimization": "AI & Process Optimization",
+  "ai-validation-compliance": "AI Validation & Compliance",
+  "smart-factory-data": "Smart Factory & Data",
+  "quality-inspection": "Quality Systems & Inspection",
+  "industry-trends": "Industry Trends",
+  "case-studies": "Case Studies",
 };
 
 /**
