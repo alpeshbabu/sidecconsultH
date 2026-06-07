@@ -125,7 +125,6 @@ export default async function CategoriesPage() {
           <Button
             asChild
             variant="outline"
-            className="rounded-sm border-hairline font-mono text-xs uppercase tracking-[0.12em]"
           >
             <Link href="/resources">← Back to All Resources</Link>
           </Button>

@@ -154,39 +154,39 @@ export function Header() {
                         : "opacity-0 invisible -translate-y-2"
                     )}
                   >
-                    <div className="w-[840px] rounded-lg border border-hairline bg-card p-6 shadow-xl">
-                      <div className="mb-4 flex items-center justify-between border-b border-hairline pb-4">
-                        <h3 className="font-display font-semibold text-foreground">
+                    <div className="w-[760px] rounded-xl border border-hairline bg-card p-6 shadow-xl">
+                      <div className="mb-5 flex items-center justify-between border-b border-hairline pb-4">
+                        <h3 className="font-display text-base font-semibold text-foreground">
                           Our Services
                         </h3>
-                        <Button asChild variant="ghost" size="sm" className="group">
+                        <Button asChild variant="ghost" size="sm" className="group -mr-2">
                           <Link href="/services">
                             View All
                             <ArrowRight className="ml-1 h-3 w-3 transition-transform group-hover:translate-x-1" />
                           </Link>
                         </Button>
                       </div>
-                      <div className="grid grid-cols-[1.4fr_1fr] gap-6">
+                      <div className="grid grid-cols-2 gap-5">
                         {/* Core services */}
                         <div>
-                          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+                          <p className="mb-2 px-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
                             Manufacturing & Engineering
                           </p>
-                          <div className="grid grid-cols-2 gap-1">
+                          <div className="flex flex-col">
                             {SERVICE_AREAS.map((service) => {
                               const IconComponent = iconMap[service.icon];
                               return (
                                 <Link
                                   key={service.id}
                                   href={service.href}
-                                  className="group flex items-center gap-3 rounded-md p-2.5 transition-colors hover:bg-muted"
+                                  className="group flex items-center gap-3 rounded-lg px-2 py-2 transition-colors hover:bg-muted"
                                 >
-                                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">
+                                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
                                     {IconComponent && <IconComponent className="h-4 w-4" />}
                                   </div>
-                                  <p className="text-sm font-medium text-foreground transition-colors group-hover:text-primary">
+                                  <span className="whitespace-nowrap text-sm font-medium text-foreground transition-colors group-hover:text-primary">
                                     {service.shortTitle}
-                                  </p>
+                                  </span>
                                 </Link>
                               );
                             })}
@@ -194,27 +194,38 @@ export function Header() {
                         </div>
                         {/* AI services */}
                         <div className="rounded-lg bg-muted/40 p-3">
-                          <p className="mb-3 px-1 text-xs font-semibold uppercase tracking-[0.12em] text-primary">
+                          <p className="mb-2 px-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-primary">
                             AI & Smart Manufacturing
                           </p>
-                          <div className="space-y-1">
+                          <div className="flex flex-col">
                             {AI_SERVICES.map((service) => {
                               const IconComponent = iconMap[service.icon];
                               return (
                                 <Link
                                   key={service.id}
                                   href={service.href}
-                                  className="group flex items-center gap-3 rounded-md p-2.5 transition-colors hover:bg-card"
+                                  className="group flex items-center gap-3 rounded-lg px-2 py-2 transition-colors hover:bg-card"
                                 >
-                                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">
+                                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
                                     {IconComponent && <IconComponent className="h-4 w-4" />}
                                   </div>
-                                  <p className="text-sm font-medium text-foreground transition-colors group-hover:text-primary">
+                                  <span className="whitespace-nowrap text-sm font-medium text-foreground transition-colors group-hover:text-primary">
                                     {service.shortTitle}
-                                  </p>
+                                  </span>
                                 </Link>
                               );
                             })}
+                            <Link
+                              href="/services#ai-readiness"
+                              className="group mt-1 flex items-center gap-3 rounded-lg border-t border-hairline px-2 pb-2 pt-3 transition-colors hover:bg-card"
+                            >
+                              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-primary text-primary-foreground">
+                                <BadgeCheck className="h-4 w-4" />
+                              </div>
+                              <span className="whitespace-nowrap text-sm font-semibold text-primary">
+                                AI Readiness Assessment
+                              </span>
+                            </Link>
                           </div>
                         </div>
                       </div>

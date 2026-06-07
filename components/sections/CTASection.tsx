@@ -30,8 +30,7 @@ export function CTASection({
         className
       )}
     >
-      {/* blueprint grid + glow */}
-      <div className="grid-blueprint absolute inset-0 opacity-60" aria-hidden />
+      {/* soft glow */}
       <div
         className="pointer-events-none absolute -right-32 -top-32 h-120 w-120 rounded-full bg-signal/10 blur-3xl"
         aria-hidden
@@ -39,9 +38,7 @@ export function CTASection({
 
       <div className="container-wide relative">
         <div className="mx-auto max-w-3xl text-center">
-          <p className="eyebrow-plain mb-6 text-signal">
-            <span aria-hidden>// </span>Engagement Inquiry
-          </p>
+          <p className="eyebrow-plain mb-6 text-signal">Get Started</p>
           <h2 className="font-display text-3xl font-bold tracking-tight text-ink-foreground sm:text-4xl lg:text-5xl text-balance">
             {title}
           </h2>
@@ -60,7 +57,7 @@ export function CTASection({
                 asChild
                 size="lg"
                 variant="outline"
-                className="h-12 w-full rounded-sm border-white/20 bg-transparent px-8 font-mono text-xs uppercase tracking-[0.12em] text-ink-foreground hover:bg-white/10 hover:text-ink-foreground sm:w-auto"
+                className="h-12 w-full border-white/20 bg-transparent px-8 text-ink-foreground hover:bg-white/10 hover:text-ink-foreground sm:w-auto"
               >
                 <Link href={secondaryButtonHref}>{secondaryButtonText}</Link>
               </Button>

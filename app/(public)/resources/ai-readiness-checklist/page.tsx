@@ -144,7 +144,7 @@ export default function AiReadinessChecklistPage() {
               <div className="grid-dots absolute inset-0 opacity-40" aria-hidden />
               <div className="relative">
                 <p className="eyebrow-plain mb-4 text-signal">
-                  <span aria-hidden>{"// "}</span>How to Read Your Score
+                  How to Read Your Score
                 </p>
                 <ul className="space-y-3 text-ink-muted">
                   <li>

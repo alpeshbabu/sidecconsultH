@@ -2,16 +2,23 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import {
   ArrowRight,
-  CheckCircle,
-  ClipboardCheck,
-  Cpu,
+  CheckCircle2,
+  Settings,
   ShieldCheck,
+  Cog,
+  Wrench,
+  Building,
+  Globe,
+  Lightbulb,
+  Cpu,
+  BadgeCheck,
   ScanSearch,
   Network,
   Target,
   Users,
   Shield,
   Zap,
+  Sparkles,
   Gauge,
   Map,
   Database,
@@ -32,65 +39,236 @@ const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://sidecconsult.com";
 export const metadata: Metadata = {
   title: "Services",
   description:
-    "AI for injection molding, deployed by manufacturing experts: AI-augmented process development, AI validation & governance under ISO 13485/QMSR, AI-driven quality & inspection, and smart-factory data foundations.",
+    "Expert consulting for injection molding & medical device manufacturing — manufacturing engineering, quality & regulatory compliance, scientific molding, facility design, supplier development — plus AI & smart manufacturing.",
   openGraph: {
-    title: "AI Services for Injection Molding | SIDEC Consulting",
+    title: "Services | SIDEC Consulting",
     description:
-      "AI process optimization, validation & governance, quality & inspection, and smart-factory data — grounded in scientific molding, not hype.",
+      "Injection molding & medical device manufacturing consulting — quality, process, facility, supplier — plus AI & smart manufacturing.",
     url: "/services",
   },
-  twitter: {
-    card: "summary_large_image",
-    title: "AI Services for Injection Molding | SIDEC Consulting",
-    description:
-      "AI process optimization, validation & governance, quality & inspection, and smart-factory data — grounded in scientific molding, not hype.",
-  },
-  alternates: {
-    canonical: "/services",
-  },
+  alternates: { canonical: "/services" },
 };
 
-// The four AI pillars (PRDB §2). Authoritative content rendered directly —
-// the public services offering is a fixed editorial set.
-const PILLARS = [
+type ServiceItem = {
+  id: string;
+  icon: React.ComponentType<{ className?: string }>;
+  title: string;
+  tagline: string;
+  description: string;
+  keyOfferings: string[];
+  outcomes: string[];
+  differentiator?: boolean;
+};
+
+// Core consulting services — injection molding & medical device manufacturing
+const CORE_SERVICES: ServiceItem[] = [
+  {
+    id: "manufacturing-engineering",
+    icon: Settings,
+    title: "Manufacturing Engineering & Operations",
+    tagline: "Build world-class manufacturing capabilities",
+    description:
+      "We help companies build and optimize their manufacturing engineering organizations — from talent and process to sustainable, repeatable improvement.",
+    keyOfferings: [
+      "Manufacturing engineering team development and organizational design",
+      "Process optimization and continuous improvement programs",
+      "Lean manufacturing and Six Sigma implementation",
+      "Equipment selection, qualification, and optimization",
+      "Manufacturing cost reduction strategies",
+      "Production capacity planning and scaling",
+    ],
+    outcomes: [
+      "15–30% manufacturing cost reduction",
+      "Improved first-pass yield",
+      "Faster time-to-market",
+      "Sustainable internal capability",
+    ],
+  },
+  {
+    id: "quality-regulatory",
+    icon: ShieldCheck,
+    title: "Quality & Regulatory Compliance",
+    tagline: "Navigate regulatory requirements with confidence",
+    description:
+      "With director-level quality experience, we build robust quality systems that satisfy FDA, ISO, and global requirements while staying practical to operate.",
+    keyOfferings: [
+      "ISO 13485 Quality Management System implementation",
+      "FDA 21 CFR Part 820 / QMSR compliance programs",
+      "EU MDR (2017/745) transition and compliance",
+      "MDSAP certification preparation",
+      "510(k) submission support and strategy",
+      "Design controls and risk management (ISO 14971)",
+      "CAPA system optimization",
+      "Audit preparation (FDA, Notified Bodies, customers)",
+    ],
+    outcomes: [
+      "Successful regulatory submissions",
+      "Clean audit results",
+      "Efficient quality systems",
+      "Reduced compliance burden",
+    ],
+  },
+  {
+    id: "injection-molding",
+    icon: Cog,
+    title: "Injection Molding Process Excellence",
+    tagline: "Master the science of injection molding",
+    description:
+      "As recognized molding subject-matter experts, we bring deep expertise in scientific molding, process development, validation, and troubleshooting.",
+    keyOfferings: [
+      "Scientific molding methodology implementation",
+      "Process development and optimization",
+      "Design of Experiments (DOE) studies",
+      "Process validation (IQ/OQ/PQ)",
+      "Mold qualification and capability studies",
+      "Process troubleshooting and root cause analysis",
+      "Automation and robotics integration",
+      "Material selection and qualification",
+    ],
+    outcomes: [
+      "Robust, validated processes",
+      "Reduced scrap and rework",
+      "Improved cycle times",
+      "Consistent part quality",
+    ],
+  },
+  {
+    id: "equipment-maintenance",
+    icon: Wrench,
+    title: "Equipment & Mold Maintenance",
+    tagline: "Maximize equipment uptime and performance",
+    description:
+      "Effective maintenance is critical to manufacturing success. We implement preventive and predictive programs that maximize availability and extend asset life.",
+    keyOfferings: [
+      "Preventive maintenance program development",
+      "Mold maintenance standards and procedures",
+      "CMMS selection and implementation",
+      "Spare parts inventory optimization",
+      "Equipment lifecycle management",
+      "Maintenance team training and development",
+      "Total Productive Maintenance (TPM) implementation",
+      "Equipment reliability analysis",
+    ],
+    outcomes: [
+      "Increased equipment uptime (OEE)",
+      "Extended mold and equipment life",
+      "Reduced unplanned downtime",
+      "Optimized maintenance costs",
+    ],
+  },
+  {
+    id: "facility-design",
+    icon: Building,
+    title: "Facility Design & Infrastructure",
+    tagline: "Design facilities built for manufacturing excellence",
+    description:
+      "We've built facilities from the ground up — from greenfield site selection to cleanroom design — that support quality, efficiency, and compliance.",
+    keyOfferings: [
+      "Greenfield and brownfield facility planning",
+      "Cleanroom design and classification (ISO 7/8)",
+      "Production floor layout optimization",
+      "Utility systems design (compressed air, cooling, electrical)",
+      "Material flow and logistics optimization",
+      "Environmental monitoring systems",
+      "EHS (Environmental Health & Safety) compliance",
+      "Facility expansion and renovation planning",
+    ],
+    outcomes: [
+      "Optimized production flow",
+      "Regulatory-compliant facilities",
+      "Efficient space utilization",
+      "Scalable infrastructure",
+    ],
+  },
+  {
+    id: "supplier-development",
+    icon: Globe,
+    title: "Supplier Development & Supply Chain",
+    tagline: "Build a resilient global supply network",
+    description:
+      "With experience developing suppliers across six continents, we help build robust supply chains — from qualification to ongoing development.",
+    keyOfferings: [
+      "Global supplier strategy development",
+      "Supplier qualification and approval programs",
+      "Supplier quality management systems",
+      "Supplier audits and assessments",
+      "Supply chain risk management",
+      "Dual-sourcing and localization strategies",
+      "Supplier performance management (scorecards, reviews)",
+      "Contract manufacturing management",
+    ],
+    outcomes: [
+      "Qualified, reliable supplier base",
+      "Reduced supply chain risk",
+      "Improved supplier quality",
+      "Optimized total cost of ownership",
+    ],
+  },
+  {
+    id: "strategic-advisory",
+    icon: Lightbulb,
+    title: "Strategic Advisory & Expert Services",
+    tagline: "Expert guidance for critical decisions",
+    description:
+      "We provide strategic advisory for complex situations requiring deep expertise — from technology transfer to M&A due diligence.",
+    keyOfferings: [
+      "Technology transfer planning and execution",
+      "Due diligence for mergers and acquisitions",
+      "Expert witness services for litigation",
+      "Custom training program development",
+      "Manufacturing strategy consulting",
+      "Make vs. buy analysis",
+      "Competitive benchmarking",
+      "Organizational capability assessments",
+    ],
+    outcomes: [
+      "Informed strategic decisions",
+      "Successful technology transfers",
+      "Risk mitigation",
+      "Knowledge transfer to your team",
+    ],
+  },
+];
+
+// AI & smart manufacturing — the modern capability layer
+const AI_PILLARS: ServiceItem[] = [
   {
     id: "ai-process",
     icon: Cpu,
     title: "AI-Augmented Process Development",
     tagline: "Scientific molding, extended with machine learning",
-    differentiator: false,
     description:
-      "We turn scientific molding and DOE into ML-driven optimization — predicting quality from parameters and balancing cycle time, scrap, and energy at once, without giving up part quality.",
+      "We turn scientific molding and DOE into ML-driven optimization — predicting quality from parameters and balancing cycle time, scrap, and energy at once.",
     keyOfferings: [
-      "ML surrogate modeling of the process (predicting quality from parameters)",
-      "Multi-objective optimization: cycle time, scrap, energy, and quality simultaneously",
+      "ML surrogate modeling (predicting quality from parameters)",
+      "Multi-objective optimization: cycle time, scrap, energy, and quality",
       "DOE accelerated and extended with machine learning",
-      "Closed-loop / adaptive process control, including for variable materials (regrind, recycled resin)",
+      "Closed-loop / adaptive control for variable materials (regrind, recycled resin)",
       "Parameter recommendation systems and digital process twins",
-      "Tech-transfer and scale-up de-risking with data-driven methods",
+      "Data-driven tech-transfer and scale-up de-risking",
     ],
     outcomes: [
       "Lower scrap (target 12–22%)",
       "Faster cycle times (target 8–15%)",
       "Reduced energy per part",
-      "De-risked, faster scale-up",
+      "De-risked scale-up",
     ],
   },
   {
     id: "ai-validation",
-    icon: ShieldCheck,
+    icon: BadgeCheck,
     title: "AI Validation & Governance",
     tagline: "Deploy AI in regulated plants — and survive the audit",
     differentiator: true,
     description:
-      "The part most AI vendors ignore. We validate ML-based process control and inspection under ISO 13485 and the new FDA QMSR, make models explainable, and produce documentation that holds up in an audit.",
+      "The part most AI vendors ignore. We validate ML-based control and inspection under ISO 13485 and the FDA QMSR, make models explainable, and produce audit-ready documentation.",
     keyOfferings: [
-      "Validating ML-based process control and inspection under ISO 13485 and the FDA QMSR (effective Feb 2, 2026)",
-      "Computer Software Assurance (CSA) applied to AI-enabled manufacturing systems",
+      "Validating ML control and inspection under ISO 13485 / FDA QMSR",
+      "Computer Software Assurance (CSA) for AI-enabled systems",
       "Model lifecycle governance: versioning, drift monitoring, retraining controls",
-      "Change-control strategy for models that update over time (Predetermined Change Control thinking)",
+      "Predetermined Change Control for models that update over time",
       "Explainability (XAI) so models are auditable, not black boxes",
-      "Risk management (ISO 14971) extended to AI failure modes; audit-ready documentation",
+      "ISO 14971 risk management extended to AI failure modes",
     ],
     outcomes: [
       "Audit-ready AI documentation",
@@ -104,13 +282,12 @@ const PILLARS = [
     icon: ScanSearch,
     title: "AI-Driven Quality & Inspection",
     tagline: "Catch defects before they happen",
-    differentiator: false,
     description:
-      "We deploy predictive defect models and automated vision on live production, and integrate them into your existing QMS — with an honest build-vs-buy call instead of a sales pitch.",
+      "We deploy predictive defect models and automated vision on live production, integrated with your existing QMS — with an honest build-vs-buy call.",
     keyOfferings: [
-      "Automated / vision-based defect detection (short shots, sink marks, warpage, flash)",
-      "Predictive defect models and early-warning systems on live production",
-      "Build-vs-buy evaluation for inspection AI and integration with existing QMS",
+      "Automated / vision-based defect detection (short shots, sink, warpage, flash)",
+      "Predictive defect models and early-warning systems",
+      "Build-vs-buy evaluation and QMS integration",
       "AI-assisted complaint, CAPA, and nonconformance pattern analysis",
       "Supplier quality analytics and incoming-material risk scoring",
     ],
@@ -126,15 +303,14 @@ const PILLARS = [
     icon: Network,
     title: "Smart Factory & Data",
     tagline: "The data foundation AI actually needs",
-    differentiator: false,
     description:
-      "Predictive maintenance, IIoT architecture, and the OEE/scrap/energy data foundation that has to exist before any AI can deliver — plus LLM operator assistants that capture tribal knowledge before it walks out the door.",
+      "Predictive maintenance, IIoT architecture, and the OEE/scrap/energy data foundation that has to exist before any AI can deliver.",
     keyOfferings: [
       "Predictive maintenance programs (sensor strategy, models, ROI realism)",
-      "IIoT architecture and the data foundation required before any AI works",
+      "IIoT architecture and the data foundation AI requires",
       "OEE / scrap / energy analytics and dashboards",
-      "Facility, utility, and cleanroom design informed by data and connectivity needs",
-      "LLM-based operator assistants to capture and transfer tribal knowledge",
+      "Facility and cleanroom design informed by connectivity needs",
+      "LLM operator assistants to capture and transfer tribal knowledge",
     ],
     outcomes: [
       "Less unplanned downtime",
@@ -145,135 +321,86 @@ const PILLARS = [
   },
 ];
 
-// AI Readiness Assessment — productized entry offering (PRDB §2.0)
 const ASSESSMENT_DELIVERABLES = [
-  {
-    icon: Gauge,
-    title: "Data-Maturity Score",
-    description:
-      "An honest read on where your sensors, SPC, and data infrastructure stand today.",
-  },
-  {
-    icon: Map,
-    title: "Opportunity Map",
-    description:
-      "Prioritized AI opportunities plotted on effort vs. ROI — what to do first, and what to skip.",
-  },
-  {
-    icon: Database,
-    title: "Sensor / Data Gap Analysis",
-    description:
-      "Exactly what data and instrumentation you need before any model can deliver.",
-  },
-  {
-    icon: Route,
-    title: "Phased Roadmap",
-    description:
-      "A staged plan from quick wins to validated, audit-ready deployment.",
-  },
+  { icon: Gauge, title: "Data-Maturity Score", description: "An honest read on where your sensors, SPC, and data infrastructure stand today." },
+  { icon: Map, title: "Opportunity Map", description: "Prioritized AI opportunities plotted on effort vs. ROI — what to do first, and what to skip." },
+  { icon: Database, title: "Sensor / Data Gap Analysis", description: "Exactly what data and instrumentation you need before any model can deliver." },
+  { icon: Route, title: "Phased Roadmap", description: "A staged plan from quick wins to validated, audit-ready deployment." },
 ];
 
-// Sectors served (PRDB §3.1.3) — medical as the premium/regulated tier
 const SECTORS = [
-  {
-    icon: Car,
-    name: "Automotive",
-    value:
-      "High-volume process optimization, scrap and cycle-time reduction, and predictive maintenance.",
-  },
-  {
-    icon: Package,
-    name: "Packaging",
-    value:
-      "Throughput, energy, and quality optimization at scale across high-cavitation tooling.",
-  },
-  {
-    icon: CircuitBoard,
-    name: "Electronics & Connectors",
-    value:
-      "Precision-part defect prediction and automated vision inspection for tight tolerances.",
-  },
+  { icon: Car, name: "Automotive", value: "High-volume process optimization, scrap and cycle-time reduction, and predictive maintenance." },
+  { icon: Package, name: "Packaging", value: "Throughput, energy, and quality optimization at scale across high-cavitation tooling." },
+  { icon: CircuitBoard, name: "Electronics & Connectors", value: "Precision-part defect prediction and automated vision inspection for tight tolerances." },
 ];
 
-// Why work with us
 const whyChooseUs = [
-  {
-    icon: Target,
-    title: "Molding-Floor Credibility",
-    description:
-      "We've actually validated processes — scientific molding, DOE, IQ/OQ/PQ — so our AI fits how a plant really runs.",
-  },
-  {
-    icon: Shield,
-    title: "Audit-Survivable AI",
-    description:
-      "Director-level quality experience means we build models that are explainable, documented, and ready for an FDA/ISO audit.",
-  },
-  {
-    icon: Zap,
-    title: "ROI Realism",
-    description:
-      "We tell you where AI pays off and where it's premature — no hype, no models that never leave the pilot.",
-  },
-  {
-    icon: Users,
-    title: "Hands-On Handoff",
-    description:
-      "We work alongside your team and leave behind capability — not a black box only we can maintain.",
-  },
+  { icon: Target, title: "Cross-Functional Expertise", description: "Experience spanning manufacturing, quality, design assurance, and R&D — we understand your challenge from every angle." },
+  { icon: Users, title: "Hands-On Approach", description: "We don't just advise — we work alongside your team, building internal capability that lasts." },
+  { icon: Shield, title: "Regulatory Confidence", description: "Director-level quality experience means we know what auditors look for and how to satisfy them." },
+  { icon: Zap, title: "Practical Solutions", description: "No ivory-tower recommendations — every solution is grounded in 25+ years of real manufacturing." },
 ];
 
 const engagementModels = [
-  {
-    title: "AI Readiness Assessment",
-    description:
-      "Fixed-scope, fixed-fee audit that maps where AI pays off and where it's premature",
-    examples: ["Data-maturity score", "Opportunity map", "Phased roadmap"],
-  },
-  {
-    title: "Pilot & Build",
-    description:
-      "Defined-scope engagements that take a prioritized opportunity from data to validated model",
-    examples: ["ML process optimization", "Vision inspection", "Predictive maintenance"],
-  },
-  {
-    title: "Validation & Advisory",
-    description:
-      "Ongoing governance and validation support for AI running in regulated production",
-    examples: ["CSA & model validation", "Drift & change control", "Audit preparation"],
-  },
+  { title: "Project-Based", description: "Defined-scope engagements with clear deliverables and timelines", examples: ["Process validation", "Quality system implementation", "Facility design"] },
+  { title: "Retainer", description: "Ongoing access to expertise for continuous support and guidance", examples: ["Monthly advisory hours", "On-call troubleshooting", "Audit preparation"] },
+  { title: "Training", description: "Custom training programs to build your team's capability", examples: ["Scientific molding", "Quality systems", "Process validation"] },
 ];
 
 const APPROACH = [
-  {
-    phase: "01",
-    title: "Discovery & Assessment",
-    description:
-      "We start with your data, processes, and goals — stakeholder interviews, a sensor/data gap analysis, and an honest read on where AI fits and where it doesn't.",
-    deliverables: ["Data-maturity score", "Opportunity map", "Gap analysis", "Scope definition"],
-  },
-  {
-    phase: "02",
-    title: "Solution Design",
-    description:
-      "We design the model and the data pipeline around your process and regulatory reality — including the validation and explainability strategy from day one.",
-    deliverables: ["Model approach", "Data pipeline plan", "Validation strategy", "Risk assessment"],
-  },
-  {
-    phase: "03",
-    title: "Pilot Deployment",
-    description:
-      "We build and pilot on real production data, working alongside your team — proving the model earns its place before it's trusted.",
-    deliverables: ["Working pilot", "Performance results", "Team enablement", "Integration plan"],
-  },
-  {
-    phase: "04",
-    title: "Validation & Handoff",
-    description:
-      "We validate the model under your QMS, produce audit-ready documentation, and hand off governance so your team can run and defend it independently.",
-    deliverables: ["Validation package", "Audit-ready docs", "Governance plan", "Knowledge transfer"],
-  },
+  { phase: "01", title: "Discovery & Assessment", description: "A comprehensive assessment of your current state, challenges, and objectives — stakeholder interviews, process reviews, and gap analysis." },
+  { phase: "02", title: "Solution Design", description: "Tailored strategies and detailed action plans aligned with your business goals and regulatory requirements." },
+  { phase: "03", title: "Implementation", description: "We execute with hands-on support, working alongside your team while building internal capability." },
+  { phase: "04", title: "Validation & Handoff", description: "We verify results, document outcomes, and ensure your team can sustain success independently." },
 ];
+
+function ServiceCard({ s }: { s: ServiceItem }) {
+  const Icon = s.icon;
+  return (
+    <div id={s.id} className="card-technical scroll-mt-24 flex flex-col p-7 md:p-8">
+      <div className="flex items-center gap-3">
+        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+          <Icon className="h-6 w-6" />
+        </div>
+        {s.differentiator && (
+          <span className="rounded-full bg-primary/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.1em] text-primary">
+            Key Differentiator
+          </span>
+        )}
+      </div>
+      <h3 className="mt-5 font-display text-xl font-bold tracking-tight">{s.title}</h3>
+      <p className="mt-1 font-medium text-primary">{s.tagline}</p>
+      <p className="mt-3 leading-relaxed text-muted-foreground">{s.description}</p>
+
+      <div className="mt-6">
+        <p className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+          What we deliver
+        </p>
+        <ul className="mt-3 space-y-2">
+          {s.keyOfferings.map((o) => (
+            <li key={o} className="flex items-start gap-2.5 text-sm text-muted-foreground">
+              <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+              <span>{o}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div className="mt-6 border-t border-hairline pt-5">
+        <p className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+          Typical outcomes
+        </p>
+        <div className="mt-3 flex flex-wrap gap-2">
+          {s.outcomes.map((o) => (
+            <span key={o} className="rounded-full bg-muted px-3 py-1 text-xs font-medium text-foreground">
+              {o}
+            </span>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function ServicesPage() {
   return (
@@ -289,259 +416,187 @@ export default function ServicesPage() {
           ),
         }}
       />
-      {/* Hero Section */}
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0 -z-10" aria-hidden>
-          <div className="grid-blueprint absolute inset-0 opacity-70" />
-          <div className="absolute inset-x-0 top-0 h-px bg-signal/40" />
-        </div>
 
+      {/* Hero */}
+      <section className="relative overflow-hidden border-b border-hairline">
+        <div className="absolute inset-0 -z-10" aria-hidden>
+          <div className="absolute left-1/2 top-[-10%] h-[560px] w-[900px] -translate-x-1/2 rounded-full bg-primary/5 blur-3xl" />
+        </div>
         <div className="container-wide py-20 md:py-28">
           <div className="mx-auto max-w-3xl text-center">
             <p className="eyebrow mb-6 justify-center">Consulting Services</p>
             <h1 className="font-display text-4xl font-bold tracking-tight text-balance sm:text-5xl lg:text-6xl">
-              AI for injection molding,{" "}
-              <span className="text-signal">deployed the right way</span>
+              Expert solutions for{" "}
+              <span className="text-primary">injection molding & medical device manufacturing</span>
             </h1>
             <p className="mt-6 text-lg text-muted-foreground md:text-xl">
-              Most &ldquo;AI for manufacturing&rdquo; advice comes from data
-              scientists who&rsquo;ve never validated a process. We come from the
-              molding floor — scientific molding, DOE, process validation, ISO
-              13485 — and layer AI on top of that rigor. The result is AI you can
-              actually deploy in production and defend in an audit. We serve
-              medical device manufacturers as a premium tier and apply the same
-              methods, minus the regulatory weight, to automotive, packaging, and
-              electronics molders.
+              From injection molding process development and quality systems to
+              facility design and supplier development — 25+ years of hands-on
+              experience, plus AI and smart manufacturing where it pays off.
             </p>
             <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
-              <Button asChild size="lg" variant="technical">
+              <Button asChild size="lg">
                 <Link href="/schedule">
                   Schedule a Consultation
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
-              <Button
-                asChild
-                size="lg"
-                variant="outline"
-                className="rounded-sm border-hairline font-mono text-xs uppercase tracking-[0.12em]"
-              >
-                <Link href="#ai-readiness">Start With an Assessment</Link>
+              <Button asChild size="lg" variant="outline">
+                <Link href="#core-services">Explore Services</Link>
               </Button>
             </div>
           </div>
         </div>
       </section>
 
-      {/* AI Readiness Assessment — productized entry offering */}
-      <section
-        id="ai-readiness"
-        className="section-padding surface-ink relative overflow-hidden scroll-mt-24"
-      >
-        <div className="grid-dots absolute inset-0 opacity-40" aria-hidden />
-        <div className="container-wide relative">
-          <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
-            <div>
-              <p className="eyebrow-plain mb-4 text-signal">
-                <span aria-hidden>{"// "}</span>Start Here
-              </p>
-              <h2 className="font-display text-3xl font-bold tracking-tight text-ink-foreground sm:text-4xl text-balance">
-                AI Readiness Assessment
-              </h2>
-              <p className="mt-4 text-lg text-ink-muted">
-                Where would AI actually pay off — and where is it premature?
-              </p>
-              <p className="mt-4 text-ink-muted leading-relaxed">
-                A fixed-scope, fixed-fee audit of your molding operation. It&rsquo;s
-                the low-commitment way to find the real opportunities before you
-                invest in sensors, models, or vendors — and it&rsquo;s the on-ramp to
-                every engagement below.
-              </p>
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                <Button asChild size="lg" variant="signal" className="h-12 px-8">
+      {/* Core services */}
+      <section id="core-services" className="section-padding scroll-mt-20">
+        <div className="container-wide">
+          <div className="mx-auto max-w-2xl text-center">
+            <p className="eyebrow mb-5 justify-center">Manufacturing & Engineering</p>
+            <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">
+              Core consulting services
+            </h2>
+            <p className="mt-4 text-muted-foreground">
+              Deep, hands-on expertise across the full injection molding and
+              medical device manufacturing lifecycle.
+            </p>
+          </div>
+          <div className="mt-14 grid gap-6 lg:grid-cols-2">
+            {CORE_SERVICES.map((s) => (
+              <ServiceCard key={s.id} s={s} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* AI & smart manufacturing */}
+      <section id="ai-services" className="section-padding surface-ink scroll-mt-20">
+        <div className="container-wide">
+          <div className="mx-auto max-w-2xl text-center">
+            <p className="eyebrow-plain mb-5 inline-flex items-center gap-2 justify-center text-signal">
+              <Sparkles className="h-4 w-4" />
+              AI & Smart Manufacturing
+            </p>
+            <h2 className="font-display text-3xl font-bold tracking-tight text-ink-foreground sm:text-4xl text-balance">
+              AI for molding, deployed the right way
+            </h2>
+            <p className="mt-4 text-ink-muted">
+              Most &ldquo;AI for manufacturing&rdquo; advice comes from data
+              scientists who&rsquo;ve never validated a process. We come from the
+              molding floor and layer AI on top of that rigor — so it deploys in
+              production and defends in an audit.
+            </p>
+          </div>
+          <div className="mt-14 grid gap-6 lg:grid-cols-2">
+            {AI_PILLARS.map((s) => {
+              const Icon = s.icon;
+              return (
+                <div
+                  key={s.id}
+                  id={s.id}
+                  className="scroll-mt-24 flex flex-col rounded-xl border border-white/10 bg-white/[0.03] p-7 md:p-8"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg border border-white/15 text-signal">
+                      <Icon className="h-6 w-6" />
+                    </div>
+                    {s.differentiator && (
+                      <span className="rounded-full border border-signal/50 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.1em] text-signal">
+                        Key Differentiator
+                      </span>
+                    )}
+                  </div>
+                  <h3 className="mt-5 font-display text-xl font-bold tracking-tight text-ink-foreground">{s.title}</h3>
+                  <p className="mt-1 font-medium text-signal">{s.tagline}</p>
+                  <p className="mt-3 leading-relaxed text-ink-muted">{s.description}</p>
+                  <ul className="mt-6 space-y-2">
+                    {s.keyOfferings.map((o) => (
+                      <li key={o} className="flex items-start gap-2.5 text-sm text-ink-muted">
+                        <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-signal" />
+                        <span>{o}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="mt-6 border-t border-white/10 pt-5">
+                    <div className="flex flex-wrap gap-2">
+                      {s.outcomes.map((o) => (
+                        <span key={o} className="rounded-full bg-white/5 px-3 py-1 text-xs font-medium text-ink-foreground">
+                          {o}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* AI Readiness Assessment */}
+      <section id="ai-readiness" className="section-padding scroll-mt-20">
+        <div className="container-wide">
+          <div className="rounded-2xl border border-hairline bg-muted/30 p-8 md:p-12">
+            <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:gap-14">
+              <div>
+                <p className="eyebrow mb-4">Start Here</p>
+                <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl text-balance">
+                  AI Readiness Assessment
+                </h2>
+                <p className="mt-4 text-lg text-muted-foreground">
+                  Where would AI actually pay off — and where is it premature?
+                </p>
+                <p className="mt-4 leading-relaxed text-muted-foreground">
+                  A fixed-scope, fixed-fee audit of your molding operation — the
+                  low-commitment way to find the real opportunities before you
+                  invest in sensors, models, or vendors.
+                </p>
+                <Button asChild size="lg" className="mt-8">
                   <Link href="/contact?service=ai-readiness">
                     Get an AI Readiness Assessment
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
                 </Button>
               </div>
-              <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.14em] text-ink-muted">
-                Fixed scope · Fixed fee · Phased roadmap
-              </p>
-            </div>
-
-            <div className="grid gap-px border border-white/10 bg-white/10 sm:grid-cols-2">
-              {ASSESSMENT_DELIVERABLES.map((item) => {
-                const Icon = item.icon;
-                return (
-                  <div key={item.title} className="surface-ink p-7">
-                    <div className="mb-4 flex h-11 w-11 items-center justify-center border border-white/15 text-signal">
-                      <Icon className="h-5 w-5" />
+              <div className="grid gap-4 sm:grid-cols-2">
+                {ASSESSMENT_DELIVERABLES.map((item) => {
+                  const Icon = item.icon;
+                  return (
+                    <div key={item.title} className="rounded-xl border border-hairline bg-card p-6 shadow-sm">
+                      <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                        <Icon className="h-5 w-5" />
+                      </div>
+                      <h3 className="font-display text-base font-semibold">{item.title}</h3>
+                      <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{item.description}</p>
                     </div>
-                    <h3 className="font-display text-base font-semibold text-ink-foreground">
-                      {item.title}
-                    </h3>
-                    <p className="mt-2 text-sm leading-relaxed text-ink-muted">
-                      {item.description}
-                    </p>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Pillar Quick Navigation */}
-      <section className="hairline-t hairline-b bg-muted/20 py-8" id="pillars">
-        <div className="container-wide">
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {PILLARS.map((pillar) => {
-              const Icon = pillar.icon;
-              return (
-                <Link key={pillar.id} href={`#${pillar.id}`} className="group">
-                  <Card className="card-technical h-full rounded-none">
-                    <CardContent className="flex items-center gap-4 p-4">
-                      <div className="flex h-12 w-12 shrink-0 items-center justify-center border border-hairline text-primary transition-colors group-hover:border-signal/60 group-hover:text-signal">
-                        <Icon className="h-6 w-6" />
-                      </div>
-                      <div>
-                        <h3 className="font-display text-sm font-semibold leading-snug transition-colors group-hover:text-signal">
-                          {pillar.title}
-                        </h3>
-                        {pillar.differentiator && (
-                          <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.12em] text-signal">
-                            Key Differentiator
-                          </p>
-                        )}
-                      </div>
-                    </CardContent>
-                  </Card>
-                </Link>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* Pillars Detail */}
-      <div id="services">
-        {PILLARS.map((pillar, index) => {
-          const ServiceIcon = pillar.icon;
-          const isEven = index % 2 === 0;
-          return (
-            <section
-              key={pillar.id}
-              id={pillar.id}
-              className={`section-padding hairline-t scroll-mt-24 ${index % 2 === 1 ? "bg-muted/20" : ""}`}
-            >
-              <div className="container-wide">
-                <Card className="card-technical gap-0 overflow-hidden rounded-none py-0">
-                  <div className="grid gap-0 lg:grid-cols-2">
-                    {/* Content Side */}
-                    <div className={`p-6 md:p-8 ${isEven ? "" : "lg:order-2"}`}>
-                      <div className="mb-4 flex items-center gap-3">
-                        <div className="flex h-14 w-14 items-center justify-center border border-hairline text-primary">
-                          <ServiceIcon className="h-7 w-7" />
-                        </div>
-                        {pillar.differentiator && (
-                          <span className="rounded-sm border border-signal/50 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.1em] text-signal">
-                            Key Differentiator
-                          </span>
-                        )}
-                      </div>
-                      <h2 className="font-display text-2xl font-bold tracking-tight">
-                        {pillar.title}
-                      </h2>
-                      <p className="mt-1 text-lg font-medium text-signal">
-                        {pillar.tagline}
-                      </p>
-                      <p className="mt-4 leading-relaxed text-muted-foreground">
-                        {pillar.description}
-                      </p>
-
-                      {/* Outcomes */}
-                      <div className="mt-6">
-                        <h3 className="font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-                          Typical Outcomes
-                        </h3>
-                        <div className="mt-3 flex flex-wrap gap-2">
-                          {pillar.outcomes.map((outcome) => (
-                            <span
-                              key={outcome}
-                              className="rounded-sm border border-hairline px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.1em] text-muted-foreground"
-                            >
-                              {outcome}
-                            </span>
-                          ))}
-                        </div>
-                        <p className="mt-3 text-xs text-muted-foreground/80">
-                          Outcome ranges are typical engagement targets, not
-                          guarantees — actual results depend on your process and data.
-                        </p>
-                      </div>
-
-                      <div className="mt-6">
-                        <Button asChild variant="technical">
-                          <Link href="/contact?service=ai-readiness">
-                            Discuss Your Operation
-                            <ArrowRight className="ml-2 h-4 w-4" />
-                          </Link>
-                        </Button>
-                      </div>
-                    </div>
-
-                    {/* Key Offerings Side */}
-                    <div className={`bg-muted/20 p-6 md:p-8 ${isEven ? "lg:hairline-l" : "lg:order-1 lg:hairline-r"}`}>
-                      <div className="mb-4 flex items-center gap-2">
-                        <ClipboardCheck className="h-5 w-5 text-signal" />
-                        <h3 className="font-display font-semibold">What We Deliver</h3>
-                      </div>
-                      <ul className="space-y-px border-y border-hairline">
-                        {pillar.keyOfferings.map((offering) => (
-                          <li key={offering} className="flex items-start gap-3 py-2.5">
-                            <CheckCircle className="mt-0.5 h-4 w-4 shrink-0 text-signal" />
-                            <span className="text-sm">{offering}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-                </Card>
+                  );
+                })}
               </div>
-            </section>
-          );
-        })}
-      </div>
-
-      {/* Why Work With Us */}
-      <section className="section-padding surface-ink relative overflow-hidden">
-        <div className="grid-dots absolute inset-0 opacity-50" aria-hidden />
-        <div className="container-wide relative">
-          <div className="mx-auto max-w-2xl text-center">
-            <p className="eyebrow-plain mb-5 flex justify-center text-signal">
-              <span aria-hidden>{"// "}</span>Why SIDEC
-            </p>
-            <h2 className="font-display text-3xl font-bold tracking-tight text-ink-foreground sm:text-4xl">
-              AI you can deploy — and defend
-            </h2>
-            <p className="mt-4 text-lg text-ink-muted">
-              What sets us apart from data scientists who&rsquo;ve never seen a press
-            </p>
+            </div>
           </div>
+        </div>
+      </section>
 
-          <div className="mt-16 grid gap-px border border-white/10 bg-white/10 sm:grid-cols-2 lg:grid-cols-4">
+      {/* Why work with us */}
+      <section className="section-padding bg-muted/30 border-y border-hairline">
+        <div className="container-wide">
+          <div className="mx-auto max-w-2xl text-center">
+            <p className="eyebrow mb-5 justify-center">Why SIDEC</p>
+            <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">
+              Why work with us
+            </h2>
+          </div>
+          <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {whyChooseUs.map((item) => {
               const Icon = item.icon;
               return (
-                <div key={item.title} className="group surface-ink p-7 text-center">
-                  <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center border border-white/15 text-signal transition-colors group-hover:border-signal/60">
-                    <Icon className="h-7 w-7" />
+                <div key={item.title} className="rounded-xl border border-hairline bg-card p-7 text-center shadow-sm">
+                  <div className="mx-auto mb-5 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                    <Icon className="h-6 w-6" />
                   </div>
-                  <h3 className="font-display text-lg font-semibold text-ink-foreground">
-                    {item.title}
-                  </h3>
-                  <p className="mt-2 text-sm text-ink-muted">{item.description}</p>
+                  <h3 className="font-display text-lg font-semibold">{item.title}</h3>
+                  <p className="mt-2 text-sm text-muted-foreground">{item.description}</p>
                 </div>
               );
             })}
@@ -549,94 +604,48 @@ export default function ServicesPage() {
         </div>
       </section>
 
-      {/* Service Delivery Approach */}
-      <section className="section-padding hairline-t">
+      {/* Approach */}
+      <section className="section-padding">
         <div className="container-wide">
           <div className="mx-auto max-w-2xl text-center">
             <p className="eyebrow mb-5 justify-center">Our Approach</p>
             <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">
-              Discovery → Design → Pilot → Validation → Handoff
+              A proven process for success
             </h2>
             <p className="mt-4 text-muted-foreground">
-              A structured method that proves a model earns its place — and leaves
-              it validated, documented, and yours to run.
+              A structured methodology that delivers measurable, sustainable results.
             </p>
           </div>
-
-          <div className="relative mt-16">
-            <div className="grid gap-px hairline border border-hairline bg-hairline md:grid-cols-2 lg:grid-cols-4">
-              {APPROACH.map((step) => (
-                <div key={step.phase} className="group relative bg-background p-7">
-                  <div className="flex items-center gap-3">
-                    <span className="h-3 w-px bg-signal" />
-                    <span className="font-display text-4xl font-bold text-primary/15 transition-colors group-hover:text-signal/70">
-                      {step.phase}
-                    </span>
-                  </div>
-                  <h3 className="mt-6 font-display text-lg font-semibold">
-                    {step.title}
-                  </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                    {step.description}
-                  </p>
-                  <div className="mt-5 border-t border-hairline pt-4">
-                    <p className="mb-3 font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-                      Key Deliverables
-                    </p>
-                    <div className="flex flex-wrap gap-2">
-                      {step.deliverables.map((item) => (
-                        <span
-                          key={item}
-                          className="rounded-sm border border-hairline px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.1em] text-muted-foreground"
-                        >
-                          {item}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
+          <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {APPROACH.map((step) => (
+              <div key={step.phase} className="rounded-xl border border-hairline bg-card p-7 shadow-sm">
+                <span className="font-display text-4xl font-bold text-primary/20">{step.phase}</span>
+                <h3 className="mt-5 font-display text-lg font-semibold">{step.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{step.description}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Engagement Models */}
-      <section className="section-padding hairline-t bg-muted/20">
+      {/* Engagement models */}
+      <section className="section-padding bg-muted/30 border-y border-hairline">
         <div className="container-wide">
           <div className="mx-auto max-w-2xl text-center">
             <p className="eyebrow mb-5 justify-center">How We Work</p>
             <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">
-              Flexible Engagement Models
+              Flexible engagement models
             </h2>
-            <p className="mt-4 text-muted-foreground">
-              Start small with an assessment, then scale to pilots and ongoing
-              validation as the ROI proves out
-            </p>
           </div>
-
-          <div className="mt-16 grid gap-px hairline border border-hairline bg-hairline md:grid-cols-3">
-            {engagementModels.map((model, index) => (
-              <div key={model.title} className="group bg-background p-7 text-center">
-                <div className="flex items-center justify-center gap-3">
-                  <span className="h-3 w-px bg-signal" />
-                  <span className="font-display text-4xl font-bold text-primary/15 transition-colors group-hover:text-signal/70">
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
-                </div>
-                <h3 className="mt-6 font-display text-xl font-semibold">
-                  {model.title}
-                </h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                  {model.description}
-                </p>
+          <div className="mt-14 grid gap-6 md:grid-cols-3">
+            {engagementModels.map((model) => (
+              <div key={model.title} className="rounded-xl border border-hairline bg-card p-7 text-center shadow-sm">
+                <h3 className="font-display text-xl font-semibold">{model.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{model.description}</p>
                 <div className="mt-5 flex flex-wrap justify-center gap-2">
-                  {model.examples.map((example) => (
-                    <span
-                      key={example}
-                      className="rounded-sm border border-hairline px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.1em] text-muted-foreground"
-                    >
-                      {example}
+                  {model.examples.map((ex) => (
+                    <span key={ex} className="rounded-full bg-muted px-3 py-1 text-xs font-medium text-foreground">
+                      {ex}
                     </span>
                   ))}
                 </div>
@@ -646,8 +655,8 @@ export default function ServicesPage() {
         </div>
       </section>
 
-      {/* Sectors Served */}
-      <section className="section-padding hairline-t">
+      {/* Sectors served */}
+      <section className="section-padding">
         <div className="container-wide">
           <div className="mx-auto max-w-2xl text-center">
             <p className="eyebrow mb-5 justify-center">Sectors We Serve</p>
@@ -655,36 +664,32 @@ export default function ServicesPage() {
               Medical device as the premium tier — and beyond
             </h2>
             <p className="mt-4 text-muted-foreground">
-              We bring full AI validation and governance to regulated medical
-              device manufacturing, and apply the same methods — minus the
-              regulatory weight — to other precision molders.
+              Full quality and regulatory rigor for regulated medical device
+              manufacturing, and the same engineering methods for other
+              precision molders.
             </p>
           </div>
 
-          {/* Premium tier — Medical */}
           <div className="mt-12">
-            <Card className="card-technical gap-0 overflow-hidden rounded-none py-0">
-              <div className="grid gap-0 lg:grid-cols-[1fr_1.2fr]">
-                <div className="p-6 md:p-8">
+            <div className="rounded-2xl border border-hairline bg-card p-7 shadow-sm md:p-9">
+              <div className="grid gap-8 lg:grid-cols-[1fr_1.2fr]">
+                <div>
                   <div className="mb-4 flex items-center gap-3">
-                    <div className="flex h-12 w-12 items-center justify-center border border-hairline text-primary">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary">
                       <HeartPulse className="h-6 w-6" />
                     </div>
-                    <span className="rounded-sm border border-signal/50 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.1em] text-signal">
+                    <span className="rounded-full bg-primary/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.1em] text-primary">
                       Premium Tier
                     </span>
                   </div>
-                  <h3 className="font-display text-2xl font-bold tracking-tight">
-                    Medical Device
-                  </h3>
+                  <h3 className="font-display text-2xl font-bold tracking-tight">Medical Device</h3>
                   <p className="mt-4 leading-relaxed text-muted-foreground">
-                    AI deployed under ISO 13485 and the FDA QMSR — validated,
-                    explainable, and audit-ready across all device risk classes
-                    and combination products.
+                    Full quality and regulatory depth under ISO 13485, FDA, and
+                    EU MDR across all device risk classes and combination products.
                   </p>
                 </div>
-                <div className="bg-muted/20 p-6 md:p-8 lg:hairline-l">
-                  <p className="mb-4 font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                <div className="rounded-xl bg-muted/40 p-6">
+                  <p className="mb-4 text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
                     Within the medical tier — all device classes
                   </p>
                   <div className="grid gap-4 sm:grid-cols-3">
@@ -693,11 +698,9 @@ export default function ServicesPage() {
                       { c: "Class II", r: "Moderate Risk" },
                       { c: "Class III", r: "High Risk" },
                     ].map((d) => (
-                      <div key={d.c} className="border border-hairline p-4">
+                      <div key={d.c} className="rounded-lg border border-hairline bg-card p-4">
                         <div className="font-display text-xl font-bold">{d.c}</div>
-                        <div className="mt-1 font-mono text-[10px] uppercase tracking-[0.1em] text-signal">
-                          {d.r}
-                        </div>
+                        <div className="mt-1 text-[11px] font-medium uppercase tracking-[0.08em] text-primary">{d.r}</div>
                       </div>
                     ))}
                   </div>
@@ -707,39 +710,33 @@ export default function ServicesPage() {
                   </p>
                 </div>
               </div>
-            </Card>
+            </div>
           </div>
 
-          {/* Other sectors */}
           <div className="mt-6 grid gap-6 md:grid-cols-3">
             {SECTORS.map((sector) => {
               const Icon = sector.icon;
               return (
-                <Card key={sector.name} className="card-technical group h-full rounded-none">
-                  <CardContent className="p-6">
-                    <div className="mb-4 flex h-12 w-12 items-center justify-center border border-hairline text-primary transition-colors group-hover:border-signal/60 group-hover:text-signal">
-                      <Icon className="h-6 w-6" />
-                    </div>
-                    <h4 className="font-display font-semibold">{sector.name}</h4>
-                    <p className="mt-2 text-sm text-muted-foreground">
-                      {sector.value}
-                    </p>
-                  </CardContent>
-                </Card>
+                <div key={sector.name} className="card-technical p-6">
+                  <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                    <Icon className="h-6 w-6" />
+                  </div>
+                  <h4 className="font-display font-semibold">{sector.name}</h4>
+                  <p className="mt-2 text-sm text-muted-foreground">{sector.value}</p>
+                </div>
               );
             })}
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
       <CTASection
-        title="Not sure where AI fits in your operation?"
-        description="Every engagement starts with understanding your process and data. Start with a fixed-scope AI Readiness Assessment, or schedule a consultation to talk it through."
-        primaryButtonText="Get an AI Readiness Assessment"
-        primaryButtonHref="/contact?service=ai-readiness"
-        secondaryButtonText="Schedule a Consultation"
-        secondaryButtonHref="/schedule"
+        title="Ready to get started?"
+        description="Every engagement begins with understanding your unique challenges and goals. Let's schedule a discovery call to explore how we can help."
+        primaryButtonText="Schedule a Consultation"
+        primaryButtonHref="/schedule"
+        secondaryButtonText="Get an AI Readiness Assessment"
+        secondaryButtonHref="/contact?service=ai-readiness"
       />
     </MainLayout>
   );

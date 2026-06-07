@@ -285,7 +285,6 @@ export default function ContactPage() {
                           form.reset();
                         }}
                         variant="outline"
-                        className="rounded-sm border-hairline font-mono text-xs uppercase tracking-[0.12em]"
                       >
                         Submit Another Inquiry
                       </Button>
@@ -467,7 +466,6 @@ export default function ContactPage() {
                           {serviceFields.length > 0 && (
                             <div className="border border-hairline bg-muted/20 p-4 space-y-4">
                               <div className="flex items-center gap-2">
-                                <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-signal" aria-hidden>{"// "}</span>
                                 <h4 className="font-display text-sm font-semibold">
                                   Help Us Understand Your{" "}
                                   {SERVICE_INTEREST_OPTIONS.find(

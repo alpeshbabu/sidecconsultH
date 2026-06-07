@@ -392,7 +392,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                   <Button
                     variant="outline"
                     size="icon"
-                    className="h-9 w-9 rounded-sm border-hairline transition-colors hover:border-signal/60 hover:text-signal"
+                    className="h-9 w-9 transition-colors hover:border-signal/60 hover:text-signal"
                     asChild
                   >
                     <a
@@ -407,7 +407,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                   <Button
                     variant="outline"
                     size="icon"
-                    className="h-9 w-9 rounded-sm border-hairline transition-colors hover:border-signal/60 hover:text-signal"
+                    className="h-9 w-9 transition-colors hover:border-signal/60 hover:text-signal"
                     asChild
                   >
                     <a
@@ -422,7 +422,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                   <Button
                     variant="outline"
                     size="icon"
-                    className="h-9 w-9 rounded-sm border-hairline transition-colors hover:border-signal/60 hover:text-signal"
+                    className="h-9 w-9 transition-colors hover:border-signal/60 hover:text-signal"
                     asChild
                   >
                     <a
@@ -441,7 +441,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               <Button
                 asChild
                 variant="outline"
-                className="gap-2 rounded-sm border-hairline font-mono text-xs uppercase tracking-[0.12em]"
+                className="gap-2"
               >
                 <Link href="/resources">
                   <ArrowLeft className="h-4 w-4" />
@@ -467,7 +467,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               <Button
                 asChild
                 variant="outline"
-                className="hidden shrink-0 rounded-sm border-hairline font-mono text-xs uppercase tracking-[0.12em] md:flex"
+                className="hidden shrink-0 md:flex"
               >
                 <Link href={`/resources?category=${post.category?.slug || ""}`}>
                   View All in {post.category?.name || "Category"}
@@ -496,7 +496,6 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               <Button
                 asChild
                 variant="outline"
-                className="rounded-sm border-hairline font-mono text-xs uppercase tracking-[0.12em]"
               >
                 <Link href={`/resources?category=${post.category?.slug || ""}`}>
                   View All in {post.category?.name || "Category"}

@@ -147,7 +147,6 @@ export default async function ResourcesPage() {
                 asChild
                 variant="outline"
                 size="sm"
-                className="rounded-sm border-hairline font-mono text-xs uppercase tracking-[0.12em]"
               >
                 <Link href="/feed.xml" target="_blank">
                   <Rss className="h-4 w-4 mr-2" />
@@ -256,7 +255,6 @@ export default async function ResourcesPage() {
                 <Button
                   asChild
                   variant="outline"
-                  className="rounded-sm border-hairline font-mono text-xs uppercase tracking-[0.12em]"
                 >
                   <Link href="/services">Explore Services</Link>
                 </Button>
@@ -293,7 +291,7 @@ export default async function ResourcesPage() {
         <div className="container-wide relative">
           <div className="max-w-2xl mx-auto text-center">
             <p className="eyebrow-plain mb-5 text-signal">
-              <span aria-hidden>{"// "}</span>Stay Updated
+              Stay Updated
             </p>
             <h2 className="font-display text-2xl font-bold tracking-tight text-ink-foreground sm:text-3xl">
               Subscribe to Our Newsletter

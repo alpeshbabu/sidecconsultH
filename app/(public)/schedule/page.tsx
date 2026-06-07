@@ -411,7 +411,7 @@ export default function SchedulePage() {
                       We'll send a confirmation email shortly.
                     </p>
                     <Button
-                      className="mt-4 rounded-sm border-hairline font-mono text-xs uppercase tracking-[0.12em]"
+                      className="mt-4"
                       variant="outline"
                       onClick={() => {
                         setIsSubmitted(false);
@@ -551,7 +551,6 @@ export default function SchedulePage() {
               asChild
               variant="outline"
               size="lg"
-              className="rounded-sm border-hairline font-mono text-xs uppercase tracking-[0.12em]"
             >
               <Link href="/contact">
                 <MessageSquare className="mr-2 h-4 w-4" />

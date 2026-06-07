@@ -272,7 +272,6 @@ export function ResourcesContent({
             <Button
               type="submit"
               variant="outline"
-              className="rounded-sm border-hairline font-mono text-xs uppercase tracking-[0.12em]"
             >
               Search
             </Button>
@@ -379,7 +378,7 @@ export function ResourcesContent({
                   size="icon"
                   onClick={() => handlePageChange(currentPage - 1)}
                   disabled={currentPage === 1}
-                  className="rounded-sm border-hairline hover:border-signal/60"
+                  className="hover:border-signal/60"
                 >
                   <ChevronLeft className="h-4 w-4" />
                 </Button>
@@ -408,7 +407,7 @@ export function ResourcesContent({
                             variant="outline"
                             size="icon"
                             onClick={() => handlePageChange(page)}
-                            className={`rounded-sm border font-mono text-xs ${
+                            className={`border ${
                               currentPage === page
                                 ? "border-signal bg-signal/10 text-foreground"
                                 : "border-hairline text-muted-foreground hover:border-signal/60 hover:text-foreground"
@@ -426,7 +425,7 @@ export function ResourcesContent({
                   size="icon"
                   onClick={() => handlePageChange(currentPage + 1)}
                   disabled={currentPage === pagination.totalPages}
-                  className="rounded-sm border-hairline hover:border-signal/60"
+                  className="hover:border-signal/60"
                 >
                   <ChevronRight className="h-4 w-4" />
                 </Button>
@@ -441,7 +440,6 @@ export function ResourcesContent({
             </p>
             <Button
               variant="outline"
-              className="rounded-sm border-hairline font-mono text-xs uppercase tracking-[0.12em]"
               onClick={() => {
                 setSearchQuery("");
                 setActiveCategory("all");

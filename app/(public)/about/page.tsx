@@ -291,18 +291,13 @@ export default function AboutPage() {
                 it in an audit.
               </p>
               <div className="mt-8 flex flex-wrap gap-4">
-                <Button asChild size="lg" variant="technical">
+                <Button asChild size="lg">
                   <Link href="/schedule">
-                    Schedule Consultation
+                    Schedule a Consultation
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
                 </Button>
-                <Button
-                  variant="outline"
-                  size="lg"
-                  asChild
-                  className="rounded-sm border-hairline font-mono text-xs uppercase tracking-[0.12em]"
-                >
+                <Button variant="outline" size="lg" asChild>
                   <a
                     href="https://linkedin.com/in/"
                     target="_blank"
@@ -315,23 +310,17 @@ export default function AboutPage() {
               </div>
             </div>
 
-            {/* Profile Image — spec frame */}
+            {/* Profile Image */}
             <div className="relative">
-              <div className="corner-marks relative aspect-[4/5] border border-hairline p-2">
-                <span className="absolute -top-3 left-6 bg-background px-2 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
-                  Fig. — Founder
-                </span>
-                <div className="relative h-full w-full overflow-hidden">
-                  <Image
-                    src="/AboutPageAssets/aboutus2.png"
-                    alt="SIDEC Consulting founder"
-                    fill
-                    sizes="(max-width: 1024px) 100vw, 600px"
-                    className="object-cover"
-                    priority
-                  />
-                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-ink/15 to-transparent" />
-                </div>
+              <div className="relative aspect-[4/5] overflow-hidden rounded-2xl border border-hairline shadow-lg">
+                <Image
+                  src="/AboutPageAssets/aboutus2.png"
+                  alt="SIDEC Consulting founder"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 600px"
+                  className="object-cover"
+                  priority
+                />
               </div>
             </div>
           </div>

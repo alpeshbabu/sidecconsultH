@@ -66,10 +66,7 @@ export function LeadMagnetForm({
     <div className="surface-ink relative overflow-hidden border border-hairline p-8 md:p-10">
       <div className="grid-blueprint absolute inset-0 opacity-50" aria-hidden />
       <div className="relative mx-auto max-w-md text-center">
-        <p className="eyebrow-plain mb-4 text-signal">
-          <span aria-hidden>{"// "}</span>
-          {eyebrow}
-        </p>
+        <p className="eyebrow-plain mb-4 text-signal">{eyebrow}</p>
         <h3 className="font-display text-2xl font-semibold text-ink-foreground">{title}</h3>
         <p className="mx-auto mt-3 max-w-md text-ink-muted">{description}</p>
 

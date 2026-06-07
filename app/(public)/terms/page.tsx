@@ -29,7 +29,7 @@ export default function TermsPage() {
               asChild
               variant="outline"
               size="sm"
-              className="mb-6 rounded-sm border-hairline font-mono text-xs uppercase tracking-[0.12em]"
+              className="mb-6"
             >
               <Link href="/">
                 <ArrowLeft className="mr-2 h-4 w-4" />
