@@ -152,14 +152,14 @@
   --warning: oklch(0.75 0.15 80);  /* #F59E0B */
   --info: oklch(0.58 0.17 255);    /* #3B82F6 */
 
-  /* Precision Engineering — Light Mode */
-  --ink: oklch(0.19 0.025 256);          /* near-black blue-ink surface */
+  /* Clean theme accents — Light Mode */
+  --ink: oklch(0.21 0.03 256);           /* deep navy surface for dark sections */
   --ink-foreground: oklch(0.97 0.005 250);
-  --ink-muted: oklch(0.72 0.02 250);     /* muted text on ink */
-  --signal: oklch(0.74 0.13 195);        /* calibrated cyan — the "measurement" accent */
-  --signal-foreground: oklch(0.18 0.03 230);
-  --grid-line: oklch(0.52 0.06 256 / 0.07);   /* blueprint grid on light */
-  --hairline-color: oklch(0.55 0.03 256 / 0.18);
+  --ink-muted: oklch(0.74 0.02 250);     /* muted text on navy */
+  --signal: oklch(0.55 0.15 252);        /* refined blue accent (single accent) */
+  --signal-foreground: oklch(0.99 0 0);
+  --grid-line: oklch(0.52 0.06 256 / 0);      /* retired */
+  --hairline-color: oklch(0.55 0.01 256 / 0.16);  /* neutral soft border */
 }
 
 .dark {
@@ -210,14 +210,14 @@
   --warning: oklch(0.78 0.15 80);
   --info: oklch(0.62 0.17 255);
 
-  /* Precision Engineering — Dark Mode */
+  /* Clean theme accents — Dark Mode */
   --ink: oklch(0.15 0.02 256);
   --ink-foreground: oklch(0.97 0.005 250);
   --ink-muted: oklch(0.7 0.02 250);
-  --signal: oklch(0.78 0.13 195);
-  --signal-foreground: oklch(0.16 0.03 230);
-  --grid-line: oklch(0.85 0.04 250 / 0.06);
-  --hairline-color: oklch(0.9 0.02 250 / 0.14);
+  --signal: oklch(0.65 0.15 252);
+  --signal-foreground: oklch(0.99 0 0);
+  --grid-line: oklch(0.85 0.04 250 / 0);
+  --hairline-color: oklch(0.9 0.01 250 / 0.12);
 }
 
 @layer base {
@@ -256,9 +256,9 @@
     @apply mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-8;
   }
   
-  /* Section spacing */
+  /* Section spacing — generous whitespace for the clean corporate look */
   .section-padding {
-    @apply py-16 md:py-24;
+    @apply py-20 md:py-28;
   }
   
   /* Gradient backgrounds */
@@ -315,30 +315,21 @@
    * Blueprint grids, hairlines, monospace annotations, tick marks
    * ============================================================ */
 
-  /* Monospace eyebrow / technical label */
+  /* Clean section label / eyebrow */
   .eyebrow {
-    @apply inline-flex items-center gap-2 font-mono text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground;
-  }
-  .eyebrow::before {
-    content: "";
-    @apply inline-block h-px w-6 bg-signal;
+    @apply inline-flex items-center text-xs font-semibold uppercase tracking-[0.13em] text-primary;
   }
   .eyebrow-plain {
-    @apply font-mono text-xs font-medium uppercase tracking-[0.18em];
+    @apply text-xs font-semibold uppercase tracking-[0.13em];
   }
 
-  /* Blueprint / graph-paper grid background (subtle) */
+  /* Grid backgrounds retired for the clean minimal theme (kept as no-ops so
+   * existing class usage stays valid). */
   .grid-blueprint {
-    background-image:
-      linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
-      linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
-    background-size: 56px 56px;
+    background-image: none;
   }
-
-  /* Fine dot grid (CAD canvas) */
   .grid-dots {
-    background-image: radial-gradient(var(--grid-line) 1.2px, transparent 1.2px);
-    background-size: 26px 26px;
+    background-image: none;
   }
 
   /* Hairline base — the engineering-drawing rule color */
@@ -352,49 +343,31 @@
     color: var(--ink-foreground);
   }
 
-  /* Signal accent text */
+  /* Accent text */
   .text-signal { color: var(--signal); }
 
-  /* Crosshair corner marks — wraps an element with engineering registration marks */
+  /* Corner registration marks retired for the clean theme (no-op). */
   .corner-marks { position: relative; }
   .corner-marks::before,
-  .corner-marks::after {
-    content: "";
-    position: absolute;
-    width: 14px;
-    height: 14px;
-    border-color: var(--signal);
-    border-style: solid;
-    border-width: 0;
-    pointer-events: none;
-  }
-  .corner-marks::before {
-    top: -1px; left: -1px;
-    border-top-width: 1.5px;
-    border-left-width: 1.5px;
-  }
-  .corner-marks::after {
-    bottom: -1px; right: -1px;
-    border-bottom-width: 1.5px;
-    border-right-width: 1.5px;
-  }
+  .corner-marks::after { content: none; }
 
-  /* Technical card — hairline border, no soft shadow, precise hover */
+  /* Clean card — soft border, subtle shadow, gentle lift on hover */
   .card-technical {
-    @apply relative border bg-card transition-[border-color,background-color,transform] duration-300;
-    border-color: var(--hairline-color);
+    @apply relative rounded-lg border bg-card shadow-sm transition-all duration-300;
+    border-color: var(--border);
   }
   .card-technical:hover {
-    border-color: color-mix(in oklch, var(--signal) 60%, transparent);
-    background-color: color-mix(in oklch, var(--signal) 4%, var(--card));
+    border-color: color-mix(in oklch, var(--primary) 30%, var(--border));
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
   }
 
-  /* Index row — capabilities list with measurement numbering */
+  /* Index row — clean capabilities list */
   .index-row {
     @apply relative flex items-start gap-6 py-6 transition-colors duration-300;
   }
   .index-row:hover {
-    background-color: color-mix(in oklch, var(--signal) 5%, transparent);
+    background-color: color-mix(in oklch, var(--primary) 4%, transparent);
   }
 }
 
@@ -419,26 +392,9 @@
     to   { opacity: 1; transform: translateY(0); }
   }
 
-  /* Slow calibration sweep for hero grid lines */
+  /* Calibration sweep retired for the clean theme (no-op). */
   .scanline::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-      90deg,
-      transparent 0%,
-      var(--signal) 50%,
-      transparent 100%
-    );
-    opacity: 0.04;
-    transform: translateX(-100%);
-    animation: scan 7s ease-in-out infinite;
-    pointer-events: none;
-  }
-
-  @keyframes scan {
-    0%, 100% { transform: translateX(-100%); }
-    50% { transform: translateX(100%); }
+    content: none;
   }
 
   @media (prefers-reduced-motion: reduce) {

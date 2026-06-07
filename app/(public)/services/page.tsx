@@ -25,6 +25,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { MainLayout } from "@/components/layout";
 import { CTASection } from "@/components/sections";
+import { createBreadcrumbSchema, getJsonLd } from "@/lib/structured-data";
+
+const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://sidecconsult.com";
 
 export const metadata: Metadata = {
   title: "Services",
@@ -275,6 +278,17 @@ const APPROACH = [
 export default function ServicesPage() {
   return (
     <MainLayout>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: getJsonLd(
+            createBreadcrumbSchema(baseUrl, [
+              { name: "Home", url: "/" },
+              { name: "Services", url: "/services" },
+            ])
+          ),
+        }}
+      />
       {/* Hero Section */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 -z-10" aria-hidden>

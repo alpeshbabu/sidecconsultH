@@ -510,9 +510,9 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       {/* CTA Section */}
       <CTASection
         title="Need Expert Guidance?"
-        description="Our team is ready to help you navigate your medical device manufacturing challenges."
-        primaryButtonText="Schedule Consultation"
-        primaryButtonHref="/contact"
+        description="Wondering where AI fits in your operation? Start with a fixed-scope AI Readiness Assessment, or schedule a consultation."
+        primaryButtonText="Get an AI Readiness Assessment"
+        primaryButtonHref="/contact?service=ai-readiness"
         secondaryButtonText="View Services"
         secondaryButtonHref="/services"
       />

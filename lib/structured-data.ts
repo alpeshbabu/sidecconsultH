@@ -2,6 +2,10 @@
  * JSON-LD Structured Data Schemas
  * Following Schema.org standards for better SEO
  */
+import { SITE_CONFIG } from "@/lib/constants";
+
+// The site logo asset (note: filename contains a space → URL-encoded).
+const LOGO_PATH = "/SIDEC%20Consulting.png";
 
 export interface Organization {
   "@context": "https://schema.org";
@@ -10,6 +14,7 @@ export interface Organization {
   url: string;
   logo?: string;
   description: string;
+  slogan?: string;
   address?: {
     "@type": "PostalAddress";
     addressCountry: string;
@@ -19,8 +24,23 @@ export interface Organization {
     "@type": "ContactPoint";
     contactType: string;
     email?: string;
+    telephone?: string;
   };
+  areaServed?: string[];
+  knowsAbout?: string[];
   sameAs?: string[];
+}
+
+export interface WebSite {
+  "@context": "https://schema.org";
+  "@type": "WebSite";
+  name: string;
+  url: string;
+  description: string;
+  publisher: {
+    "@type": "Organization";
+    name: string;
+  };
 }
 
 export interface Person {
@@ -99,22 +119,53 @@ export function createOrganizationSchema(baseUrl: string): Organization {
     "@type": "ProfessionalService",
     name: "SIDEC Consulting",
     url: baseUrl,
-    logo: `${baseUrl}/logo.png`,
+    logo: `${baseUrl}${LOGO_PATH}`,
     description:
-      "Medical device manufacturing and injection molding consulting services with 25+ years of expertise in ISO 13485, process validation, and facility design.",
+      "AI and machine learning consulting for injection molding manufacturing — process optimization, quality and inspection, predictive maintenance, and the validation and governance to deploy AI in regulated (ISO 13485 / FDA QMSR) plants, backed by 25+ years of manufacturing expertise.",
+    slogan: "Bring AI to injection molding — without breaking validation.",
     address: {
       "@type": "PostalAddress",
       addressCountry: "US",
+      addressRegion: "CA",
     },
     contactPoint: {
       "@type": "ContactPoint",
       contactType: "Customer Service",
-      email: "contact@sidecconsult.com",
+      ...(SITE_CONFIG.email && { email: SITE_CONFIG.email }),
+      ...(SITE_CONFIG.phone && { telephone: SITE_CONFIG.phone }),
     },
-    sameAs: [
-      // Add social media links here when available
-      // "https://www.linkedin.com/company/sidec-consulting",
+    areaServed: ["United States", "Global"],
+    knowsAbout: [
+      "Artificial Intelligence in Manufacturing",
+      "Machine Learning for Injection Molding",
+      "AI Process Optimization",
+      "AI Validation and Governance",
+      "ISO 13485",
+      "FDA QMSR",
+      "Computer Software Assurance",
+      "Scientific Molding",
+      "Design of Experiments",
+      "Predictive Maintenance",
+      "Smart Factory and IIoT",
+      "AI Vision Inspection",
     ],
+    sameAs: SITE_CONFIG.linkedin ? [SITE_CONFIG.linkedin] : [],
+  };
+}
+
+// Helper function to create the WebSite schema (entity + search hint)
+export function createWebSiteSchema(baseUrl: string): WebSite {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "SIDEC Consulting",
+    url: baseUrl,
+    description:
+      "AI for injection molding manufacturing — validated, explainable, and audit-ready.",
+    publisher: {
+      "@type": "Organization",
+      name: "SIDEC Consulting",
+    },
   };
 }
 
@@ -124,23 +175,25 @@ export function createPersonSchema(baseUrl: string): Person {
     "@context": "https://schema.org",
     "@type": "Person",
     name: "Alpesh Patel",
-    jobTitle: "Medical Device Manufacturing Consultant",
+    jobTitle: "AI in Manufacturing Consultant — Injection Molding",
     description:
-      "Expert consultant with 25+ years of experience in medical device manufacturing, injection molding, ISO 13485 quality systems, and facility design.",
+      "Consultant with 25+ years in medical device injection molding — scientific molding, DOE, and process validation under ISO 13485 — now bringing AI and machine learning to the molding floor, validated and audit-ready.",
     url: `${baseUrl}/about`,
     worksFor: {
       "@type": "Organization",
       name: "SIDEC Consulting",
     },
     knowsAbout: [
-      "Medical Device Manufacturing",
-      "Injection Molding",
-      "ISO 13485",
-      "Process Validation",
-      "Quality Management Systems",
-      "Facility Design",
-      "Regulatory Compliance",
+      "Artificial Intelligence in Manufacturing",
+      "Machine Learning for Injection Molding",
+      "AI Validation and Governance",
       "Scientific Molding",
+      "Design of Experiments",
+      "Process Validation",
+      "ISO 13485",
+      "FDA QMSR",
+      "Predictive Maintenance",
+      "Smart Factory and IIoT",
     ],
   };
 }
@@ -199,7 +252,7 @@ export function createBlogPostingSchema(
       name: "SIDEC Consulting",
       logo: {
         "@type": "ImageObject",
-        url: `${baseUrl}/logo.png`,
+        url: `${baseUrl}${LOGO_PATH}`,
       },
     },
     datePublished: publishedDate,

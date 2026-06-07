@@ -8,8 +8,15 @@ import {
   Menu,
   X,
   ChevronDown,
+  Settings,
   ShieldCheck,
+  Cog,
+  Wrench,
+  Building,
+  Globe,
+  Lightbulb,
   Cpu,
+  BadgeCheck,
   ScanSearch,
   Network,
   ArrowRight,
@@ -23,13 +30,20 @@ import {
   SheetClose,
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
-import { SERVICE_AREAS, NAV_LINKS } from "@/lib/constants";
+import { SERVICE_AREAS, AI_SERVICES, NAV_LINKS } from "@/lib/constants";
 import { SearchDialog } from "@/components/search";
 
 // Map icon names to components
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
-  Cpu,
+  Settings,
   ShieldCheck,
+  Cog,
+  Wrench,
+  Building,
+  Globe,
+  Lightbulb,
+  Cpu,
+  BadgeCheck,
   ScanSearch,
   Network,
 };
@@ -140,16 +154,11 @@ export function Header() {
                         : "opacity-0 invisible -translate-y-2"
                     )}
                   >
-                    <div className="w-[800px] rounded-sm border border-hairline bg-card p-6 shadow-xl">
+                    <div className="w-[840px] rounded-lg border border-hairline bg-card p-6 shadow-xl">
                       <div className="mb-4 flex items-center justify-between border-b border-hairline pb-4">
-                        <div>
-                          <p className="eyebrow-plain text-muted-foreground">
-                            Capabilities Index
-                          </p>
-                          <h3 className="mt-1 font-display font-semibold text-foreground">
-                            Our Services
-                          </h3>
-                        </div>
+                        <h3 className="font-display font-semibold text-foreground">
+                          Our Services
+                        </h3>
                         <Button asChild variant="ghost" size="sm" className="group">
                           <Link href="/services">
                             View All
@@ -157,31 +166,57 @@ export function Header() {
                           </Link>
                         </Button>
                       </div>
-                      <div className="grid grid-cols-2 gap-3">
-                        {SERVICE_AREAS.map((service) => {
-                          const IconComponent = iconMap[service.icon];
-                          return (
-                            <Link
-                              key={service.id}
-                              href={service.href}
-                              className="group flex gap-4 rounded-sm p-3 transition-colors hover:bg-muted"
-                            >
-                              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-sm border border-hairline text-primary transition-colors group-hover:border-signal/60 group-hover:text-signal">
-                                {IconComponent && (
-                                  <IconComponent className="h-5 w-5" />
-                                )}
-                              </div>
-                              <div className="flex-1 min-w-0">
-                                <p className="font-medium text-sm text-foreground group-hover:text-signal transition-colors">
-                                  {service.shortTitle}
-                                </p>
-                                <p className="text-xs text-muted-foreground line-clamp-2 mt-0.5">
-                                  {service.description}
-                                </p>
-                              </div>
-                            </Link>
-                          );
-                        })}
+                      <div className="grid grid-cols-[1.4fr_1fr] gap-6">
+                        {/* Core services */}
+                        <div>
+                          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+                            Manufacturing & Engineering
+                          </p>
+                          <div className="grid grid-cols-2 gap-1">
+                            {SERVICE_AREAS.map((service) => {
+                              const IconComponent = iconMap[service.icon];
+                              return (
+                                <Link
+                                  key={service.id}
+                                  href={service.href}
+                                  className="group flex items-center gap-3 rounded-md p-2.5 transition-colors hover:bg-muted"
+                                >
+                                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">
+                                    {IconComponent && <IconComponent className="h-4 w-4" />}
+                                  </div>
+                                  <p className="text-sm font-medium text-foreground transition-colors group-hover:text-primary">
+                                    {service.shortTitle}
+                                  </p>
+                                </Link>
+                              );
+                            })}
+                          </div>
+                        </div>
+                        {/* AI services */}
+                        <div className="rounded-lg bg-muted/40 p-3">
+                          <p className="mb-3 px-1 text-xs font-semibold uppercase tracking-[0.12em] text-primary">
+                            AI & Smart Manufacturing
+                          </p>
+                          <div className="space-y-1">
+                            {AI_SERVICES.map((service) => {
+                              const IconComponent = iconMap[service.icon];
+                              return (
+                                <Link
+                                  key={service.id}
+                                  href={service.href}
+                                  className="group flex items-center gap-3 rounded-md p-2.5 transition-colors hover:bg-card"
+                                >
+                                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">
+                                    {IconComponent && <IconComponent className="h-4 w-4" />}
+                                  </div>
+                                  <p className="text-sm font-medium text-foreground transition-colors group-hover:text-primary">
+                                    {service.shortTitle}
+                                  </p>
+                                </Link>
+                              );
+                            })}
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -298,7 +333,7 @@ export function Header() {
                       </SheetClose>
                     </div>
                     <div className="space-y-1">
-                      {SERVICE_AREAS.map((service) => {
+                      {[...SERVICE_AREAS, ...AI_SERVICES].map((service) => {
                         const IconComponent = iconMap[service.icon];
                         return (
                           <SheetClose asChild key={service.id}>

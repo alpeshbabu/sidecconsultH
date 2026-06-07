@@ -26,7 +26,7 @@ import {
 import { MainLayout } from "@/components/layout";
 import { AnimatedStats, CTASection } from "@/components/sections";
 import Image from "next/image";
-import { createPersonSchema, getJsonLd } from "@/lib/structured-data";
+import { createPersonSchema, createBreadcrumbSchema, getJsonLd } from "@/lib/structured-data";
 
 
 export const metadata: Metadata = {
@@ -201,7 +201,7 @@ const education = [
     degree: "M.Sc. Organic Chemistry",
     specialization: "Polymer Specialization",
     description:
-      "Advanced studies in organic chemistry with specialization in polymer science, providing deep understanding of material properties, polymer processing, and chemical interactions critical to medical device manufacturing.",
+      "Advanced studies in organic chemistry with specialization in polymer science, providing deep understanding of material properties, polymer processing, and chemical interactions critical to injection molding manufacturing.",
   },
   {
     degree: "PG Diploma in Plastics Engineering",
@@ -240,16 +240,20 @@ const coreValues = [
 ];
 
 export default function AboutPage() {
-  // Generate Person schema for JSON-LD
+  // Generate Person + Breadcrumb schemas for JSON-LD
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://sidecconsult.com";
   const personSchema = createPersonSchema(baseUrl);
+  const breadcrumbSchema = createBreadcrumbSchema(baseUrl, [
+    { name: "Home", url: "/" },
+    { name: "About", url: "/about" },
+  ]);
 
   return (
     <MainLayout>
-      {/* JSON-LD Structured Data for Person */}
+      {/* JSON-LD Structured Data */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: getJsonLd(personSchema) }}
+        dangerouslySetInnerHTML={{ __html: getJsonLd([personSchema, breadcrumbSchema]) }}
       />
 
       {/* Hero Section */}
@@ -320,8 +324,9 @@ export default function AboutPage() {
                 <div className="relative h-full w-full overflow-hidden">
                   <Image
                     src="/AboutPageAssets/aboutus2.png"
-                    alt="SIDEC"
+                    alt="SIDEC Consulting founder"
                     fill
+                    sizes="(max-width: 1024px) 100vw, 600px"
                     className="object-cover"
                     priority
                   />

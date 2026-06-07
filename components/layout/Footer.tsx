@@ -23,9 +23,9 @@ export function Footer() {
               />
             </Link>
             <p className="mt-6 text-sm text-muted-foreground max-w-sm leading-relaxed">
-              Expert consulting services for medical device manufacturing,
-              quality systems, and regulatory compliance. 25+ years of industry
-              experience delivering operational excellence.
+              Bringing AI and machine learning to injection molding — validated,
+              explainable, and audit-ready. 25+ years of manufacturing
+              experience, now applied to AI you can deploy and defend.
             </p>
 
             {/* Contact Info */}
@@ -53,6 +53,11 @@ export function Footer() {
                 Ventura, California
               </div>
             </div>
+
+            {/* Trust signals */}
+            <p className="mt-6 font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
+              Confidential · Responses within 24–48 business hours
+            </p>
 
             {/* Social Links */}
             <div className="mt-6 flex items-center gap-4">

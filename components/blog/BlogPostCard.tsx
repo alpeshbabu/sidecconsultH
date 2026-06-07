@@ -65,6 +65,7 @@ export function BlogPostCard({
                   src={featuredImage}
                   alt={title}
                   fill
+                  sizes="(max-width: 768px) 100vw, 50vw"
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
                 />
               ) : (
@@ -142,7 +143,7 @@ export function BlogPostCard({
           {/* Small Image */}
           <div className="relative h-20 w-20 shrink-0 overflow-hidden border border-hairline">
             {featuredImage ? (
-              <Image src={featuredImage} alt={title} fill className="object-cover" />
+              <Image src={featuredImage} alt={title} fill sizes="80px" className="object-cover" />
             ) : (
               <div className="grid-blueprint absolute inset-0 flex items-center justify-center bg-muted/40">
                 <Calendar className="h-6 w-6 text-signal" />
@@ -181,6 +182,7 @@ export function BlogPostCard({
               src={featuredImage}
               alt={title}
               fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
               className="object-cover transition-transform duration-500 group-hover:scale-105"
             />
           ) : (
