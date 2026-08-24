@@ -421,7 +421,7 @@ export function PostEditor({ post, categories, allTags, isNew }: PostEditorProps
 
     setIsSaving(true);
     try {
-      const status = publish ? "PUBLISHED" : formData.status;
+      const status = publish ? "PUBLISHED" : "DRAFT";
       const readingTime = calculateReadingTime(formData.content);
 
       const payload = {
@@ -888,19 +888,20 @@ export function PostEditor({ post, categories, allTags, isNew }: PostEditorProps
             <div className="p-6 space-y-4">
               <div className="space-y-2">
                 <Label className="font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">Status</Label>
-                <Select
-                  value={formData.status}
-                  onValueChange={(value) => updateField("status", value)}
-                >
-                  <SelectTrigger className="rounded-sm border-hairline focus-visible:ring-signal">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="DRAFT">Draft</SelectItem>
-                    <SelectItem value="PUBLISHED">Published</SelectItem>
-                    <SelectItem value="ARCHIVED">Archived</SelectItem>
-                  </SelectContent>
-                </Select>
+                <div className="pt-1">
+                  <span
+                    className={cn(
+                      "rounded-sm font-mono text-[10px] uppercase tracking-[0.1em] px-2 py-0.5 inline-flex items-center border",
+                      formData.status === "PUBLISHED"
+                        ? "bg-emerald-500/10 text-emerald-600 border-emerald-500/30"
+                        : formData.status === "ARCHIVED"
+                        ? "bg-muted text-muted-foreground border-hairline"
+                        : "bg-amber-500/10 text-amber-600 border-amber-500/30"
+                    )}
+                  >
+                    {formData.status}
+                  </span>
+                </div>
               </div>
 
               <div className="space-y-2">

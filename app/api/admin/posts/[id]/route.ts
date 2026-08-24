@@ -140,9 +140,19 @@ export async function PUT(
       readingTime = Math.ceil(data.content.split(/\s+/).length / 200);
     }
 
+    // Determine the status of the post after update (automatically mark as DRAFT unless explicitly published or archived)
+    let status = existingPost.status;
+    if (data.status === "PUBLISHED") {
+      status = "PUBLISHED";
+    } else if (data.status === "ARCHIVED") {
+      status = "ARCHIVED";
+    } else {
+      status = "DRAFT";
+    }
+
     // Handle publishedAt based on status
     let publishedAt = existingPost.publishedAt;
-    if (data.status === "PUBLISHED" && !existingPost.publishedAt) {
+    if (status === "PUBLISHED" && !existingPost.publishedAt) {
       publishedAt = data.publishedAt ? new Date(data.publishedAt) : new Date();
     } else if (data.publishedAt) {
       publishedAt = new Date(data.publishedAt);
@@ -157,7 +167,7 @@ export async function PUT(
         ...(data.excerpt !== undefined && { excerpt: data.excerpt }),
         ...(data.content && { content: data.content }),
         ...(data.featuredImage !== undefined && { featuredImage: data.featuredImage }),
-        ...(data.status && { status: data.status }),
+        status,
         publishedAt,
         ...(data.metaTitle !== undefined && { metaTitle: data.metaTitle }),
         ...(data.metaDescription !== undefined && { metaDescription: data.metaDescription }),
