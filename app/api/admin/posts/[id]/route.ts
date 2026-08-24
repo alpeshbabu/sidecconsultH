@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { z } from "zod";
+import { revalidatePath } from "next/cache";
 
 // Validation schema for updating post
 const updatePostSchema = z.object({
@@ -196,6 +197,15 @@ export async function PUT(
       },
     });
 
+    // Revalidate public cache paths
+    revalidatePath("/");
+    revalidatePath("/resources");
+    revalidatePath("/resources/categories");
+    revalidatePath(`/resources/${updatedPost.slug}`);
+    if (existingPost.slug !== updatedPost.slug) {
+      revalidatePath(`/resources/${existingPost.slug}`);
+    }
+
     return NextResponse.json({
       success: true,
       data: updatedPost,
@@ -239,6 +249,12 @@ export async function DELETE(
     await prisma.blogPost.delete({
       where: { id },
     });
+
+    // Revalidate public cache paths
+    revalidatePath("/");
+    revalidatePath("/resources");
+    revalidatePath("/resources/categories");
+    revalidatePath(`/resources/${existingPost.slug}`);
 
     return NextResponse.json({
       success: true,

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { z } from "zod";
+import { revalidatePath } from "next/cache";
 
 // Validation schema for creating/updating post
 const postSchema = z.object({
@@ -194,6 +195,12 @@ export async function POST(request: NextRequest) {
         },
       },
     });
+
+    // Revalidate public cache paths
+    revalidatePath("/");
+    revalidatePath("/resources");
+    revalidatePath("/resources/categories");
+    revalidatePath(`/resources/${post.slug}`);
 
     return NextResponse.json({
       success: true,
