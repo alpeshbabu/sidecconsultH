@@ -1,9 +1,9 @@
 // Site Configuration
 export const SITE_CONFIG = {
   name: "SIDEC Consulting",
-  title: "AI for Injection Molding — Validated, Explainable, Audit-Ready",
+  title: "Medical Device Injection Molding & Quality Systems Consulting",
   description:
-    "25+ years in medical device manufacturing, now bringing AI and machine learning to injection molding — process optimization, quality, predictive maintenance, and the validation and governance to deploy it in regulated plants.",
+    "25+ years of expert consulting in medical device manufacturing, injection molding process excellence, ISO 13485 quality systems, and facility design — with smart manufacturing capabilities.",
   url: "https://sidecconsulting.com", // Update with actual domain
   author: "SIDEC Consulting",
   // Contact details are env-driven so they can be set without a code change.
@@ -138,7 +138,7 @@ export const STATS = [
   { value: "25+", label: "Years Experience" },
   { value: "100+", label: "Projects Delivered" },
   { value: "ISO 13485", label: "Quality & Regulatory" },
-  { value: "AI + DOE", label: "Process Optimization" },
+  { value: "Scientific Molding", label: "Process Validation" },
 ] as const;
 
 // Contact Form Options — core manufacturing services + AI capabilities
@@ -294,8 +294,8 @@ export const PROJECT_TIMELINE_OPTIONS = [
 
 // Blog Categories (PRDB §7.2)
 export const BLOG_CATEGORIES = [
-  { id: "ai-process-optimization", name: "AI & Process Optimization", slug: "ai-process-optimization" },
-  { id: "ai-validation-compliance", name: "AI Validation & Compliance", slug: "ai-validation-compliance" },
+  { id: "ai-process-optimization", name: "Process Optimization & Technology", slug: "ai-process-optimization" },
+  { id: "ai-validation-compliance", name: "Validation & Compliance", slug: "ai-validation-compliance" },
   { id: "smart-factory-data", name: "Smart Factory & Data", slug: "smart-factory-data" },
   { id: "quality-inspection", name: "Quality Systems & Inspection", slug: "quality-inspection" },
   { id: "industry-trends", name: "Industry Trends", slug: "industry-trends" },

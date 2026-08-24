@@ -22,11 +22,11 @@ const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://sidecconsult.com";
 export const metadata: Metadata = {
   title: "Case Studies",
   description:
-    "Representative examples of AI deployed in injection molding operations — problem, approach, and measured result, kept validated and audit-ready.",
+    "Representative examples of process optimization, quality systems, and manufacturing solutions delivered in injection molding operations — problem, approach, and measured result.",
   openGraph: {
     title: "Case Studies | SIDEC Consulting",
     description:
-      "How AI cuts scrap, cycle time, and downtime in molding — and stays validated and audit-ready.",
+      "How process optimization, quality systems, and smart manufacturing cut scrap and downtime in molding.",
     url: "/case-studies",
   },
   alternates: { canonical: "/case-studies" },
@@ -37,15 +37,15 @@ const CASE_STUDIES = [
     id: "scrap-reduction-ml-control",
     icon: Cpu,
     sector: "Medical Device (Class II)",
-    pillar: "AI-Augmented Process Development",
-    title: "Cutting scrap on a high-cavitation tool with ML process control",
+    pillar: "Process Optimization & Technology",
+    title: "Cutting scrap on a high-cavitation tool with scientific molding & advanced process control",
     challenge:
       "A Class II molder ran a 32-cavity tool with persistent scrap from short shots and dimensional drift, especially when switching resin lots. Operators chased the process manually, and scrap spiked after every material change.",
     approach: [
       "Characterized the baseline with scientific molding and validated existing sensor data quality",
-      "Trained an ML surrogate model mapping process parameters and material state to part quality",
+      "Trained a predictive model mapping process parameters and material state to part quality",
       "Used multi-objective optimization to balance scrap, cycle time, and dimensional capability",
-      "Deployed parameter recommendations, then closed the loop for lot-to-lot adaptation",
+      "Deployed parameter recommendations for lot-to-lot material adaptation",
     ],
     result: [
       "Scrap reduced in the high-teens %",
@@ -59,14 +59,14 @@ const CASE_STUDIES = [
     id: "validated-vision-inspection",
     icon: ScanSearch,
     sector: "Medical Device (Class III)",
-    pillar: "AI-Driven Quality & Inspection",
-    title: "Validated vision inspection that passed a notified-body audit",
+    pillar: "Quality & Inspection Automation",
+    title: "Validated vision inspection for automated defect detection",
     challenge:
       "A manufacturer wanted automated vision inspection for cosmetic and dimensional defects on an implantable-device component, but prior attempts stalled because the model couldn't be validated or explained to auditors.",
     approach: [
-      "Defined intended use, operating range, and acceptance criteria (sensitivity / false-negative limits) up front",
-      "Applied Computer Software Assurance (CSA) — deepest testing on the highest-risk failure modes",
-      "Built explainability into the model so rejections could be understood by a quality engineer",
+      "Define sensitivity / false-negative limits up front",
+      "Apply Computer Software Assurance (CSA) — deepest testing on the highest-risk failure modes",
+      "Built explainable criteria into the inspection logic so rejections could be easily verified",
       "Produced IQ/OQ/PQ-style validation evidence and a model-governance plan",
     ],
     result: [
@@ -88,7 +88,7 @@ const CASE_STUDIES = [
     approach: [
       "Ranked assets by downtime cost and failure predictability — focused only on the high-consequence few",
       "Built the IIoT data foundation (reliable time-series collection) before any modeling",
-      "Modeled degradation signatures on critical presses and auxiliary equipment",
+      "Analyzed degradation signatures on critical presses and auxiliary equipment",
       "Set condition thresholds tied to maintenance workflows, not just dashboards",
     ],
     result: [
@@ -132,7 +132,7 @@ export default function CaseStudiesPage() {
           <div className="mx-auto max-w-3xl text-center">
             <p className="eyebrow mb-6 justify-center">Case Studies</p>
             <h1 className="font-display text-4xl font-bold tracking-tight text-balance sm:text-5xl lg:text-6xl">
-              AI that earned its place{" "}
+              Proven results delivered{" "}
               <span className="text-signal">on the floor</span>
             </h1>
             <p className="mt-6 text-lg text-muted-foreground md:text-xl">
@@ -284,13 +284,13 @@ export default function CaseStudiesPage() {
                   Could your operation be the next one?
                 </h2>
                 <p className="mt-2 text-muted-foreground">
-                  Start with a fixed-scope AI Readiness Assessment to see where AI
-                  would actually pay off in your plant.
+                  Start with a fixed-scope Smart Manufacturing Assessment to map out where data-driven
+                  improvements deliver the highest value.
                 </p>
               </div>
               <Button asChild size="lg" variant="technical" className="shrink-0">
-                <Link href="/contact?service=ai-readiness">
-                  Get an AI Readiness Assessment
+                <Link href="/contact">
+                  Get an Operations Assessment
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
@@ -305,8 +305,8 @@ export default function CaseStudiesPage() {
         description="Every engagement starts with your process and your data. Schedule a consultation, or start with a fixed-scope assessment."
         primaryButtonText="Schedule a Consultation"
         primaryButtonHref="/schedule"
-        secondaryButtonText="Get an AI Readiness Assessment"
-        secondaryButtonHref="/contact?service=ai-readiness"
+        secondaryButtonText="Explore Services"
+        secondaryButtonHref="/services"
       />
     </MainLayout>
   );

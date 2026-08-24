@@ -214,13 +214,13 @@ export default function ContactPage() {
           <div className="mx-auto max-w-3xl text-center">
             <p className="eyebrow mb-5 justify-center">Start the Conversation</p>
             <h1 className="font-display text-4xl font-bold tracking-tight text-balance sm:text-5xl lg:text-6xl">
-              Let&apos;s find where AI{" "}
-              <span className="text-signal">pays off in your plant</span>
+              Let&apos;s discuss your{" "}
+              <span className="text-signal">manufacturing challenge</span>
             </h1>
             <p className="mt-6 text-lg text-muted-foreground md:text-xl">
-              Tell us your challenge — scrap, cycle time, unplanned downtime,
-              inspection cost, or validating AI for an audit — and we&apos;ll help
-              map where AI fits, and where it&apos;s premature.
+              Tell us about your project — process validation, quality systems,
+              facility design, scientific molding, or smart manufacturing — and
+              we&apos;ll work with you to design a tailored solution.
             </p>
           </div>
         </div>

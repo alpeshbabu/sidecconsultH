@@ -17,18 +17,18 @@ import { prisma } from "@/lib/db";
 export const metadata: Metadata = {
   title: "Resources",
   description:
-    "Practical insights and guides on AI, machine learning, and validation for injection molding manufacturing — process optimization, quality, predictive maintenance, and compliance.",
+    "Practical insights and guides on medical device injection molding manufacturing — process optimization, quality systems, validation, predictive maintenance, and compliance.",
   openGraph: {
     title: "Resources | SIDEC Consulting",
     description:
-      "Practical guidance on AI and machine learning for injection molding manufacturing.",
+      "Practical guidance on injection molding manufacturing, quality systems, and process validation.",
     url: "/resources",
   },
   twitter: {
     card: "summary_large_image",
     title: "Resources | SIDEC Consulting",
     description:
-      "Practical guidance on AI and machine learning for injection molding manufacturing.",
+      "Practical guidance on injection molding manufacturing, quality systems, and process validation.",
   },
   alternates: {
     canonical: "/resources",
@@ -135,12 +135,12 @@ export default async function ResourcesPage() {
             <p className="eyebrow mb-5 justify-center">Resources & Insights</p>
             <h1 className="font-display text-4xl font-bold tracking-tight text-balance sm:text-5xl lg:text-6xl">
               Practical Knowledge for{" "}
-              <span className="text-signal">AI in Molding</span>
+              <span className="text-signal">Medical Molding</span>
             </h1>
             <p className="mt-6 text-lg text-muted-foreground md:text-xl">
-              Guides and insights on AI, machine learning, and validation for
-              injection molding — grounded in 25+ years of manufacturing
-              experience.
+              Guides and insights on injection molding, quality systems, process
+              optimization, and smart manufacturing — grounded in 25+ years of
+              manufacturing experience.
             </p>
             <div className="mt-8">
               <Button
@@ -242,8 +242,8 @@ export default async function ResourcesPage() {
               </h2>
               <p className="text-muted-foreground mt-4 mb-8">
                 We&apos;re working on bringing you practical insights and guides
-                on AI and machine learning for injection molding manufacturing.
-                Check back soon!
+                on injection molding, quality systems, process validation, and
+                manufacturing operations. Check back soon!
               </p>
               <div className="flex flex-col sm:flex-row gap-3 justify-center">
                 <Button asChild variant="technical">
@@ -297,8 +297,8 @@ export default async function ResourcesPage() {
               Subscribe to Our Newsletter
             </h2>
             <p className="mt-4 text-ink-muted">
-              Get practical insights on AI, machine learning, and validation for
-              injection molding manufacturing delivered to your inbox.
+              Get practical insights on injection molding, quality systems, and
+              manufacturing operations delivered to your inbox.
             </p>
             <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center max-w-md mx-auto">
               <input
@@ -317,12 +317,12 @@ export default async function ResourcesPage() {
 
       {/* CTA Section */}
       <CTASection
-        title="Wondering where AI fits in your plant?"
-        description="Start with a fixed-scope AI Readiness Assessment, or schedule a consultation to talk through your process and data."
-        primaryButtonText="Get an AI Readiness Assessment"
-        primaryButtonHref="/contact?service=ai-readiness"
-        secondaryButtonText="Schedule a Consultation"
-        secondaryButtonHref="/schedule"
+        title="Ready to optimize your manufacturing operations?"
+        description="Schedule a consultation to discuss process validation, quality systems, facility design, or smart manufacturing."
+        primaryButtonText="Schedule a Consultation"
+        primaryButtonHref="/schedule"
+        secondaryButtonText="Explore Services"
+        secondaryButtonHref="/services"
       />
     </MainLayout>
   );

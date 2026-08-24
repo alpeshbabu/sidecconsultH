@@ -32,11 +32,11 @@ import { createPersonSchema, createBreadcrumbSchema, getJsonLd } from "@/lib/str
 export const metadata: Metadata = {
   title: "About",
   description:
-    "25+ years in medical device injection molding — scientific molding, DOE, and process validation under ISO 13485 — now applied to deploying AI and machine learning on the molding floor, responsibly.",
+    "25+ years in medical device injection molding — scientific molding, DOE, and process validation under ISO 13485, facility design, and quality systems compliance.",
   openGraph: {
     title: "About | SIDEC Consulting",
     description:
-      "Deep injection molding and regulated-manufacturing expertise, now applied to AI: process optimization, validation & governance, quality, and smart-factory data.",
+      "Deep injection molding and regulated-manufacturing expertise: manufacturing engineering, quality and compliance, process excellence, and facility design.",
     url: "/about",
     images: [
       {
@@ -51,7 +51,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "About | SIDEC Consulting",
     description:
-      "Deep injection molding and regulated-manufacturing expertise, now applied to AI: process optimization, validation & governance, quality, and smart-factory data.",
+      "Deep injection molding and regulated-manufacturing expertise: manufacturing engineering, quality and compliance, process excellence, and facility design.",
     images: ["/AboutPageAssets/aboutus1.jpeg"],
   },
   alternates: {
@@ -67,50 +67,50 @@ const aboutStats = [
   { value: "6", label: "Continents Worked" },
 ] as const;
 
-// Expertise areas with icons — domain depth, now extended with AI
+// Expertise areas with icons — domain depth
 const expertiseAreas = [
   {
     icon: Factory,
-    title: "Scientific Molding, Extended with ML",
+    title: "Injection Molding Process Excellence",
     items: [
       "Scientific Molding Methodology",
-      "DOE accelerated & extended with machine learning",
-      "ML surrogate modeling (predicting quality from parameters)",
-      "Closed-loop / adaptive process control",
-      "Multi-objective optimization: cycle time, scrap, energy & quality",
+      "Design of Experiments (DOE) studies",
+      "Process validation (IQ/OQ/PQ)",
+      "Equipment & mold qualification",
+      "Surrogate modeling & process optimization",
     ],
   },
   {
     icon: Shield,
-    title: "AI Validation & Governance",
+    title: "Quality Systems & Regulatory Compliance",
     items: [
-      "ML validation under ISO 13485 & FDA QMSR",
-      "Computer Software Assurance (CSA) for AI systems",
-      "Explainable AI (XAI) for auditable models",
-      "Model lifecycle governance: versioning, drift, retraining",
-      "ISO 14971 risk management extended to AI failure modes",
+      "ISO 13485 Quality Management System implementation",
+      "FDA 21 CFR Part 820 / QMSR compliance programs",
+      "Design controls & risk management (ISO 14971)",
+      "Computer Software Assurance (CSA) implementation",
+      "Audit preparation (FDA, Notified Bodies)",
     ],
   },
   {
     icon: FlaskConical,
-    title: "AI-Driven Quality & Inspection",
+    title: "Manufacturing Engineering & Operations",
     items: [
-      "Vision-based defect detection (short shots, sink, warpage, flash)",
-      "Predictive defect models & early-warning systems",
-      "Build-vs-buy evaluation and QMS integration",
-      "AI-assisted CAPA & nonconformance pattern analysis",
-      "Process validation (IQ/OQ/PQ) & statistical process control",
+      "Process optimization & continuous improvement",
+      "Lean manufacturing & Six Sigma programs",
+      "Manufacturing cost reduction strategies",
+      "Production capacity planning & scaling",
+      "Defect analysis & root-cause investigations",
     ],
   },
   {
     icon: Globe,
-    title: "Smart Factory, Data & Global Ops",
+    title: "Facility Design & Smart Factory Integration",
     items: [
-      "Predictive maintenance (sensor strategy, models, ROI realism)",
-      "IIoT architecture & the data foundation AI requires",
-      "OEE / scrap / energy analytics & dashboards",
-      "LLM operator assistants to capture tribal knowledge",
-      "Supplier quality, technology transfer & facility design",
+      "Greenfield & brownfield facility planning",
+      "Cleanroom design & classification (ISO 7/8)",
+      "Global supplier quality & supply chain strategy",
+      "IIoT data foundation & connectivity",
+      "Preventive & predictive maintenance programs",
     ],
   },
 ];
@@ -166,19 +166,19 @@ const deepExpertise = [
   {
     area: "Molding-Floor Credibility",
     description:
-      "From Associate Director to Project Engineer—we've actually validated processes, so our AI is grounded in scientific molding and DOE, not theory",
+      "From Associate Director to Project Engineer—we've actually run operations, so our advice is grounded in scientific molding and DOE, not theory",
     icon: Factory,
   },
   {
-    area: "Audit-Survivable AI",
+    area: "Regulatory Compliance",
     description:
-      "Director-level quality experience means we validate ML under ISO 13485/QMSR and document it to satisfy FDA, ISO, and EU MDR auditors",
+      "Director-level quality experience means we build quality systems that satisfy FDA, ISO, and EU MDR auditors, keeping you compliant and audit-ready",
     icon: Shield,
   },
   {
-    area: "ROI Realism",
+    area: "Operational ROI",
     description:
-      "We map where AI pays off and where it's premature—so you invest in the sensors and models that return, not the hype",
+      "We map where improvements pay off and focus on actions that return real value, not just chasing technology trends",
     icon: FlaskConical,
   },
 ];
@@ -269,11 +269,11 @@ export default function AboutPage() {
             <div>
               <p className="eyebrow mb-5">About Us</p>
               <h1 className="font-display text-4xl font-bold tracking-tight text-balance sm:text-5xl lg:text-6xl">
-                The rare team that can deploy AI{" "}
-                <span className="text-signal">and survive the audit</span>
+                Expert engineering & quality systems{" "}
+                <span className="text-signal">for medical molding</span>
               </h1>
               <p className="mt-2 text-xl text-muted-foreground">
-                Injection Molding × Applied AI | 25+ Years Experience
+                Injection Molding, Quality Systems & Operations | 25+ Years Experience
               </p>
               <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
                 SIDEC Consulting brings over{" "}
@@ -284,11 +284,10 @@ export default function AboutPage() {
                 Associate Director.
               </p>
               <p className="mt-4 leading-relaxed text-muted-foreground">
-                We now use that foundation to bring AI and machine learning onto
-                the molding floor responsibly — process optimization, quality and
-                inspection, predictive maintenance, and the validation and
-                governance that lets you deploy AI in a regulated plant and defend
-                it in an audit.
+                We provide end-to-end support across manufacturing engineering,
+                quality systems compliance, process excellence, and facility design —
+                including advanced smart manufacturing and data analytics capabilities
+                when your operation is ready to scale.
               </p>
               <div className="mt-8 flex flex-wrap gap-4">
                 <Button asChild size="lg">
@@ -336,13 +335,13 @@ export default function AboutPage() {
           <div className="mx-auto max-w-2xl text-center">
             <p className="eyebrow mb-5 justify-center">Areas of Expertise</p>
             <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">
-              Domain Depth, Now Applied to AI
+              Core Technical & Regulatory Expertise
             </h2>
             <p className="mt-4 text-muted-foreground">
-              Our AI work comes from real-world manufacturing experience—not a
-              data-science lab. Because we&apos;ve run injection molding
-              operations, led quality organizations, and validated processes,
-              the AI we deploy fits how a regulated plant actually works.
+              Our consulting comes from real-world manufacturing experience — not just
+              theory. Because we&apos;ve run injection molding operations, led quality
+              organizations, and validated processes, our advice fits how a regulated
+              plant actually works.
             </p>
           </div>
 
@@ -560,8 +559,8 @@ export default function AboutPage() {
               </h2>
               <p className="mt-4 text-muted-foreground">
                 Deep knowledge of global regulatory requirements for medical
-                device manufacturing — and how to deploy AI/ML inside them under
-                the new FDA QMSR.
+                device manufacturing — and how to validate software and systems
+                under the new FDA QMSR.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
                 {certifications.map((cert, index) => (
@@ -580,8 +579,8 @@ export default function AboutPage() {
                   </h3>
                   <ul className="space-y-2">
                     {[
-                      "Validating AI/ML process control & inspection under QMSR",
-                      "Computer Software Assurance (CSA) for AI-enabled systems",
+                      "Process validation & automated inspection under QMSR",
+                      "Computer Software Assurance (CSA) for manufacturing systems",
                       "FDA and Notified Body audit preparation",
                       "Predetermined Change Control for models that retrain",
                       "510(k) support, EU MDR technical files & CAPA systems",
@@ -657,11 +656,11 @@ export default function AboutPage() {
       {/* CTA Section */}
       <CTASection
         title="Let's Work Together"
-        description="Whether you're exploring where AI fits or ready to validate a model for production, we bring the molding-floor experience to make it work — and survive an audit."
-        primaryButtonText="Get an AI Readiness Assessment"
-        primaryButtonHref="/contact?service=ai-readiness"
-        secondaryButtonText="Schedule a Consultation"
-        secondaryButtonHref="/schedule"
+        description="Whether you are expanding operations, building a quality system, or optimizing your molding process, we bring the hands-on manufacturing experience to make it work."
+        primaryButtonText="Schedule a Consultation"
+        primaryButtonHref="/schedule"
+        secondaryButtonText="Explore Services"
+        secondaryButtonHref="/services"
       />
     </MainLayout>
   );

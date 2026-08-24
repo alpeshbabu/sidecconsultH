@@ -9,11 +9,11 @@ import { prisma } from "@/lib/db";
 export const metadata: Metadata = {
   title: "Categories | Resources",
   description:
-    "Browse our resource categories covering AI and process optimization, AI validation and compliance, smart factory and data, and quality systems.",
+    "Browse our resource categories covering injection molding process optimization, quality systems compliance, facility design, and smart factory integration.",
   openGraph: {
     title: "Categories | SIDEC Consulting Resources",
     description:
-      "Browse insights by category: AI process optimization, validation, smart factory, and quality.",
+      "Browse insights by category: process optimization, validation, smart factory, and quality.",
   },
 };
 

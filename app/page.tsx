@@ -69,9 +69,9 @@ const DIFFERENTIATORS = [
   },
   {
     icon: Cpu,
-    title: "AI Where It Pays Off",
+    title: "Smart Manufacturing",
     description:
-      "When it helps, we bring AI and machine learning to optimize process, quality, and uptime — validated, explainable, and audit-ready, never hype.",
+      "We help integrate IIoT, connectivity, and data analytics to optimize process, quality, and uptime — providing clear operational visibility without the hype.",
   },
 ];
 
@@ -142,14 +142,14 @@ export default async function HomePage() {
               <p className="eyebrow mb-6">Injection Molding & Medical Device Manufacturing</p>
 
               <h1 className="font-display text-4xl font-bold leading-[1.08] tracking-tight text-balance sm:text-5xl md:text-6xl">
-                Precision manufacturing consulting,{" "}
-                <span className="text-primary">from process validation to AI</span>
+                Precision consulting for{" "}
+                <span className="text-primary">injection molding & quality systems</span>
               </h1>
 
               <p className="mt-7 max-w-xl text-lg leading-relaxed text-muted-foreground md:text-xl">
                 25+ years of hands-on expertise in injection molding, ISO 13485
-                quality systems, regulatory compliance, and facility design — and
-                AI-driven optimization where it genuinely pays off.
+                quality systems, regulatory compliance, and facility design — with
+                advanced smart manufacturing capabilities when you need them.
               </p>
 
               <div className="mt-10 flex flex-col gap-3 sm:flex-row">
@@ -262,27 +262,27 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ============ AI & SMART MANUFACTURING ============ */}
+      {/* ============ SMART MANUFACTURING & ADVANCED CAPABILITIES ============ */}
       <section id="ai-services" className="section-padding surface-ink scroll-mt-20">
         <div className="container-wide">
           <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
             <div className="max-w-2xl">
               <p className="eyebrow-plain mb-5 inline-flex items-center gap-2 text-signal">
-                <Sparkles className="h-4 w-4" />
-                AI & Smart Manufacturing
+                <Settings className="h-4 w-4" />
+                Smart Manufacturing & Technology
               </p>
               <h2 className="font-display text-3xl font-bold tracking-tight text-ink-foreground sm:text-4xl text-balance">
-                And we bring AI to the floor — where it actually pays off
+                Smart manufacturing & advanced data analytics
               </h2>
               <p className="mt-4 text-ink-muted">
-                Our manufacturing depth is what makes our AI work. We deploy
-                machine learning that fits how a regulated plant really runs —
-                validated, explainable, and audit-ready.
+                We bring IIoT, connectivity, and data analytics to the floor where they
+                deliver real value — ensuring your systems are validated, compliant,
+                and audit-ready.
               </p>
             </div>
             <Button asChild variant="signal" className="h-11 shrink-0">
-              <Link href="/services#ai-readiness">
-                AI Readiness Assessment
+              <Link href="/services#ai-services">
+                Explore Advanced Capabilities
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>
@@ -319,7 +319,7 @@ export default async function HomePage() {
             </h2>
             <p className="mt-5 text-lg leading-relaxed text-muted-foreground">
               Cross-functional experience across manufacturing, quality, design
-              assurance, and R&D — with modern AI capability when it earns its place.
+              assurance, and R&D — with advanced smart manufacturing capabilities when you are ready to scale.
             </p>
           </div>
 
@@ -434,7 +434,7 @@ export default async function HomePage() {
                   "Scientific molding, DOE & process validation (IQ/OQ/PQ)",
                   "ISO 13485, FDA 21 CFR 820 / QMSR & EU MDR expertise",
                   "Global supplier quality, facility design & technology transfer",
-                  "AI & machine learning for process, quality, and uptime",
+                  "Smart manufacturing, process data & automated inspection",
                 ].map((item) => (
                   <li key={item} className="flex items-start gap-3">
                     <Check className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
@@ -492,7 +492,7 @@ export default async function HomePage() {
                 Latest from the field
               </h2>
               <p className="mt-3 text-muted-foreground">
-                Practical guidance on injection molding, quality systems, and AI
+                Practical guidance on injection molding, quality systems, and operations
                 for manufacturing professionals.
               </p>
             </div>

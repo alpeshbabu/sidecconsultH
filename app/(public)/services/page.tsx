@@ -39,11 +39,11 @@ const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://sidecconsult.com";
 export const metadata: Metadata = {
   title: "Services",
   description:
-    "Expert consulting for injection molding & medical device manufacturing — manufacturing engineering, quality & regulatory compliance, scientific molding, facility design, supplier development — plus AI & smart manufacturing.",
+    "Expert consulting for injection molding & medical device manufacturing — manufacturing engineering, quality & regulatory compliance, scientific molding, facility design, supplier development — with advanced smart manufacturing capabilities.",
   openGraph: {
     title: "Services | SIDEC Consulting",
     description:
-      "Injection molding & medical device manufacturing consulting — quality, process, facility, supplier — plus AI & smart manufacturing.",
+      "Injection molding & medical device manufacturing consulting — quality, process, facility, supplier — with advanced smart manufacturing capabilities.",
     url: "/services",
   },
   alternates: { canonical: "/services" },
@@ -432,7 +432,7 @@ export default function ServicesPage() {
             <p className="mt-6 text-lg text-muted-foreground md:text-xl">
               From injection molding process development and quality systems to
               facility design and supplier development — 25+ years of hands-on
-              experience, plus AI and smart manufacturing where it pays off.
+              experience, with advanced smart manufacturing and data analytics capabilities.
             </p>
             <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Button asChild size="lg">
@@ -470,22 +470,22 @@ export default function ServicesPage() {
         </div>
       </section>
 
-      {/* AI & smart manufacturing */}
+      {/* Smart manufacturing & advanced capabilities */}
       <section id="ai-services" className="section-padding surface-ink scroll-mt-20">
         <div className="container-wide">
           <div className="mx-auto max-w-2xl text-center">
             <p className="eyebrow-plain mb-5 inline-flex items-center gap-2 justify-center text-signal">
-              <Sparkles className="h-4 w-4" />
-              AI & Smart Manufacturing
+              <Cpu className="h-4 w-4" />
+              Smart Manufacturing & Data
             </p>
             <h2 className="font-display text-3xl font-bold tracking-tight text-ink-foreground sm:text-4xl text-balance">
-              AI for molding, deployed the right way
+              Smart manufacturing, deployed the right way
             </h2>
             <p className="mt-4 text-ink-muted">
-              Most &ldquo;AI for manufacturing&rdquo; advice comes from data
-              scientists who&rsquo;ve never validated a process. We come from the
-              molding floor and layer AI on top of that rigor — so it deploys in
-              production and defends in an audit.
+              Most &ldquo;smart factory&rdquo; advice comes from technology vendors
+              who&rsquo;ve never run a molding floor. We combine decades of manufacturing
+              engineering rigor with modern connectivity and data analytics — so it actually
+              works in production and stands up to audits.
             </p>
           </div>
           <div className="mt-14 grid gap-6 lg:grid-cols-2">
@@ -542,19 +542,19 @@ export default function ServicesPage() {
               <div>
                 <p className="eyebrow mb-4">Start Here</p>
                 <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl text-balance">
-                  AI Readiness Assessment
+                  Smart Manufacturing Assessment
                 </h2>
                 <p className="mt-4 text-lg text-muted-foreground">
-                  Where would AI actually pay off — and where is it premature?
+                  Where would data-driven improvements pay off — and where are they premature?
                 </p>
                 <p className="mt-4 leading-relaxed text-muted-foreground">
                   A fixed-scope, fixed-fee audit of your molding operation — the
-                  low-commitment way to find the real opportunities before you
-                  invest in sensors, models, or vendors.
+                  low-commitment way to find real optimization opportunities before you
+                  invest in databases, sensors, or complex software.
                 </p>
                 <Button asChild size="lg" className="mt-8">
                   <Link href="/contact?service=ai-readiness">
-                    Get an AI Readiness Assessment
+                    Get a Smart Manufacturing Assessment
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
                 </Button>

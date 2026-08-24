@@ -2,10 +2,10 @@ import { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "SIDEC Consulting — AI for Injection Molding",
+    name: "SIDEC Consulting — Medical Molding & Quality",
     short_name: "SIDEC Consulting",
     description:
-      "AI and machine learning for injection molding manufacturing — validated, explainable, and audit-ready.",
+      "Expert consulting for medical device manufacturing, injection molding process excellence, and ISO 13485 quality systems.",
     start_url: "/",
     display: "standalone",
     background_color: "#10141d",

@@ -6,13 +6,13 @@ import { MainLayout } from "@/components/layout";
 import { LeadMagnetForm } from "@/components/sections";
 
 export const metadata: Metadata = {
-  title: "Is Your Plant AI-Ready? — 12-Point Checklist",
+  title: "Smart Manufacturing Readiness — 12-Point Checklist",
   description:
-    "A free 12-point checklist to gauge whether your injection molding operation is ready for AI — covering data, sensors, process maturity, and governance.",
+    "A free 12-point checklist to gauge whether your injection molding operation is ready for smart manufacturing and data-driven optimization.",
   openGraph: {
-    title: "Is Your Plant AI-Ready? — 12-Point Checklist | SIDEC Consulting",
+    title: "Smart Manufacturing Readiness — 12-Point Checklist | SIDEC Consulting",
     description:
-      "Gauge your molding operation's AI readiness across data, sensors, process maturity, and governance — free checklist.",
+      "Gauge your molding operation's smart manufacturing readiness across data, sensors, process maturity, and governance — free checklist.",
     url: "/resources/ai-readiness-checklist",
   },
   alternates: { canonical: "/resources/ai-readiness-checklist" },
@@ -71,12 +71,12 @@ export default function AiReadinessChecklistPage() {
             <p className="eyebrow mb-6 justify-center">Free Resource</p>
             <h1 className="font-display text-4xl font-bold tracking-tight text-balance sm:text-5xl">
               Is your plant{" "}
-              <span className="text-signal">AI-ready?</span>
+              <span className="text-signal">ready to optimize?</span>
             </h1>
             <p className="mt-6 text-lg text-muted-foreground md:text-xl">
               Twelve honest checks across data, sensors, process maturity, and
-              governance. Score yourself before you spend a dollar on models or
-              sensors.
+              governance. Score yourself before you spend a dollar on databases,
+              sensors, or automation.
             </p>
           </div>
         </div>
@@ -87,10 +87,10 @@ export default function AiReadinessChecklistPage() {
         <div className="mx-auto max-w-3xl">
           <LeadMagnetForm
             eyebrow="Get the Checklist"
-            title="Want a printable copy + AI insights?"
-            description="Drop your email and we'll send the checklist along with practical guidance on AI for molding. The full list is right below — print or save it any time."
+            title="Want a printable copy + implementation insights?"
+            description="Drop your email and we'll send the checklist along with practical guidance on smart manufacturing. The full list is right below — print or save it any time."
             buttonText="Send It to Me"
-            source="ai-readiness-checklist"
+            source="smart-readiness-checklist"
           />
         </div>
       </section>
@@ -148,16 +148,16 @@ export default function AiReadinessChecklistPage() {
                 </p>
                 <ul className="space-y-3 text-ink-muted">
                   <li>
-                    <strong className="text-ink-foreground">9–12 checked:</strong> You&rsquo;re AI-ready.
-                    The opportunity is prioritizing the highest-ROI use case and deploying it validated.
+                    <strong className="text-ink-foreground">9–12 checked:</strong> You&rsquo;re ready for smart manufacturing.
+                    The opportunity is prioritizing the highest-ROI improvements and deploying them validated.
                   </li>
                   <li>
                     <strong className="text-ink-foreground">5–8 checked:</strong> You&rsquo;re close.
-                    A focused assessment will identify the few gaps to close before AI pays off.
+                    A focused assessment will identify the few gaps to close before smart manufacturing investments pay off.
                   </li>
                   <li>
                     <strong className="text-ink-foreground">0–4 checked:</strong> Start with the
-                    data foundation. AI on top of weak data produces confident, wrong answers.
+                    data foundation. Advanced analytics on top of weak data produces confident, wrong answers.
                   </li>
                 </ul>
               </div>
@@ -168,12 +168,12 @@ export default function AiReadinessChecklistPage() {
               <div>
                 <h3 className="font-display text-lg font-semibold">Want the expert version?</h3>
                 <p className="mt-1 text-sm text-muted-foreground">
-                  An AI Readiness Assessment turns this self-check into a scored,
+                  A Smart Manufacturing Assessment turns this self-check into a scored,
                   prioritized roadmap for your specific operation.
                 </p>
               </div>
               <Button asChild variant="technical" className="shrink-0">
-                <Link href="/contact?service=ai-readiness">
+                <Link href="/contact">
                   Get an Assessment
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
