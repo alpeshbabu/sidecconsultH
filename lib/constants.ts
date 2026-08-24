@@ -47,10 +47,10 @@ export const SERVICE_AREAS = [
   },
   {
     id: "injection-molding",
-    title: "Injection Molding Process Excellence",
-    shortTitle: "Process Excellence",
+    title: "Injection Molding Excellence (Plastics & LSR)",
+    shortTitle: "Molding Excellence",
     description:
-      "Scientific molding, Design of Experiments (DOE), process validation (IQ/OQ/PQ), automation, and process troubleshooting.",
+      "Scientific molding, Design of Experiments (DOE), and process validation (IQ/OQ/PQ) for thermoplastics and Liquid Silicone Rubber (LSR) medical device manufacturing.",
     icon: "Cog",
     href: "/services#injection-molding",
   },
@@ -90,46 +90,14 @@ export const SERVICE_AREAS = [
     icon: "Lightbulb",
     href: "/services#strategic-advisory",
   },
-] as const;
-
-// AI & Smart Manufacturing — the modern capability layer that builds on the
-// core manufacturing expertise above.
-export const AI_SERVICES = [
   {
-    id: "ai-process",
-    title: "AI-Augmented Process Development",
-    shortTitle: "AI Process Development",
+    id: "smart-manufacturing",
+    title: "Smart Manufacturing & Applied AI",
+    shortTitle: "Smart Manufacturing",
     description:
-      "ML-driven optimization of cycle time, scrap, and energy — built on scientific molding and DOE, not hype.",
+      "Integrating IIoT connectivity, predictive maintenance, and explainable AI/ML models on the molding floor to optimize cycle times, scrap, and quality validation.",
     icon: "Cpu",
-    href: "/services#ai-process",
-  },
-  {
-    id: "ai-validation",
-    title: "AI Validation & Governance",
-    shortTitle: "AI Validation & Governance",
-    description:
-      "Deploy AI in regulated plants validated under ISO 13485/QMSR — explainable and audit-ready.",
-    icon: "BadgeCheck",
-    href: "/services#ai-validation",
-  },
-  {
-    id: "ai-quality",
-    title: "AI-Driven Quality & Inspection",
-    shortTitle: "AI Quality & Inspection",
-    description:
-      "Predictive defect models and automated vision inspection, integrated with your existing QMS.",
-    icon: "ScanSearch",
-    href: "/services#ai-quality",
-  },
-  {
-    id: "smart-factory",
-    title: "Smart Factory & Data",
-    shortTitle: "Smart Factory & Data",
-    description:
-      "Predictive maintenance, IIoT, and the data foundation that has to exist before any AI can deliver.",
-    icon: "Network",
-    href: "/services#smart-factory",
+    href: "/services#smart-manufacturing",
   },
 ] as const;
 
@@ -145,16 +113,12 @@ export const STATS = [
 export const SERVICE_INTEREST_OPTIONS = [
   { value: "manufacturing-engineering", label: "Manufacturing Engineering & Operations" },
   { value: "quality-regulatory", label: "Quality & Regulatory Compliance" },
-  { value: "injection-molding", label: "Injection Molding Process Excellence" },
+  { value: "injection-molding", label: "Injection Molding Excellence (Plastics & LSR)" },
   { value: "equipment-maintenance", label: "Equipment & Mold Maintenance" },
   { value: "facility-design", label: "Facility Design & Infrastructure" },
   { value: "supplier-development", label: "Supplier Development & Supply Chain" },
   { value: "strategic-advisory", label: "Strategic Advisory & Expert Services" },
-  { value: "ai-readiness", label: "AI Readiness Assessment" },
-  { value: "ai-process", label: "AI Process Development & Optimization" },
-  { value: "ai-validation", label: "AI Validation & Governance" },
-  { value: "ai-quality", label: "AI Quality & Inspection" },
-  { value: "smart-factory", label: "Smart Factory / Predictive Maintenance" },
+  { value: "smart-manufacturing", label: "Smart Manufacturing & Applied AI" },
   { value: "general", label: "General Inquiry" },
 ] as const;
 
@@ -257,29 +221,11 @@ export const SERVICE_SPECIFIC_FIELDS: Record<string, ServiceFieldConfig[]> = {
     FIELD_DEFINITIONS.estimatedBudget,
     FIELD_DEFINITIONS.regulatoryStandards,
   ],
-  // AI & smart manufacturing
-  "ai-readiness": [
-    FIELD_DEFINITIONS.otherSites,
-    FIELD_DEFINITIONS.otherSiteLocations,
-    FIELD_DEFINITIONS.estimatedBudget,
-  ],
-  "ai-process": [
-    FIELD_DEFINITIONS.otherSites,
-    FIELD_DEFINITIONS.estimatedBudget,
-  ],
-  "ai-validation": [
+  "smart-manufacturing": [
     FIELD_DEFINITIONS.regulatoryStandards,
     FIELD_DEFINITIONS.expectedDocuments,
     FIELD_DEFINITIONS.estimatedBudget,
-  ],
-  "ai-quality": [
-    FIELD_DEFINITIONS.expectedDocuments,
-    FIELD_DEFINITIONS.estimatedBudget,
-  ],
-  "smart-factory": [
     FIELD_DEFINITIONS.otherSites,
-    FIELD_DEFINITIONS.otherSiteLocations,
-    FIELD_DEFINITIONS.estimatedBudget,
   ],
   general: [],
 };
@@ -307,14 +253,14 @@ export const FOOTER_LINKS = {
   services: [
     { label: "Manufacturing Engineering", href: "/services#manufacturing-engineering" },
     { label: "Quality & Regulatory", href: "/services#quality-regulatory" },
-    { label: "Injection Molding Excellence", href: "/services#injection-molding" },
-    { label: "AI & Smart Manufacturing", href: "/services#ai-services" },
-    { label: "AI Readiness Assessment", href: "/services#ai-readiness" },
+    { label: "Molding Excellence (Plastics/LSR)", href: "/services#injection-molding" },
+    { label: "Facility Design & Build", href: "/services#facility-design" },
+    { label: "Smart Manufacturing & AI", href: "/services#smart-manufacturing" },
   ],
   company: [
     { label: "About", href: "/about" },
     { label: "Case Studies", href: "/case-studies" },
-    { label: "AI Readiness Checklist", href: "/resources/ai-readiness-checklist" },
+    { label: "Smart Manufacturing Checklist", href: "/resources/ai-readiness-checklist" },
     { label: "Resources", href: "/resources" },
     { label: "Contact", href: "/contact" },
   ],

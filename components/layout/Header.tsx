@@ -30,7 +30,7 @@ import {
   SheetClose,
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
-import { SERVICE_AREAS, AI_SERVICES, NAV_LINKS } from "@/lib/constants";
+import { SERVICE_AREAS, NAV_LINKS } from "@/lib/constants";
 import { SearchDialog } from "@/components/search";
 
 // Map icon names to components
@@ -166,68 +166,24 @@ export function Header() {
                           </Link>
                         </Button>
                       </div>
-                      <div className="grid grid-cols-2 gap-5">
-                        {/* Core services */}
-                        <div>
-                          <p className="mb-2 px-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
-                            Manufacturing & Engineering
-                          </p>
-                          <div className="flex flex-col">
-                            {SERVICE_AREAS.map((service) => {
-                              const IconComponent = iconMap[service.icon];
-                              return (
-                                <Link
-                                  key={service.id}
-                                  href={service.href}
-                                  className="group flex items-center gap-3 rounded-lg px-2 py-2 transition-colors hover:bg-muted"
-                                >
-                                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
-                                    {IconComponent && <IconComponent className="h-4 w-4" />}
-                                  </div>
-                                  <span className="whitespace-nowrap text-sm font-medium text-foreground transition-colors group-hover:text-primary">
-                                    {service.shortTitle}
-                                  </span>
-                                </Link>
-                              );
-                            })}
-                          </div>
-                        </div>
-                        {/* AI services */}
-                        <div className="rounded-lg bg-muted/40 p-3">
-                          <p className="mb-2 px-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-primary">
-                            AI & Smart Manufacturing
-                          </p>
-                          <div className="flex flex-col">
-                            {AI_SERVICES.map((service) => {
-                              const IconComponent = iconMap[service.icon];
-                              return (
-                                <Link
-                                  key={service.id}
-                                  href={service.href}
-                                  className="group flex items-center gap-3 rounded-lg px-2 py-2 transition-colors hover:bg-card"
-                                >
-                                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
-                                    {IconComponent && <IconComponent className="h-4 w-4" />}
-                                  </div>
-                                  <span className="whitespace-nowrap text-sm font-medium text-foreground transition-colors group-hover:text-primary">
-                                    {service.shortTitle}
-                                  </span>
-                                </Link>
-                              );
-                            })}
+                      <div className="grid grid-cols-2 gap-x-6 gap-y-1">
+                        {SERVICE_AREAS.map((service) => {
+                          const IconComponent = iconMap[service.icon];
+                          return (
                             <Link
-                              href="/services#ai-readiness"
-                              className="group mt-1 flex items-center gap-3 rounded-lg border-t border-hairline px-2 pb-2 pt-3 transition-colors hover:bg-card"
+                              key={service.id}
+                              href={service.href}
+                              className="group flex items-center gap-3 rounded-lg px-2 py-2 transition-colors hover:bg-muted"
                             >
-                              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-primary text-primary-foreground">
-                                <BadgeCheck className="h-4 w-4" />
+                              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+                                {IconComponent && <IconComponent className="h-4 w-4" />}
                               </div>
-                              <span className="whitespace-nowrap text-sm font-semibold text-primary">
-                                AI Readiness Assessment
+                              <span className="text-sm font-medium text-foreground transition-colors group-hover:text-primary">
+                                {service.shortTitle}
                               </span>
                             </Link>
-                          </div>
-                        </div>
+                          );
+                        })}
                       </div>
                     </div>
                   </div>
@@ -344,7 +300,7 @@ export function Header() {
                       </SheetClose>
                     </div>
                     <div className="space-y-1">
-                      {[...SERVICE_AREAS, ...AI_SERVICES].map((service) => {
+                      {SERVICE_AREAS.map((service) => {
                         const IconComponent = iconMap[service.icon];
                         return (
                           <SheetClose asChild key={service.id}>

@@ -111,10 +111,10 @@ const CORE_SERVICES: ServiceItem[] = [
   {
     id: "injection-molding",
     icon: Cog,
-    title: "Injection Molding Process Excellence",
-    tagline: "Master the science of injection molding",
+    title: "Injection Molding Excellence (Plastics & LSR)",
+    tagline: "Thermoplastics & LSR molding for medical devices",
     description:
-      "As recognized molding subject-matter experts, we bring deep expertise in scientific molding, process development, validation, and troubleshooting.",
+      "As recognized molding subject-matter experts, we bring deep expertise in scientific molding, process development, validation, and troubleshooting for both thermoplastics and Liquid Silicone Rubber (LSR) medical device components.",
     keyOfferings: [
       "Scientific molding methodology implementation",
       "Process development and optimization",
@@ -228,110 +228,27 @@ const CORE_SERVICES: ServiceItem[] = [
       "Knowledge transfer to your team",
     ],
   },
-];
-
-// AI & smart manufacturing — the modern capability layer
-const AI_PILLARS: ServiceItem[] = [
   {
-    id: "ai-process",
+    id: "smart-manufacturing",
     icon: Cpu,
-    title: "AI-Augmented Process Development",
-    tagline: "Scientific molding, extended with machine learning",
+    title: "Smart Manufacturing & Applied AI",
+    tagline: "Data-driven optimization for molding floors",
     description:
-      "We turn scientific molding and DOE into ML-driven optimization — predicting quality from parameters and balancing cycle time, scrap, and energy at once.",
+      "We integrate IIoT connectivity, predictive maintenance, and explainable AI/ML models on the molding floor to optimize cycle times, scrap, and quality validation.",
     keyOfferings: [
-      "ML surrogate modeling (predicting quality from parameters)",
-      "Multi-objective optimization: cycle time, scrap, energy, and quality",
-      "DOE accelerated and extended with machine learning",
-      "Closed-loop / adaptive control for variable materials (regrind, recycled resin)",
-      "Parameter recommendation systems and digital process twins",
-      "Data-driven tech-transfer and scale-up de-risking",
+      "AI-augmented process development & ML-driven optimization",
+      "Validated AI/ML control & inspection systems (ISO 13485/FDA)",
+      "Automated / vision-based defect detection & predictive quality",
+      "IIoT architecture, predictive maintenance, and data foundations",
+      "LLM-based knowledge management and operator assistants",
     ],
     outcomes: [
-      "Lower scrap (target 12–22%)",
-      "Faster cycle times (target 8–15%)",
-      "Reduced energy per part",
-      "De-risked scale-up",
-    ],
-  },
-  {
-    id: "ai-validation",
-    icon: BadgeCheck,
-    title: "AI Validation & Governance",
-    tagline: "Deploy AI in regulated plants — and survive the audit",
-    differentiator: true,
-    description:
-      "The part most AI vendors ignore. We validate ML-based control and inspection under ISO 13485 and the FDA QMSR, make models explainable, and produce audit-ready documentation.",
-    keyOfferings: [
-      "Validating ML control and inspection under ISO 13485 / FDA QMSR",
-      "Computer Software Assurance (CSA) for AI-enabled systems",
-      "Model lifecycle governance: versioning, drift monitoring, retraining controls",
-      "Predetermined Change Control for models that update over time",
-      "Explainability (XAI) so models are auditable, not black boxes",
-      "ISO 14971 risk management extended to AI failure modes",
-    ],
-    outcomes: [
-      "Audit-ready AI documentation",
-      "Validated ML control & inspection",
-      "Clean regulatory inspections",
-      "Defensible model governance",
-    ],
-  },
-  {
-    id: "ai-quality",
-    icon: ScanSearch,
-    title: "AI-Driven Quality & Inspection",
-    tagline: "Catch defects before they happen",
-    description:
-      "We deploy predictive defect models and automated vision on live production, integrated with your existing QMS — with an honest build-vs-buy call.",
-    keyOfferings: [
-      "Automated / vision-based defect detection (short shots, sink, warpage, flash)",
-      "Predictive defect models and early-warning systems",
-      "Build-vs-buy evaluation and QMS integration",
-      "AI-assisted complaint, CAPA, and nonconformance pattern analysis",
-      "Supplier quality analytics and incoming-material risk scoring",
-    ],
-    outcomes: [
-      "Defects caught before they ship",
-      "Lower inspection cost",
-      "Faster CAPA root-cause",
+      "Lower scrap rates",
       "Higher first-pass yield",
+      "Validated, audit-ready data",
+      "Reduced unplanned downtime & captured tribal knowledge",
     ],
   },
-  {
-    id: "smart-factory",
-    icon: Network,
-    title: "Smart Factory & Data",
-    tagline: "The data foundation AI actually needs",
-    description:
-      "Predictive maintenance, IIoT architecture, and the OEE/scrap/energy data foundation that has to exist before any AI can deliver.",
-    keyOfferings: [
-      "Predictive maintenance programs (sensor strategy, models, ROI realism)",
-      "IIoT architecture and the data foundation AI requires",
-      "OEE / scrap / energy analytics and dashboards",
-      "Facility and cleanroom design informed by connectivity needs",
-      "LLM operator assistants to capture and transfer tribal knowledge",
-    ],
-    outcomes: [
-      "Less unplanned downtime",
-      "Higher OEE",
-      "A real data foundation",
-      "Captured tribal knowledge",
-    ],
-  },
-];
-
-const ASSESSMENT_DELIVERABLES = [
-  { icon: Gauge, title: "Data-Maturity Score", description: "An honest read on where your sensors, SPC, and data infrastructure stand today." },
-  { icon: Map, title: "Opportunity Map", description: "Prioritized AI opportunities plotted on effort vs. ROI — what to do first, and what to skip." },
-  { icon: Database, title: "Sensor / Data Gap Analysis", description: "Exactly what data and instrumentation you need before any model can deliver." },
-  { icon: Route, title: "Phased Roadmap", description: "A staged plan from quick wins to validated, audit-ready deployment." },
-];
-
-const SECTORS = [
-  { icon: Car, name: "Automotive", value: "High-volume process optimization, scrap and cycle-time reduction, and predictive maintenance." },
-  { icon: Package, name: "Packaging", value: "Throughput, energy, and quality optimization at scale across high-cavitation tooling." },
-  { icon: CircuitBoard, name: "Electronics & Connectors", value: "Precision-part defect prediction and automated vision inspection for tight tolerances." },
 ];
 
 const whyChooseUs = [
@@ -345,6 +262,12 @@ const engagementModels = [
   { title: "Project-Based", description: "Defined-scope engagements with clear deliverables and timelines", examples: ["Process validation", "Quality system implementation", "Facility design"] },
   { title: "Retainer", description: "Ongoing access to expertise for continuous support and guidance", examples: ["Monthly advisory hours", "On-call troubleshooting", "Audit preparation"] },
   { title: "Training", description: "Custom training programs to build your team's capability", examples: ["Scientific molding", "Quality systems", "Process validation"] },
+];
+
+const SECTORS = [
+  { icon: Car, name: "Automotive", value: "High-volume process optimization, scrap and cycle-time reduction, and predictive maintenance." },
+  { icon: Package, name: "Packaging", value: "Throughput, energy, and quality optimization at scale across high-cavitation tooling." },
+  { icon: CircuitBoard, name: "Electronics & Connectors", value: "Precision-part defect prediction and automated vision inspection for tight tolerances." },
 ];
 
 const APPROACH = [
@@ -430,9 +353,8 @@ export default function ServicesPage() {
               <span className="text-primary">injection molding & medical device manufacturing</span>
             </h1>
             <p className="mt-6 text-lg text-muted-foreground md:text-xl">
-              From injection molding process development and quality systems to
-              facility design and supplier development — 25+ years of hands-on
-              experience, with advanced smart manufacturing and data analytics capabilities.
+              From thermoplastics and LSR injection molding process development and quality systems to
+              facility build design and supplier development — 25+ years of hands-on experience.
             </p>
             <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Button asChild size="lg">
@@ -455,7 +377,7 @@ export default function ServicesPage() {
           <div className="mx-auto max-w-2xl text-center">
             <p className="eyebrow mb-5 justify-center">Manufacturing & Engineering</p>
             <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">
-              Core consulting services
+              Our consulting services
             </h2>
             <p className="mt-4 text-muted-foreground">
               Deep, hands-on expertise across the full injection molding and
@@ -470,113 +392,6 @@ export default function ServicesPage() {
         </div>
       </section>
 
-      {/* Smart manufacturing & advanced capabilities */}
-      <section id="ai-services" className="section-padding surface-ink scroll-mt-20">
-        <div className="container-wide">
-          <div className="mx-auto max-w-2xl text-center">
-            <p className="eyebrow-plain mb-5 inline-flex items-center gap-2 justify-center text-signal">
-              <Cpu className="h-4 w-4" />
-              Smart Manufacturing & Data
-            </p>
-            <h2 className="font-display text-3xl font-bold tracking-tight text-ink-foreground sm:text-4xl text-balance">
-              Smart manufacturing, deployed the right way
-            </h2>
-            <p className="mt-4 text-ink-muted">
-              Most &ldquo;smart factory&rdquo; advice comes from technology vendors
-              who&rsquo;ve never run a molding floor. We combine decades of manufacturing
-              engineering rigor with modern connectivity and data analytics — so it actually
-              works in production and stands up to audits.
-            </p>
-          </div>
-          <div className="mt-14 grid gap-6 lg:grid-cols-2">
-            {AI_PILLARS.map((s) => {
-              const Icon = s.icon;
-              return (
-                <div
-                  key={s.id}
-                  id={s.id}
-                  className="scroll-mt-24 flex flex-col rounded-xl border border-white/10 bg-white/[0.03] p-7 md:p-8"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg border border-white/15 text-signal">
-                      <Icon className="h-6 w-6" />
-                    </div>
-                    {s.differentiator && (
-                      <span className="rounded-full border border-signal/50 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.1em] text-signal">
-                        Key Differentiator
-                      </span>
-                    )}
-                  </div>
-                  <h3 className="mt-5 font-display text-xl font-bold tracking-tight text-ink-foreground">{s.title}</h3>
-                  <p className="mt-1 font-medium text-signal">{s.tagline}</p>
-                  <p className="mt-3 leading-relaxed text-ink-muted">{s.description}</p>
-                  <ul className="mt-6 space-y-2">
-                    {s.keyOfferings.map((o) => (
-                      <li key={o} className="flex items-start gap-2.5 text-sm text-ink-muted">
-                        <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-signal" />
-                        <span>{o}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  <div className="mt-6 border-t border-white/10 pt-5">
-                    <div className="flex flex-wrap gap-2">
-                      {s.outcomes.map((o) => (
-                        <span key={o} className="rounded-full bg-white/5 px-3 py-1 text-xs font-medium text-ink-foreground">
-                          {o}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* AI Readiness Assessment */}
-      <section id="ai-readiness" className="section-padding scroll-mt-20">
-        <div className="container-wide">
-          <div className="rounded-2xl border border-hairline bg-muted/30 p-8 md:p-12">
-            <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:gap-14">
-              <div>
-                <p className="eyebrow mb-4">Start Here</p>
-                <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl text-balance">
-                  Smart Manufacturing Assessment
-                </h2>
-                <p className="mt-4 text-lg text-muted-foreground">
-                  Where would data-driven improvements pay off — and where are they premature?
-                </p>
-                <p className="mt-4 leading-relaxed text-muted-foreground">
-                  A fixed-scope, fixed-fee audit of your molding operation — the
-                  low-commitment way to find real optimization opportunities before you
-                  invest in databases, sensors, or complex software.
-                </p>
-                <Button asChild size="lg" className="mt-8">
-                  <Link href="/contact?service=ai-readiness">
-                    Get a Smart Manufacturing Assessment
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Link>
-                </Button>
-              </div>
-              <div className="grid gap-4 sm:grid-cols-2">
-                {ASSESSMENT_DELIVERABLES.map((item) => {
-                  const Icon = item.icon;
-                  return (
-                    <div key={item.title} className="rounded-xl border border-hairline bg-card p-6 shadow-sm">
-                      <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                        <Icon className="h-5 w-5" />
-                      </div>
-                      <h3 className="font-display text-base font-semibold">{item.title}</h3>
-                      <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{item.description}</p>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* Why work with us */}
       <section className="section-padding bg-muted/30 border-y border-hairline">

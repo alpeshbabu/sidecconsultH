@@ -25,7 +25,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { MainLayout } from "@/components/layout";
 import { AnimatedStats, CTASection, NewsletterForm } from "@/components/sections";
-import { SERVICE_AREAS, AI_SERVICES, STATS } from "@/lib/constants";
+import { SERVICE_AREAS, STATS } from "@/lib/constants";
 import Image from "next/image";
 import { prisma } from "@/lib/db";
 import { BlogPostCard } from "@/components/blog";
@@ -118,7 +118,7 @@ export default async function HomePage() {
 
   // Service schemas for JSON-LD (core + AI)
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://sidecconsult.com";
-  const serviceSchemas = [...SERVICE_AREAS, ...AI_SERVICES].map((service) =>
+  const serviceSchemas = SERVICE_AREAS.map((service) =>
     createServiceSchema(baseUrl, service.title, service.description)
   );
 
@@ -142,14 +142,12 @@ export default async function HomePage() {
               <p className="eyebrow mb-6">Injection Molding & Medical Device Manufacturing</p>
 
               <h1 className="font-display text-4xl font-bold leading-[1.08] tracking-tight text-balance sm:text-5xl md:text-6xl">
-                Precision consulting for{" "}
-                <span className="text-primary">injection molding & quality systems</span>
+                Consulting for <span className="text-primary">medical plastics & LSR injection molding</span>
               </h1>
 
               <p className="mt-7 max-w-xl text-lg leading-relaxed text-muted-foreground md:text-xl">
-                25+ years of hands-on expertise in injection molding, ISO 13485
-                quality systems, regulatory compliance, and facility design — with
-                advanced smart manufacturing capabilities when you need them.
+                25+ years of hands-on expertise in thermoplastics, Liquid Silicone Rubber (LSR),
+                ISO 13485 quality systems, regulatory compliance, and facility build design.
               </p>
 
               <div className="mt-10 flex flex-col gap-3 sm:flex-row">
@@ -262,52 +260,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ============ SMART MANUFACTURING & ADVANCED CAPABILITIES ============ */}
-      <section id="ai-services" className="section-padding surface-ink scroll-mt-20">
-        <div className="container-wide">
-          <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-            <div className="max-w-2xl">
-              <p className="eyebrow-plain mb-5 inline-flex items-center gap-2 text-signal">
-                <Settings className="h-4 w-4" />
-                Smart Manufacturing & Technology
-              </p>
-              <h2 className="font-display text-3xl font-bold tracking-tight text-ink-foreground sm:text-4xl text-balance">
-                Smart manufacturing & advanced data analytics
-              </h2>
-              <p className="mt-4 text-ink-muted">
-                We bring IIoT, connectivity, and data analytics to the floor where they
-                deliver real value — ensuring your systems are validated, compliant,
-                and audit-ready.
-              </p>
-            </div>
-            <Button asChild variant="signal" className="h-11 shrink-0">
-              <Link href="/services#ai-services">
-                Explore Advanced Capabilities
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
-          </div>
 
-          <div className="mt-14 grid gap-px overflow-hidden rounded-xl border border-white/10 bg-white/10 sm:grid-cols-2 lg:grid-cols-4">
-            {AI_SERVICES.map((service) => {
-              const Icon = iconMap[service.icon];
-              return (
-                <Link key={service.id} href={service.href} className="group surface-ink p-7 transition-colors hover:bg-white/[0.03]">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-lg border border-white/15 text-signal transition-colors group-hover:border-signal/60">
-                    {Icon && <Icon className="h-6 w-6" />}
-                  </div>
-                  <h3 className="mt-6 font-display text-base font-semibold text-ink-foreground">
-                    {service.shortTitle}
-                  </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-ink-muted">
-                    {service.description}
-                  </p>
-                </Link>
-              );
-            })}
-          </div>
-        </div>
-      </section>
 
       {/* ============ WHY SIDEC ============ */}
       <section className="section-padding">
