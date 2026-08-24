@@ -34,6 +34,16 @@ import {
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogClose,
+} from "@/components/ui/dialog";
 
 // Types
 interface Category {
@@ -96,6 +106,14 @@ export function PostEditor({ post, categories, allTags, isNew }: PostEditorProps
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // AI Content Generator state
+  const [isAiDialogOpen, setIsAiDialogOpen] = useState(false);
+  const [isAiGenerating, setIsAiGenerating] = useState(false);
+  const [aiKeywords, setAiKeywords] = useState("");
+  const [aiCustomPrompt, setAiCustomPrompt] = useState("");
+  const [aiInsertMode, setAiInsertMode] = useState<"replace" | "append">("replace");
+  const [aiError, setAiError] = useState<string | null>(null);
 
   // Tag state
   const [selectedTagIds, setSelectedTagIds] = useState<string[]>(
@@ -299,6 +317,54 @@ export function PostEditor({ post, categories, allTags, isNew }: PostEditorProps
     (tag) => tag.name.toLowerCase() === tagSearchQuery.trim().toLowerCase()
   );
 
+  // AI content generator handler
+  const handleAiGenerate = async () => {
+    if (!formData.title.trim()) {
+      setAiError("Please specify a post title first.");
+      return;
+    }
+    setAiError(null);
+    setIsAiGenerating(true);
+
+    try {
+      const selectedCategory = categories.find((c) => c.id === formData.categoryId);
+      const response = await fetch("/api/admin/posts/generate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          title: formData.title,
+          excerpt: formData.excerpt,
+          categoryName: selectedCategory?.name || "",
+          keywords: aiKeywords,
+          customPrompt: aiCustomPrompt,
+        }),
+      });
+
+      const res = await response.json();
+      if (!res.success) {
+        throw new Error(res.error || "Failed to generate content");
+      }
+
+      const generatedText = res.content;
+      if (aiInsertMode === "replace") {
+        updateField("content", generatedText);
+      } else {
+        updateField("content", formData.content ? `${formData.content}\n\n${generatedText}` : generatedText);
+      }
+
+      setIsAiDialogOpen(false);
+      setAiKeywords("");
+      setAiCustomPrompt("");
+    } catch (err: any) {
+      console.error("AI Generation failed:", err);
+      setAiError(err.message || "Failed to generate content. Please try again.");
+    } finally {
+      setIsAiGenerating(false);
+    }
+  };
+
   // Save post
   const savePost = async (publish: boolean = false) => {
     if (!validateForm()) return;
@@ -491,12 +557,126 @@ export function PostEditor({ post, categories, allTags, isNew }: PostEditorProps
           {/* Content */}
           <div className="card-technical rounded-none">
             <div className="p-6 pb-0">
-              <h2 className="font-display text-lg font-semibold tracking-tight flex items-center gap-2">
-                <span className="flex h-7 w-7 items-center justify-center border border-hairline text-signal">
-                  <FileText className="h-4 w-4" />
-                </span>
-                Content
-              </h2>
+              <div className="flex items-center justify-between">
+                <h2 className="font-display text-lg font-semibold tracking-tight flex items-center gap-2">
+                  <span className="flex h-7 w-7 items-center justify-center border border-hairline text-signal">
+                    <FileText className="h-4 w-4" />
+                  </span>
+                  Content
+                </h2>
+
+                <Dialog open={isAiDialogOpen} onOpenChange={setIsAiDialogOpen}>
+                  <DialogTrigger asChild>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      className="rounded-sm border-hairline hover:text-signal flex items-center gap-1.5"
+                    >
+                      <Sparkles className="h-3.5 w-3.5 text-signal animate-pulse" />
+                      Generate with AI
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-[500px]">
+                    <DialogHeader>
+                      <DialogTitle className="flex items-center gap-2">
+                        <Sparkles className="h-5 w-5 text-signal" />
+                        AI Content Generator
+                      </DialogTitle>
+                      <DialogDescription>
+                        Generate detailed, technical blog content using AI. Prefills from the title and category.
+                      </DialogDescription>
+                    </DialogHeader>
+
+                    {aiError && (
+                      <div className="rounded-sm bg-destructive/10 p-3 text-sm text-destructive font-mono">
+                        {aiError}
+                      </div>
+                    )}
+
+                    <div className="space-y-4 py-2">
+                      <div className="space-y-1">
+                        <Label className="text-xs uppercase tracking-wider text-muted-foreground">Post Title</Label>
+                        <Input value={formData.title} readOnly className="bg-muted text-muted-foreground rounded-sm border-hairline" />
+                      </div>
+
+                      <div className="space-y-1">
+                        <Label htmlFor="ai-keywords" className="text-xs uppercase tracking-wider text-muted-foreground">Focus Keywords (Optional)</Label>
+                        <Input
+                          id="ai-keywords"
+                          placeholder="e.g., LSR molding, flash prevention, ISO 13485"
+                          value={aiKeywords}
+                          onChange={(e) => setAiKeywords(e.target.value)}
+                          className="rounded-sm border-hairline focus-visible:ring-signal"
+                        />
+                      </div>
+
+                      <div className="space-y-1">
+                        <Label htmlFor="ai-prompt" className="text-xs uppercase tracking-wider text-muted-foreground">Custom Outline / Guidelines (Optional)</Label>
+                        <Textarea
+                          id="ai-prompt"
+                          placeholder="e.g., Explain cleanroom validation requirements, list 4 key steps, focus on mold temperature control..."
+                          value={aiCustomPrompt}
+                          onChange={(e) => setAiCustomPrompt(e.target.value)}
+                          className="min-h-[100px] rounded-sm border-hairline focus-visible:ring-signal"
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label className="text-xs uppercase tracking-wider text-muted-foreground">Insertion Mode</Label>
+                        <div className="flex gap-4">
+                          <label className="flex items-center gap-2 text-sm font-medium cursor-pointer">
+                            <input
+                              type="radio"
+                              name="ai-insert-mode"
+                              value="replace"
+                              checked={aiInsertMode === "replace"}
+                              onChange={() => setAiInsertMode("replace")}
+                              className="text-signal focus:ring-signal"
+                            />
+                            Replace entire content
+                          </label>
+                          <label className="flex items-center gap-2 text-sm font-medium cursor-pointer">
+                            <input
+                              type="radio"
+                              name="ai-insert-mode"
+                              value="append"
+                              checked={aiInsertMode === "append"}
+                              onChange={() => setAiInsertMode("append")}
+                              className="text-signal focus:ring-signal"
+                            />
+                            Append to current content
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+
+                    <DialogFooter className="gap-2 sm:gap-0">
+                      <DialogClose asChild>
+                        <Button type="button" variant="outline" className="rounded-sm border-hairline">
+                          Cancel
+                        </Button>
+                      </DialogClose>
+                      <Button
+                        type="button"
+                        variant="technical"
+                        className="rounded-sm"
+                        onClick={handleAiGenerate}
+                        disabled={isAiGenerating || !formData.title.trim()}
+                      >
+                        {isAiGenerating ? (
+                          <>
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            Generating...
+                          </>
+                        ) : (
+                          "Generate Content"
+                        )}
+                      </Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
+              </div>
               <p className="text-sm text-muted-foreground mt-1.5">
                 Write your post content. You can use markdown formatting.
               </p>
