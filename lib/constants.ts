@@ -92,10 +92,10 @@ export const SERVICE_AREAS = [
   },
   {
     id: "smart-manufacturing",
-    title: "Smart Manufacturing & Applied AI",
+    title: "Smart Manufacturing & Process Analytics",
     shortTitle: "Smart Manufacturing",
     description:
-      "Integrating IIoT connectivity, predictive maintenance, and explainable AI/ML models on the molding floor to optimize cycle times, scrap, and quality validation.",
+      "Integrating IIoT connectivity, predictive maintenance, and data-driven process analytics on the molding floor to optimize cycle times, scrap, and quality validation.",
     icon: "Cpu",
     href: "/services#smart-manufacturing",
   },
@@ -105,11 +105,11 @@ export const SERVICE_AREAS = [
 export const STATS = [
   { value: "25+", label: "Years Experience" },
   { value: "100+", label: "Projects Delivered" },
-  { value: "ISO 13485", label: "Quality & Regulatory" },
-  { value: "Scientific Molding", label: "Process Validation" },
+  { value: "50+", label: "Companies Served" },
+  { value: "ISO 13485", label: "Quality Systems Expertise" },
 ] as const;
 
-// Contact Form Options — core manufacturing services + AI capabilities
+// Contact Form Options
 export const SERVICE_INTEREST_OPTIONS = [
   { value: "manufacturing-engineering", label: "Manufacturing Engineering & Operations" },
   { value: "quality-regulatory", label: "Quality & Regulatory Compliance" },
@@ -118,7 +118,7 @@ export const SERVICE_INTEREST_OPTIONS = [
   { value: "facility-design", label: "Facility Design & Infrastructure" },
   { value: "supplier-development", label: "Supplier Development & Supply Chain" },
   { value: "strategic-advisory", label: "Strategic Advisory & Expert Services" },
-  { value: "smart-manufacturing", label: "Smart Manufacturing & Applied AI" },
+  { value: "smart-manufacturing", label: "Smart Manufacturing & Process Analytics" },
   { value: "general", label: "General Inquiry" },
 ] as const;
 
@@ -184,8 +184,7 @@ const FIELD_DEFINITIONS: Record<ServiceFieldKey, ServiceFieldConfig> = {
   },
 };
 
-// Keyed by SERVICE_INTEREST_OPTIONS values — covers both the core manufacturing
-// services and the AI capabilities. Uses only existing field definitions.
+// Keyed by SERVICE_INTEREST_OPTIONS values. Uses only existing field definitions.
 export const SERVICE_SPECIFIC_FIELDS: Record<string, ServiceFieldConfig[]> = {
   // Core manufacturing & engineering services
   "manufacturing-engineering": [
@@ -240,8 +239,8 @@ export const PROJECT_TIMELINE_OPTIONS = [
 
 // Blog Categories (PRDB §7.2)
 export const BLOG_CATEGORIES = [
-  { id: "ai-process-optimization", name: "Process Optimization & Technology", slug: "ai-process-optimization" },
-  { id: "ai-validation-compliance", name: "Validation & Compliance", slug: "ai-validation-compliance" },
+  { id: "process-optimization", name: "Process Optimization & Technology", slug: "process-optimization" },
+  { id: "validation-compliance", name: "Validation & Compliance", slug: "validation-compliance" },
   { id: "smart-factory-data", name: "Smart Factory & Data", slug: "smart-factory-data" },
   { id: "quality-inspection", name: "Quality Systems & Inspection", slug: "quality-inspection" },
   { id: "industry-trends", name: "Industry Trends", slug: "industry-trends" },
@@ -255,7 +254,7 @@ export const FOOTER_LINKS = {
     { label: "Quality & Regulatory", href: "/services#quality-regulatory" },
     { label: "Molding Excellence (Plastics/LSR)", href: "/services#injection-molding" },
     { label: "Facility Design & Build", href: "/services#facility-design" },
-    { label: "Smart Manufacturing & AI", href: "/services#smart-manufacturing" },
+    { label: "Smart Manufacturing", href: "/services#smart-manufacturing" },
   ],
   company: [
     { label: "About", href: "/about" },

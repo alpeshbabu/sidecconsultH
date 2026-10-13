@@ -23,9 +23,9 @@
   /* Colors */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-space-grotesk);
   --font-display: var(--font-outfit);
-  --font-mono: var(--font-geist-mono);
+  --font-mono: var(--font-space-grotesk);
 
   /* Premium tinted shadow scale (blue-tinted, layered) */
   --shadow-2xs: 0 1px 2px oklch(0.45 0.05 256 / 0.04);

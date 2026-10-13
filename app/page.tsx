@@ -19,7 +19,6 @@ import {
   Clock,
   TrendingDown,
   Gauge,
-  Sparkles,
   Check,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -37,7 +36,7 @@ export const metadata: Metadata = {
   },
 };
 
-// Icon name → component (covers both core services and AI services)
+// Icon name → component (covers all service areas)
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Settings,
   ShieldCheck,
@@ -91,10 +90,10 @@ const GUARANTEES = [
 ];
 
 const RESULTS = [
-  { icon: TrendingDown, value: "15–30%", label: "Manufacturing Cost Reduction" },
-  { icon: Gauge, value: "Higher", label: "First-Pass Yield" },
-  { icon: BadgeCheck, value: "Clean", label: "Audit Outcomes" },
-  { icon: Cpu, value: "Less", label: "Scrap & Downtime" },
+  { icon: TrendingDown, value: "15–30%", label: "Manufacturing cost reduction", description: "Targeted across scrap, cycle time, labor, and material usage." },
+  { icon: Gauge, value: "First-pass yield", label: "Robust processes", description: "Scientifically developed, validated processes that make good parts the first time." },
+  { icon: BadgeCheck, value: "Audit-ready", label: "Quality systems", description: "Documentation and controls that hold up to FDA and notified-body scrutiny." },
+  { icon: Cpu, value: "Uptime", label: "Equipment & molds", description: "Less scrap and unplanned downtime through disciplined maintenance and control." },
 ];
 
 const PROCESS = [
@@ -116,7 +115,7 @@ export default async function HomePage() {
     take: 3,
   });
 
-  // Service schemas for JSON-LD (core + AI)
+  // Service schemas for JSON-LD
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://sidecconsult.com";
   const serviceSchemas = SERVICE_AREAS.map((service) =>
     createServiceSchema(baseUrl, service.title, service.description)
@@ -182,19 +181,19 @@ export default async function HomePage() {
 
             {/* Right visual */}
             <div className="relative reveal-up [animation-delay:120ms]">
-              <div className="relative aspect-[4/5] w-full max-w-md mx-auto overflow-hidden rounded-2xl border border-hairline shadow-lg">
+              <div className="relative aspect-[4/3] w-full overflow-hidden rounded-xl border border-hairline shadow-lg lg:aspect-[5/6]">
                 <Image
-                  src="/HomePageAssets/Hero1.png"
-                  alt="Medical device injection molding manufacturing"
+                  src="/AboutPageAssets/aboutus1.jpeg"
+                  alt="Engineers working in a medical device cleanroom manufacturing facility"
                   fill
-                  sizes="(max-width: 1024px) 90vw, 28rem"
-                  className="object-cover"
+                  sizes="(max-width: 1024px) 90vw, 36rem"
+                  className="object-cover object-[35%_center]"
                   priority
                 />
               </div>
 
               {/* Clean floating stat */}
-              <div className="absolute -bottom-5 -left-2 rounded-xl border border-hairline bg-card px-6 py-4 shadow-lg sm:left-4">
+              <div className="absolute -bottom-5 left-4 rounded-lg border border-hairline bg-card px-6 py-4 shadow-lg">
                 <div className="font-display text-3xl font-bold text-foreground">25+</div>
                 <div className="text-xs font-medium uppercase tracking-[0.12em] text-muted-foreground">
                   Years of Expertise
@@ -231,19 +230,19 @@ export default async function HomePage() {
             </Button>
           </div>
 
-          <div className="mt-14 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {SERVICE_AREAS.map((service) => {
               const Icon = iconMap[service.icon];
               return (
                 <Link
                   key={service.id}
                   href={service.href}
-                  className="card-technical group flex flex-col p-7"
+                  className="card-technical group flex flex-col p-6"
                 >
-                  <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
-                    {Icon && <Icon className="h-6 w-6" />}
+                  <div className="flex h-10 w-10 items-center justify-center rounded-md bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+                    {Icon && <Icon className="h-5 w-5" />}
                   </div>
-                  <h3 className="mt-6 font-display text-lg font-semibold transition-colors group-hover:text-primary">
+                  <h3 className="mt-5 font-display text-base font-semibold leading-snug transition-colors group-hover:text-primary">
                     {service.title}
                   </h3>
                   <p className="mt-2 flex-1 text-sm leading-relaxed text-muted-foreground">
@@ -320,18 +319,17 @@ export default async function HomePage() {
             </h2>
           </div>
 
-          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-12 grid gap-px overflow-hidden rounded-lg border border-hairline bg-hairline shadow-sm sm:grid-cols-2 lg:grid-cols-4">
             {RESULTS.map((m) => {
               const Icon = m.icon;
               return (
-                <div key={m.label} className="rounded-lg border border-hairline bg-card p-7 text-center shadow-sm">
-                  <div className="mx-auto mb-5 flex h-11 w-11 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                    <Icon className="h-5 w-5" />
-                  </div>
-                  <div className="font-display text-3xl font-bold tracking-tight text-foreground">{m.value}</div>
-                  <div className="mt-2 text-xs font-medium uppercase tracking-[0.12em] text-muted-foreground">
+                <div key={m.label} className="bg-card p-7">
+                  <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-[0.12em] text-muted-foreground">
+                    <Icon className="h-4 w-4 text-primary" />
                     {m.label}
                   </div>
+                  <div className="mt-4 font-display text-2xl font-bold tracking-tight text-foreground">{m.value}</div>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{m.description}</p>
                 </div>
               );
             })}
@@ -349,7 +347,7 @@ export default async function HomePage() {
         <div className="container-wide">
           <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
             <div className="relative order-2 lg:order-1">
-              <div className="relative aspect-[4/3] overflow-hidden rounded-2xl border border-hairline shadow-lg">
+              <div className="relative aspect-[4/3] overflow-hidden rounded-xl border border-hairline shadow-lg">
                 <Image
                   src="/HomePageAssets/AboutUs1.jpeg"
                   alt="SIDEC Consulting manufacturing engineering in the field"
@@ -358,7 +356,7 @@ export default async function HomePage() {
                   className="object-cover"
                 />
               </div>
-              <div className="absolute -bottom-5 right-4 flex overflow-hidden rounded-xl border border-hairline bg-card shadow-lg md:right-8">
+              <div className="absolute -bottom-5 right-4 flex overflow-hidden rounded-lg border border-hairline bg-card shadow-lg md:right-8">
                 <div className="px-5 py-3 text-center">
                   <div className="font-display text-2xl font-bold text-foreground">25+</div>
                   <div className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground">Years</div>
@@ -425,7 +423,7 @@ export default async function HomePage() {
 
           <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {PROCESS.map((phase) => (
-              <div key={phase.step} className="rounded-xl border border-white/10 bg-white/[0.03] p-7">
+              <div key={phase.step} className="rounded-lg border border-white/10 bg-white/[0.03] p-7">
                 <span className="font-display text-4xl font-bold text-signal/70">{phase.step}</span>
                 <h3 className="mt-5 font-display text-lg font-semibold text-ink-foreground">{phase.title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-ink-muted">{phase.description}</p>
@@ -452,7 +450,7 @@ export default async function HomePage() {
             <div className="flex shrink-0 flex-col gap-3 sm:flex-row">
               <Button asChild className="shrink-0">
                 <Link href="/resources/ai-readiness-checklist">
-                  Free AI-Readiness Checklist
+                  Free Smart Manufacturing Checklist
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
@@ -490,7 +488,7 @@ export default async function HomePage() {
       {/* ============ CTA ============ */}
       <CTASection
         title="Ready to elevate your manufacturing operations?"
-        description="Whether you need injection molding and quality expertise or want to explore where AI fits, let's discuss how we can help your organization succeed."
+        description="Whether you need injection molding and quality expertise or help modernizing your manufacturing floor, let's discuss how we can help your organization succeed."
         primaryButtonText="Schedule a Consultation"
         primaryButtonHref="/schedule"
         secondaryButtonText="Explore Services"

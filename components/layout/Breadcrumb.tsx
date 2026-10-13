@@ -35,15 +35,13 @@ const defaultLabelMap: Record<string, string> = {
   categories: "Categories",
   inquiries: "Inquiries",
   login: "Login",
-  // AI service pillars
-  "ai-readiness": "AI Readiness Assessment",
-  "ai-process": "AI Process Development",
-  "ai-validation": "AI Validation & Governance",
-  "ai-quality": "AI Quality & Inspection",
   "smart-factory": "Smart Factory & Data",
   // Blog categories
-  "ai-process-optimization": "AI & Process Optimization",
-  "ai-validation-compliance": "AI Validation & Compliance",
+  "process-optimization": "Process Optimization & Technology",
+  "validation-compliance": "Validation & Compliance",
+  // Legacy category slugs, kept so old links still get a readable label
+  "ai-process-optimization": "Process Optimization & Technology",
+  "ai-validation-compliance": "Validation & Compliance",
   "smart-factory-data": "Smart Factory & Data",
   "quality-inspection": "Quality Systems & Inspection",
   "industry-trends": "Industry Trends",

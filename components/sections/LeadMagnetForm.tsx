@@ -15,7 +15,7 @@ interface LeadMagnetFormProps {
 }
 
 /**
- * Email-capture for lead magnets (e.g. the AI Readiness Checklist).
+ * Email-capture for lead magnets (e.g. the Smart Manufacturing Checklist).
  * Reuses the existing /api/subscribe endpoint — captured emails land in the
  * same Subscriber list the admin already manages.
  */

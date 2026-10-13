@@ -51,3 +51,6 @@ next-env.d.ts
 
 /lib/generated/prisma
 .env*.local
+
+# one-off scripts and local DB backups
+/scratch/

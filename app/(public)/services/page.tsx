@@ -231,16 +231,16 @@ const CORE_SERVICES: ServiceItem[] = [
   {
     id: "smart-manufacturing",
     icon: Cpu,
-    title: "Smart Manufacturing & Applied AI",
+    title: "Smart Manufacturing & Process Analytics",
     tagline: "Data-driven optimization for molding floors",
     description:
-      "We integrate IIoT connectivity, predictive maintenance, and explainable AI/ML models on the molding floor to optimize cycle times, scrap, and quality validation.",
+      "We integrate IIoT connectivity, predictive maintenance, and data-driven process analytics on the molding floor to optimize cycle times, scrap, and quality validation.",
     keyOfferings: [
-      "AI-augmented process development & ML-driven optimization",
-      "Validated AI/ML control & inspection systems (ISO 13485/FDA)",
+      "Data-driven process development & optimization",
+      "Validated process control & inspection systems (ISO 13485/FDA)",
       "Automated / vision-based defect detection & predictive quality",
       "IIoT architecture, predictive maintenance, and data foundations",
-      "LLM-based knowledge management and operator assistants",
+      "Digital knowledge management and operator work instructions",
     ],
     outcomes: [
       "Lower scrap rates",
@@ -550,8 +550,8 @@ export default function ServicesPage() {
         description="Every engagement begins with understanding your unique challenges and goals. Let's schedule a discovery call to explore how we can help."
         primaryButtonText="Schedule a Consultation"
         primaryButtonHref="/schedule"
-        secondaryButtonText="Get an AI Readiness Assessment"
-        secondaryButtonHref="/contact?service=ai-readiness"
+        secondaryButtonText="Get a Smart Manufacturing Assessment"
+        secondaryButtonHref="/contact?service=smart-manufacturing"
       />
     </MainLayout>
   );

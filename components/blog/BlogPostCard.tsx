@@ -1,8 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Calendar, Clock, User } from "lucide-react";
+import { Calendar, Clock, FileText, User } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
+import { cn, displayAuthorName } from "@/lib/utils";
 
 export interface BlogPostCardProps {
   slug: string;
@@ -27,6 +27,23 @@ export interface BlogPostCardProps {
 }
 
 const monoMeta = "font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground";
+
+function PlaceholderCover({ category, large = false }: { category?: { name: string } | null; large?: boolean }) {
+  return (
+    <div className={cn("absolute inset-0 flex flex-col justify-between overflow-hidden border-b border-hairline bg-gradient-to-br from-primary/[0.09] via-muted/40 to-background p-5 text-primary", large && "justify-end")}>
+      <div
+        aria-hidden
+        className="absolute inset-0 opacity-[0.07] [background-image:linear-gradient(to_right,currentColor_1px,transparent_1px),linear-gradient(to_bottom,currentColor_1px,transparent_1px)] [background-size:28px_28px]"
+      />
+      <FileText className={cn("relative", large ? "h-7 w-7" : "h-5 w-5")} />
+      {category && (
+        <span className="relative font-mono text-[10px] uppercase tracking-[0.16em] text-primary">
+          {category.name}
+        </span>
+      )}
+    </div>
+  );
+}
 
 export function BlogPostCard({
   slug,
@@ -53,13 +70,13 @@ export function BlogPostCard({
       <Link href={`/resources/${slug}`} className="group block">
         <Card
           className={cn(
-            "card-technical gap-0 overflow-hidden rounded-none py-0",
+            "card-technical gap-0 overflow-hidden py-0",
             className
           )}
         >
           <div className="grid md:grid-cols-2">
             {/* Image */}
-            <div className="relative aspect-video md:aspect-auto">
+            <div className="relative aspect-video md:aspect-auto md:min-h-64">
               {featuredImage ? (
                 <Image
                   src={featuredImage}
@@ -69,14 +86,10 @@ export function BlogPostCard({
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
                 />
               ) : (
-                <div className="grid-blueprint absolute inset-0 flex items-center justify-center bg-muted/40">
-                  <div className="flex h-16 w-16 items-center justify-center border border-hairline text-signal">
-                    <Calendar className="h-7 w-7" />
-                  </div>
-                </div>
+                <PlaceholderCover large />
               )}
               {category && (
-                <span className="absolute left-4 top-4 rounded-sm bg-ink/90 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.14em] text-ink-foreground">
+                <span className="absolute left-4 top-4 rounded-sm bg-background/95 px-2.5 py-1 font-mono text-foreground text-[10px] uppercase tracking-[0.14em]">
                   {category.name}
                 </span>
               )}
@@ -98,7 +111,7 @@ export function BlogPostCard({
                   </span>
                 )}
               </div>
-              <CardTitle className="mb-3 font-display text-2xl leading-snug transition-colors group-hover:text-signal line-clamp-2">
+              <CardTitle className="mb-3 font-display text-2xl leading-snug transition-colors group-hover:text-primary line-clamp-2">
                 {title}
               </CardTitle>
               {tags && tags.length > 0 && (
@@ -118,10 +131,10 @@ export function BlogPostCard({
                   {excerpt}
                 </p>
               )}
-              {author?.name && (
+              {author && (
                 <div className={cn("mt-4 flex items-center gap-2", monoMeta)}>
                   <User className="h-3.5 w-3.5" />
-                  {author.name}
+                  {displayAuthorName(author.name)}
                 </div>
               )}
             </div>
@@ -136,24 +149,24 @@ export function BlogPostCard({
       <Link href={`/resources/${slug}`} className="group block">
         <div
           className={cn(
-            "flex gap-4 border border-hairline p-4 transition-colors hover:border-signal/50 hover:bg-muted/40",
+            "flex gap-4 rounded-lg border border-hairline p-4 transition-colors hover:border-signal/50 hover:bg-muted/40",
             className
           )}
         >
           {/* Small Image */}
-          <div className="relative h-20 w-20 shrink-0 overflow-hidden border border-hairline">
+          <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-md border border-hairline">
             {featuredImage ? (
               <Image src={featuredImage} alt={title} fill sizes="80px" className="object-cover" />
             ) : (
-              <div className="grid-blueprint absolute inset-0 flex items-center justify-center bg-muted/40">
-                <Calendar className="h-6 w-6 text-signal" />
+              <div className="absolute inset-0 flex items-center justify-center bg-primary/[0.08]">
+                <FileText className="h-5 w-5 text-primary" />
               </div>
             )}
           </div>
 
           {/* Content */}
           <div className="min-w-0 flex-1">
-            <h3 className="font-display text-sm font-semibold transition-colors line-clamp-2 group-hover:text-signal">
+            <h3 className="font-display text-sm font-semibold transition-colors line-clamp-2 group-hover:text-primary">
               {title}
             </h3>
             <div className={cn("mt-1 flex items-center gap-3", monoMeta)}>
@@ -171,12 +184,12 @@ export function BlogPostCard({
     <Link href={`/resources/${slug}`} className="group block h-full">
       <Card
         className={cn(
-          "card-technical h-full gap-0 overflow-hidden rounded-none py-0",
+          "card-technical h-full gap-0 overflow-hidden py-0",
           className
         )}
       >
         {/* Image */}
-        <div className="relative aspect-video">
+        <div className="relative aspect-[2/1]">
           {featuredImage ? (
             <Image
               src={featuredImage}
@@ -186,18 +199,14 @@ export function BlogPostCard({
               className="object-cover transition-transform duration-500 group-hover:scale-105"
             />
           ) : (
-            <div className="grid-blueprint absolute inset-0 flex items-center justify-center bg-muted/40">
-              <div className="flex h-12 w-12 items-center justify-center border border-hairline text-signal">
-                <Calendar className="h-6 w-6" />
-              </div>
-            </div>
+            <PlaceholderCover category={category} />
           )}
         </div>
 
         <CardHeader className="pt-5">
           <div className="mb-2 flex flex-wrap items-center gap-2">
-            {category && (
-              <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-signal">
+            {category && featuredImage && (
+              <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-primary">
                 {category.name}
               </span>
             )}
@@ -207,7 +216,7 @@ export function BlogPostCard({
               </span>
             )}
           </div>
-          <CardTitle className="font-display text-lg leading-snug transition-colors line-clamp-2 group-hover:text-signal">
+          <CardTitle className="font-display text-lg leading-snug transition-colors line-clamp-2 group-hover:text-primary">
             {title}
           </CardTitle>
         </CardHeader>
@@ -225,10 +234,10 @@ export function BlogPostCard({
                 {formattedDate}
               </span>
             )}
-            {author?.name && (
+            {author && (
               <span className="flex items-center gap-1">
                 <User className="h-3 w-3" />
-                {author.name}
+                {displayAuthorName(author.name)}
               </span>
             )}
           </div>

@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Suspense } from "react";
-import { Geist, Geist_Mono, Outfit } from "next/font/google";
+import { Outfit, Space_Grotesk } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
 import { WebVitalsReporter, GoogleAnalytics, CookieConsent } from "@/components/shared";
 import { ChatbotWidget } from "@/components/chatbot";
@@ -8,8 +8,8 @@ import { SessionProvider, ThemeProvider } from "@/components/providers";
 import { createOrganizationSchema, createWebSiteSchema, getJsonLd } from "@/lib/structured-data";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-space-grotesk",
   subsets: ["latin"],
   display: "swap",
 });
@@ -19,12 +19,6 @@ const outfit = Outfit({
   subsets: ["latin"],
   display: "swap",
   weight: ["400", "500", "600", "700", "800"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -123,7 +117,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${geistSans.variable} ${outfit.variable} ${geistMono.variable} font-sans antialiased`}
+        className={`${spaceGrotesk.variable} ${outfit.variable} font-sans antialiased`}
         suppressHydrationWarning
       >
         <ThemeProvider>

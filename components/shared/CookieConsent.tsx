@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { X, Cookie, Settings } from "lucide-react";
+import { Cookie, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -79,21 +79,57 @@ export function CookieConsent() {
 
   if (!showBanner) return null;
 
+  // Compact, non-blocking notice. The full settings panel only opens on request.
+  if (!showSettings) {
+    return (
+      <div
+        role="region"
+        aria-label="Cookie consent"
+        className="fixed inset-x-4 bottom-24 z-50 rounded-lg border border-hairline bg-card p-5 shadow-lg animate-in fade-in slide-in-from-bottom-2 duration-300 sm:inset-x-auto sm:left-6 sm:bottom-6 sm:max-w-sm"
+      >
+        <div className="flex items-start gap-3">
+          <Cookie className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+          <p className="text-sm leading-relaxed text-muted-foreground">
+            We use cookies to understand how the site is used and to improve it. See our{" "}
+            <Link href="/cookies" className="text-foreground underline underline-offset-2 hover:text-primary">
+              Cookie Policy
+            </Link>
+            .
+          </p>
+        </div>
+        <div className="mt-4 flex items-center gap-2">
+          <Button size="sm" className="flex-1" onClick={acceptAll}>
+            Accept
+          </Button>
+          <Button size="sm" variant="outline" className="flex-1" onClick={rejectAll}>
+            Decline
+          </Button>
+          <Button
+            size="sm"
+            variant="ghost"
+            className="px-2 text-muted-foreground"
+            onClick={() => setShowSettings(true)}
+            aria-label="Customize cookie settings"
+          >
+            <Settings className="h-4 w-4" />
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center pointer-events-none">
       {/* Overlay */}
-      {showSettings && (
-        <div
-          className="absolute inset-0 bg-black/50 pointer-events-auto"
-          onClick={() => setShowSettings(false)}
-        />
-      )}
+      <div
+        className="absolute inset-0 bg-black/50 pointer-events-auto"
+        onClick={() => setShowSettings(false)}
+      />
 
       {/* Banner */}
       <Card
         className={cn(
-          "pointer-events-auto w-full max-w-2xl m-4 shadow-2xl transition-all duration-300",
-          showSettings && "mb-4"
+          "pointer-events-auto w-full max-w-2xl m-4 shadow-2xl transition-all duration-300"
         )}
       >
         <CardHeader className="pb-4">
@@ -109,42 +145,11 @@ export function CookieConsent() {
                 </CardDescription>
               </div>
             </div>
-            {!showSettings && (
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8 rounded-full"
-                onClick={rejectAll}
-              >
-                <X className="h-4 w-4" />
-              </Button>
-            )}
           </div>
         </CardHeader>
 
         <CardContent className="pb-4">
-          {!showSettings ? (
-            // Simple banner
-            <div className="space-y-4">
-              <p className="text-sm text-muted-foreground">
-                We use cookies to provide you with the best possible experience. They also
-                allow us to analyze user behavior in order to constantly improve the website
-                for you. By clicking "Accept All", you consent to our use of cookies.
-              </p>
-              <p className="text-xs text-muted-foreground">
-                Read our{" "}
-                <Link href="/cookies" className="text-primary hover:underline">
-                  Cookie Policy
-                </Link>{" "}
-                and{" "}
-                <Link href="/privacy" className="text-primary hover:underline">
-                  Privacy Policy
-                </Link>
-                .
-              </p>
-            </div>
-          ) : (
-            // Settings view
+          {/* Settings view */}
             <div className="space-y-4">
               <p className="text-sm text-muted-foreground">
                 Choose which cookies you want to allow. You can change these settings at
@@ -211,35 +216,12 @@ export function CookieConsent() {
                 </label>
               </div>
             </div>
-          )}
         </CardContent>
 
         <Separator />
 
         <CardFooter className="pt-4 flex flex-col sm:flex-row gap-2">
-          {!showSettings ? (
-            <>
-              <Button
-                variant="outline"
-                className="w-full sm:w-auto"
-                onClick={() => setShowSettings(true)}
-              >
-                <Settings className="mr-2 h-4 w-4" />
-                Customize
-              </Button>
-              <Button
-                variant="outline"
-                className="w-full sm:w-auto"
-                onClick={rejectAll}
-              >
-                Reject All
-              </Button>
-              <Button className="w-full sm:flex-1" onClick={acceptAll}>
-                Accept All
-              </Button>
-            </>
-          ) : (
-            <>
+          <>
               <Button
                 variant="outline"
                 className="w-full sm:w-auto"
@@ -257,8 +239,7 @@ export function CookieConsent() {
               <Button className="w-full sm:flex-1" onClick={saveCustom}>
                 Save Preferences
               </Button>
-            </>
-          )}
+          </>
         </CardFooter>
       </Card>
     </div>

@@ -60,20 +60,14 @@ const nextConfig: NextConfig = {
     return config;
   },
 
-  // Headers for better caching and security
+  // Long-lived caching for public images in production only. Next.js already
+  // caches /_next/static itself; forcing `immutable` there in dev pins stale
+  // JS in the browser (dev chunk names don't change when code changes).
   async headers() {
+    if (process.env.NODE_ENV !== "production") return [];
     return [
       {
         source: "/:all*(svg|jpg|jpeg|png|gif|ico|webp|avif)",
-        headers: [
-          {
-            key: "Cache-Control",
-            value: "public, max-age=31536000, immutable",
-          },
-        ],
-      },
-      {
-        source: "/_next/static/:path*",
         headers: [
           {
             key: "Cache-Control",

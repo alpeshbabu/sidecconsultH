@@ -4,7 +4,6 @@ import { useRef, useEffect, useState, useCallback } from "react";
 import { X, RotateCcw, Send, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { ChatMessageList } from "./ChatMessageList";
 import type { UIMessage } from "ai";
@@ -77,9 +76,6 @@ export function ChatbotPanel({
         <div className="flex items-center gap-2">
           <div className="h-2 w-2 rounded-full bg-green-500" />
           <span className="font-semibold text-sm">SIDEC Assistant</span>
-          <Badge variant="secondary" className="text-xs">
-            AI
-          </Badge>
         </div>
         <div className="flex items-center gap-1">
           <Button

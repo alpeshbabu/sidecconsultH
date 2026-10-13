@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Loader2, CheckCircle, Mail } from "lucide-react";
+import { Loader2, CheckCircle } from "lucide-react";
 
 export function NewsletterForm() {
   const [email, setEmail] = useState("");
@@ -43,27 +43,28 @@ export function NewsletterForm() {
   };
 
   return (
-    <div className="surface-ink relative mt-12 overflow-hidden border border-hairline p-8 md:p-10">
-      <div className="grid-blueprint absolute inset-0 opacity-50" aria-hidden />
-      <div className="relative mx-auto max-w-md text-center">
-        <p className="eyebrow-plain mb-4 text-signal">Newsletter</p>
-        <h3 className="font-display text-2xl font-semibold text-ink-foreground">
-          AI for Molding, In Your Inbox
+    <div className="mt-12 grid gap-6 rounded-lg border border-hairline bg-muted/30 p-7 md:grid-cols-[1fr_auto] md:items-center md:gap-10 md:p-8">
+      <div>
+        <p className="eyebrow mb-3">Newsletter</p>
+        <h3 className="font-display text-xl font-semibold text-foreground">
+          Molding insights, in your inbox
         </h3>
-        <p className="mx-auto mt-3 max-w-md text-ink-muted">
-          Practical insights on AI, machine learning, and validation for
+        <p className="mt-2 max-w-lg text-sm leading-relaxed text-muted-foreground">
+          Practical guidance on scientific molding, quality systems, and validation for
           injection molding manufacturing.
         </p>
+      </div>
+      <div className="w-full md:w-[26rem]">
 
         {message?.type === "success" ? (
-          <div className="mt-6 flex items-center justify-center gap-2 font-mono text-sm text-signal">
+          <div className="flex items-center gap-2 text-sm text-primary">
             <CheckCircle className="h-5 w-5" />
             <span>{message.text}</span>
           </div>
         ) : (
           <form
             onSubmit={handleSubmit}
-            className="mt-6 flex flex-col justify-center gap-3 sm:flex-row"
+            className="flex flex-col gap-3 sm:flex-row"
           >
             <input
               type="email"
@@ -71,9 +72,10 @@ export function NewsletterForm() {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email"
               disabled={isLoading}
-              className="flex h-11 w-full rounded-sm border border-white/20 bg-white/5 px-4 py-2 text-sm text-ink-foreground placeholder:text-ink-muted focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-signal disabled:opacity-50"
+              aria-label="Email address"
+              className="flex h-11 w-full rounded-md border border-input bg-background px-4 py-2 text-sm text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50"
             />
-            <Button type="submit" variant="signal" disabled={isLoading} className="h-11 shrink-0">
+            <Button type="submit" disabled={isLoading} className="h-11 shrink-0">
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -87,7 +89,7 @@ export function NewsletterForm() {
         )}
 
         {message?.type === "error" && (
-          <p className="mt-3 font-mono text-sm text-destructive">{message.text}</p>
+          <p className="mt-3 text-sm text-destructive">{message.text}</p>
         )}
       </div>
     </div>

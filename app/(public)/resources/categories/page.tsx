@@ -77,7 +77,7 @@ export default async function CategoriesPage() {
                   href={`/resources?category=${category.slug}`}
                   className="group"
                 >
-                  <div className="card-technical rounded-none flex h-full flex-col p-6">
+                  <div className="card-technical flex h-full flex-col p-6">
                     <div className="flex items-start justify-between">
                       <div className="flex h-12 w-12 items-center justify-center border border-hairline text-primary transition-colors group-hover:border-signal/60 group-hover:text-signal">
                         <FileText className="h-6 w-6" />

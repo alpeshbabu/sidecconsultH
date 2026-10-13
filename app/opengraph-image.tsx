@@ -3,7 +3,7 @@ import { ImageResponse } from "next/og";
 // Code-generated social share image (Open Graph + Twitter). Next applies this
 // to og:image and twitter:image site-wide unless a route sets its own.
 export const runtime = "edge";
-export const alt = "SIDEC Consulting — AI for Injection Molding Manufacturing";
+export const alt = "SIDEC Consulting — Injection Molding & Quality Consulting";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -47,7 +47,7 @@ export default function OpengraphImage() {
         >
           <span>SIDEC Consulting</span>
           <span style={{ color: MUTED }}>·</span>
-          <span style={{ color: MUTED }}>Molding × Applied AI</span>
+          <span style={{ color: MUTED }}>Molding × Quality Systems</span>
         </div>
 
         {/* headline */}
@@ -62,7 +62,7 @@ export default function OpengraphImage() {
               maxWidth: 1000,
             }}
           >
-            Bring AI to Injection Molding
+            Optimize Injection Molding
           </div>
           <div
             style={{
@@ -88,10 +88,10 @@ export default function OpengraphImage() {
           }}
         >
           <span style={{ maxWidth: 760 }}>
-            Validated, explainable, audit-ready AI — from 25+ years on the molding floor.
+            Validated, audit-ready process improvement — from 25+ years on the molding floor.
           </span>
           <div style={{ display: "flex", gap: 12 }}>
-            {["ISO 13485", "QMSR", "DOE+ML"].map((t) => (
+            {["ISO 13485", "QMSR", "DOE"].map((t) => (
               <span
                 key={t}
                 style={{

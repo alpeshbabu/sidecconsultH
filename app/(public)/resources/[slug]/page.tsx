@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { displayAuthorName } from "@/lib/utils";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import ReactMarkdown from "react-markdown";
@@ -183,7 +184,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     featuredImage: post.featuredImage,
     publishedAt: post.publishedAt,
     updatedAt: post.updatedAt,
-    authorName: post.author?.name ?? undefined,
+    authorName: displayAuthorName(post.author?.name),
   });
 
   const breadcrumbItems = [
@@ -271,10 +272,10 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             {/* Author and Meta — mono labels */}
             <div className="flex flex-wrap items-center gap-x-6 gap-y-3 font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
               {/* Author */}
-              {post.author?.name && (
+              {post.author && (
                 <span className="flex items-center gap-2">
                   <User className="h-3.5 w-3.5" />
-                  {post.author.name}
+                  {displayAuthorName(post.author.name)}
                 </span>
               )}
 
@@ -319,10 +320,10 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
       {/* Article Content */}
       <article className="container-wide pb-16">
-        <div className="max-w-3xl mx-auto">
+        <div className="max-w-3xl">
           {/* Main Content */}
           <div className="prose prose-lg dark:prose-invert max-w-none
-            prose-headings:font-bold prose-headings:tracking-tight prose-headings:text-foreground
+            prose-headings:font-display prose-headings:font-bold prose-headings:tracking-tight prose-headings:text-foreground
             prose-h2:text-2xl prose-h2:md:text-3xl prose-h2:mt-12 prose-h2:mb-6 prose-h2:pb-3 prose-h2:border-b prose-h2:border-border
             prose-h3:text-xl prose-h3:md:text-2xl prose-h3:mt-10 prose-h3:mb-4 prose-h3:text-foreground/90
             prose-h4:text-lg prose-h4:mt-8 prose-h4:mb-3 prose-h4:font-semibold
@@ -492,7 +493,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               ))}
             </div>
 
-            <div className="mt-8 text-center md:hidden">
+            <div className="mt-8 md:hidden">
               <Button
                 asChild
                 variant="outline"
@@ -509,9 +510,9 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       {/* CTA Section */}
       <CTASection
         title="Need Expert Guidance?"
-        description="Wondering where AI fits in your operation? Start with a fixed-scope AI Readiness Assessment, or schedule a consultation."
-        primaryButtonText="Get an AI Readiness Assessment"
-        primaryButtonHref="/contact?service=ai-readiness"
+        description="Facing a molding, quality, or validation challenge? Start with a fixed-scope Smart Manufacturing Assessment, or schedule a consultation."
+        primaryButtonText="Get an Assessment"
+        primaryButtonHref="/contact?service=smart-manufacturing"
         secondaryButtonText="View Services"
         secondaryButtonHref="/services"
       />

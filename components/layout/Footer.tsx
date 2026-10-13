@@ -23,9 +23,9 @@ export function Footer() {
               />
             </Link>
             <p className="mt-6 text-sm text-muted-foreground max-w-sm leading-relaxed">
-              Bringing AI and machine learning to injection molding — validated,
-              explainable, and audit-ready. 25+ years of manufacturing
-              experience, now applied to AI you can deploy and defend.
+              Injection molding, quality, and manufacturing expertise — validated
+              and audit-ready. 25+ years of experience helping manufacturers
+              build processes they can deploy and defend.
             </p>
 
             {/* Contact Info */}

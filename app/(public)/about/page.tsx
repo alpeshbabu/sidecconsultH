@@ -8,9 +8,7 @@ import {
   Factory,
   FlaskConical,
   Globe,
-  GraduationCap,
   Linkedin,
-  Mail,
   Shield,
   Target,
   Users,
@@ -77,7 +75,7 @@ const expertiseAreas = [
       "Design of Experiments (DOE) studies",
       "Process validation (IQ/OQ/PQ)",
       "Equipment & mold qualification",
-      "Surrogate modeling & process optimization",
+      "Process window development & optimization",
     ],
   },
   {
@@ -193,22 +191,6 @@ const certifications = [
   "IEC 62366-1",
   "ISO 14644 (Cleanrooms)",
   "ISO 15223 (Symbols)",
-];
-
-// Education
-const education = [
-  {
-    degree: "M.Sc. Organic Chemistry",
-    specialization: "Polymer Specialization",
-    description:
-      "Advanced studies in organic chemistry with specialization in polymer science, providing deep understanding of material properties, polymer processing, and chemical interactions critical to injection molding manufacturing.",
-  },
-  {
-    degree: "PG Diploma in Plastics Engineering",
-    specialization: "Plastics Processing & Engineering",
-    description:
-      "Comprehensive training in plastics processing technologies, mold design, material selection, and manufacturing engineering principles essential for injection molding excellence.",
-  },
 ];
 
 // Core values
@@ -349,7 +331,7 @@ export default function AboutPage() {
             {expertiseAreas.map((area, index) => {
               const IconComponent = area.icon;
               return (
-                <Card key={index} className="card-technical group rounded-none">
+                <Card key={index} className="card-technical group">
                   <CardHeader>
                     <div className="mb-2 flex h-12 w-12 items-center justify-center border border-hairline text-primary transition-colors group-hover:border-signal/60 group-hover:text-signal">
                       <IconComponent className="h-6 w-6" />
@@ -376,139 +358,44 @@ export default function AboutPage() {
       </section>
 
       {/* Career Journey Section */}
-      <section className="section-padding bg-muted/20 hairline-t">
+      <section className="section-padding hairline-t">
         <div className="container-wide">
-          <div className="mx-auto max-w-2xl text-center">
-            <p className="eyebrow mb-5 justify-center">Career Journey</p>
-            <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">
-              Professional Background
-            </h2>
-            <p className="mt-4 text-muted-foreground">
-              Our founder&apos;s career spans 6 progressive roles across
-              manufacturing engineering, quality, design assurance, and
-              R&D—providing the cross-functional expertise that sets SIDEC
-              Consulting apart.
-            </p>
-          </div>
+          <div className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
+            <div className="lg:sticky lg:top-28 lg:self-start">
+              <p className="eyebrow mb-5">Career Journey</p>
+              <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">
+                Professional Background
+              </h2>
+              <p className="mt-4 leading-relaxed text-muted-foreground">
+                Our founder&apos;s career spans six progressive roles across
+                manufacturing engineering, quality, design assurance, and
+                R&D — the cross-functional experience that sets SIDEC
+                Consulting apart.
+              </p>
+            </div>
 
-          <div className="mx-auto mt-16 max-w-3xl">
-            <div className="relative space-y-8 before:absolute before:left-[19px] before:top-2 before:h-[calc(100%-40px)] before:w-px before:bg-hairline md:before:left-1/2 md:before:-translate-x-px">
+            <ol className="relative border-l border-hairline">
               {careerTimeline.map((item, index) => (
-                <div
-                  key={index}
-                  className={`relative flex flex-col gap-4 md:flex-row ${
-                    index % 2 === 0 ? "md:flex-row-reverse" : ""
-                  }`}
-                >
-                  {/* Timeline dot */}
-                  <div className="absolute left-0 top-2 z-10 flex h-10 w-10 items-center justify-center border border-hairline bg-background text-signal md:left-1/2 md:-translate-x-1/2">
-                    <Briefcase className="h-4 w-4" />
-                  </div>
-
-                  {/* Content — pad the center-facing side so the card never
-                      overlaps the centered timeline dot. */}
-                  <div
-                    className={`ml-16 md:ml-0 md:w-1/2 ${
-                      index % 2 === 0 ? "md:pl-16" : "md:pr-16"
+                <li key={index} className="relative pb-10 pl-8 last:pb-0">
+                  <span
+                    aria-hidden
+                    className={`absolute -left-[5px] top-1.5 h-[9px] w-[9px] rounded-full border-2 border-background ${
+                      index === 0 ? "bg-primary" : "bg-muted-foreground/40"
                     }`}
-                  >
-                    <Card className="card-technical rounded-none">
-                      <CardHeader className="pb-2">
-                        <span className="w-fit rounded-sm border border-hairline px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.1em] text-muted-foreground">
-                          {item.period}
-                        </span>
-                        <CardTitle className="font-display text-lg">{item.role}</CardTitle>
-                        <CardDescription className="font-medium text-primary">
-                          {item.company}
-                        </CardDescription>
-                      </CardHeader>
-                      <CardContent>
-                        <p className="text-sm text-muted-foreground">
-                          {item.description}
-                        </p>
-                      </CardContent>
-                    </Card>
-                  </div>
-                </div>
+                  />
+                  <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
+                    {item.period}
+                  </p>
+                  <h3 className="mt-2 font-display text-lg font-semibold leading-snug">
+                    {item.role}
+                  </h3>
+                  <p className="mt-0.5 text-sm font-medium text-primary">{item.company}</p>
+                  <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+                    {item.description}
+                  </p>
+                </li>
               ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Education & Credentials Section */}
-      <section className="section-padding">
-        <div className="container-wide">
-          <div className="grid gap-12 lg:grid-cols-2">
-            {/* Education */}
-            <div>
-              <p className="eyebrow mb-5">Education</p>
-              <h2 className="font-display text-2xl font-bold tracking-tight sm:text-3xl">
-                Academic Foundation
-              </h2>
-              <p className="mt-4 text-muted-foreground">
-                Strong academic credentials in chemistry and plastics engineering
-                provide the scientific foundation for our technical expertise.
-              </p>
-              <div className="mt-8 space-y-6">
-                {education.map((edu, index) => (
-                  <Card key={index} className="card-technical group rounded-none">
-                    <CardContent className="p-6">
-                      <div className="flex items-start gap-4">
-                        <div className="flex h-12 w-12 shrink-0 items-center justify-center border border-hairline text-primary transition-colors group-hover:border-signal/60 group-hover:text-signal">
-                          <GraduationCap className="h-6 w-6" />
-                        </div>
-                        <div>
-                          <h3 className="font-display font-semibold">{edu.degree}</h3>
-                          <p className="text-sm text-primary font-medium">
-                            {edu.specialization}
-                          </p>
-                          <p className="mt-2 text-sm text-muted-foreground">
-                            {edu.description}
-                          </p>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </div>
-
-            {/* CV Download / Connect */}
-            <div>
-              <p className="eyebrow mb-5">Connect</p>
-              <h2 className="font-display text-2xl font-bold tracking-tight sm:text-3xl">
-                Learn More About Us
-              </h2>
-              <p className="mt-4 text-muted-foreground">
-                Interested in learning more about our background and
-                qualifications? Schedule a consultation to discuss how we can
-                help your organization.
-              </p>
-
-              <div className="mt-8 space-y-4">
-                {/* Email Card */}
-                <Card className="card-technical group overflow-hidden rounded-none">
-                  <CardContent className="p-0">
-                    <Link
-                      href="/schedule"
-                      className="flex items-center gap-4 p-6 transition-colors hover:bg-muted/50"
-                    >
-                      <div className="flex h-14 w-14 shrink-0 items-center justify-center border border-hairline text-primary transition-colors group-hover:border-signal/60 group-hover:text-signal">
-                        <Mail className="h-7 w-7" />
-                      </div>
-                      <div className="flex-1">
-                        <h3 className="font-display font-semibold">Get in Touch</h3>
-                        <p className="text-sm text-muted-foreground">
-                          Schedule a consultation or ask questions
-                        </p>
-                      </div>
-                      <ArrowRight className="h-5 w-5 text-muted-foreground" />
-                    </Link>
-                  </CardContent>
-                </Card>
-              </div>
-            </div>
+            </ol>
           </div>
         </div>
       </section>
@@ -533,7 +420,7 @@ export default function AboutPage() {
                 {deepExpertise.map((item, index) => {
                   const IconComponent = item.icon;
                   return (
-                    <Card key={index} className="card-technical group rounded-none">
+                    <Card key={index} className="card-technical group">
                       <CardContent className="flex items-start gap-4 p-6">
                         <div className="flex h-12 w-12 shrink-0 items-center justify-center border border-hairline text-primary transition-colors group-hover:border-signal/60 group-hover:text-signal">
                           <IconComponent className="h-6 w-6" />
@@ -572,7 +459,7 @@ export default function AboutPage() {
                   </span>
                 ))}
               </div>
-              <Card className="card-technical mt-6 rounded-none">
+              <Card className="card-technical mt-6">
                 <CardContent className="p-6">
                   <h3 className="mb-3 font-display font-semibold">
                     Regulatory Experience Includes:
@@ -582,7 +469,7 @@ export default function AboutPage() {
                       "Process validation & automated inspection under QMSR",
                       "Computer Software Assurance (CSA) for manufacturing systems",
                       "FDA and Notified Body audit preparation",
-                      "Predetermined Change Control for models that retrain",
+                      "Change control for validated processes and equipment",
                       "510(k) support, EU MDR technical files & CAPA systems",
                     ].map((item, index) => (
                       <li key={index} className="flex items-start gap-2">
@@ -618,7 +505,7 @@ export default function AboutPage() {
             {coreValues.map((value, index) => {
               const IconComponent = value.icon;
               return (
-                <Card key={index} className="card-technical group rounded-none text-center">
+                <Card key={index} className="card-technical group text-center">
                   <CardHeader>
                     <div className="mx-auto mb-2 flex h-14 w-14 items-center justify-center border border-hairline text-primary transition-colors group-hover:border-signal/60 group-hover:text-signal">
                       <IconComponent className="h-7 w-7" />
@@ -635,7 +522,7 @@ export default function AboutPage() {
 
           {/* Quote */}
           <div className="mx-auto mt-16 max-w-3xl">
-            <div className="surface-ink relative overflow-hidden rounded-none">
+            <div className="surface-ink relative overflow-hidden rounded-lg">
               <div className="grid-dots absolute inset-0 opacity-50" aria-hidden />
               <div className="relative p-8 text-center">
                 <blockquote className="text-xl font-medium italic text-ink-foreground">

@@ -50,14 +50,14 @@ const SECTIONS = [
     icon: ShieldCheck,
     title: "Governance & Readiness",
     items: [
-      "If you're regulated, you know AI touching the process must be validated and explainable.",
-      "There's an owner who would maintain a model after it's deployed.",
-      "Leadership expects an honest answer about where AI is premature — not just where it helps.",
+      "If you're regulated, you know any change to the process must be validated and documented.",
+      "There's an owner who would maintain new systems after they're deployed.",
+      "Leadership expects an honest answer about where investment is premature — not just where it helps.",
     ],
   },
 ];
 
-export default function AiReadinessChecklistPage() {
+export default function SmartManufacturingChecklistPage() {
   return (
     <MainLayout>
       {/* Hero */}

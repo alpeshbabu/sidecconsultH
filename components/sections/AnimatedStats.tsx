@@ -72,7 +72,7 @@ function AnimatedNumber({ value, prefix = "", suffix = "" }: { value: string; pr
   return (
     <div
       ref={ref}
-      className="font-display text-4xl font-bold leading-none tracking-tight tabular-nums text-foreground md:text-5xl lg:text-6xl"
+      className="whitespace-nowrap font-display text-3xl font-bold leading-none tracking-tight tabular-nums text-foreground sm:text-4xl md:text-5xl lg:text-6xl"
     >
       {prefix}
       {displayValue}

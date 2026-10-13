@@ -262,7 +262,7 @@ export default function SchedulePage() {
         <div className="container-wide">
           <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
             {/* Calendar & Slots */}
-            <Card className="card-technical rounded-none">
+            <Card className="card-technical">
               <CardHeader>
                 <CardTitle className="font-display">Choose a Time Slot</CardTitle>
               </CardHeader>
@@ -394,7 +394,7 @@ export default function SchedulePage() {
             </Card>
 
             {/* Booking Form */}
-            <Card className="card-technical rounded-none">
+            <Card className="card-technical">
               <CardHeader>
                 <CardTitle className="font-display">Your Details</CardTitle>
               </CardHeader>

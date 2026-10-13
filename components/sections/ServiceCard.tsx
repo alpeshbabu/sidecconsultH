@@ -32,7 +32,7 @@ export function ServiceCard({
   if (variant === "compact") {
     return (
       <Link href={href} className="group block h-full">
-        <Card className={cn("card-technical h-full rounded-none", className)}>
+        <Card className={cn("card-technical h-full", className)}>
           <CardHeader className="pb-3">
             <div className="flex items-center gap-4">
               <div className="flex h-11 w-11 shrink-0 items-center justify-center border border-hairline text-primary transition-colors group-hover:border-signal/60 group-hover:text-signal">
@@ -60,7 +60,7 @@ export function ServiceCard({
   if (variant === "featured") {
     return (
       <Link href={href} className="group block h-full">
-        <Card className={cn("card-technical h-full gap-0 overflow-hidden rounded-none py-0", className)}>
+        <Card className={cn("card-technical h-full gap-0 overflow-hidden py-0", className)}>
           <div className="grid md:grid-cols-2">
             {/* Visual Side */}
             <div className="surface-ink relative flex flex-col justify-center p-8">
@@ -102,7 +102,7 @@ export function ServiceCard({
   // Default variant
   return (
     <Link href={href} className="group block h-full">
-      <Card className={cn("card-technical h-full rounded-none", className)}>
+      <Card className={cn("card-technical h-full", className)}>
         <CardHeader>
           <div className="mb-4 flex h-14 w-14 items-center justify-center border border-hairline text-primary transition-colors group-hover:border-signal/60 group-hover:text-signal">
             <Icon className="h-7 w-7" />

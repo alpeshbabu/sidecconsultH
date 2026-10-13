@@ -129,7 +129,7 @@ export default function ContactPage() {
   });
 
   // Preselect the service area from a ?service= query param (e.g. funnel CTAs
-  // pointing to /contact?service=ai-readiness). Read from the URL directly to
+  // pointing to /contact?service=smart-manufacturing). Read from the URL directly to
   // avoid a useSearchParams Suspense boundary.
   useEffect(() => {
     const svc = new URLSearchParams(window.location.search).get("service");
@@ -264,7 +264,7 @@ export default function ContactPage() {
             <div className="lg:col-span-2">
               {isSubmitted ? (
                 // Success State
-                <Card className="card-technical rounded-none">
+                <Card className="card-technical">
                   <CardContent className="flex flex-col items-center py-16 text-center">
                     <div className="mb-6 flex h-20 w-20 items-center justify-center border border-hairline text-signal">
                       <CheckCircle className="h-10 w-10" />
@@ -296,7 +296,7 @@ export default function ContactPage() {
                 </Card>
               ) : (
                 // Form
-                <Card className="card-technical rounded-none">
+                <Card className="card-technical">
                   <CardHeader>
                     <CardTitle className="font-display text-2xl tracking-tight">
                       Tell Us About Your Project
@@ -617,7 +617,7 @@ export default function ContactPage() {
             {/* Sidebar */}
             <div className="space-y-6">
               {/* What to Expect */}
-              <Card className="card-technical rounded-none">
+              <Card className="card-technical">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 font-display text-lg">
                     <Calendar className="h-5 w-5 text-signal" />
@@ -662,7 +662,7 @@ export default function ContactPage() {
               </Card>
 
               {/* Schedule Directly */}
-              <Card className="card-technical rounded-none">
+              <Card className="card-technical">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 font-display text-lg">
                     <Calendar className="h-5 w-5 text-signal" />
@@ -688,7 +688,7 @@ export default function ContactPage() {
               </Card>
 
               {/* Direct Contact */}
-              <Card className="card-technical rounded-none">
+              <Card className="card-technical">
                 <CardHeader>
                   <CardTitle className="font-display text-lg">
                     Prefer Direct Contact?
@@ -716,7 +716,7 @@ export default function ContactPage() {
               </Card>
 
               {/* IP Protection Guarantee */}
-              <Card className="card-technical rounded-none">
+              <Card className="card-technical">
                 <CardContent className="flex items-center gap-4 p-6">
                   <div className="flex h-12 w-12 shrink-0 items-center justify-center border border-hairline text-signal">
                     <Shield className="h-6 w-6" />
@@ -734,7 +734,7 @@ export default function ContactPage() {
               </Card>
 
               {/* Response Time */}
-              <Card className="surface-ink relative overflow-hidden rounded-none border-0">
+              <Card className="surface-ink relative overflow-hidden rounded-lg border-0">
                 <div className="grid-dots absolute inset-0 opacity-50" aria-hidden />
                 <CardContent className="relative flex items-center gap-4 p-6">
                   <div className="flex h-12 w-12 shrink-0 items-center justify-center border border-white/15 text-signal">
@@ -791,7 +791,7 @@ export default function ContactPage() {
                     "Yes! We work with startups bringing their first medical device to market, mid-size manufacturers scaling operations, and large enterprises optimizing global supply chains. Our approach is tailored to your specific needs and resources.",
                 },
               ].map((faq, index) => (
-                <Card key={index} className="card-technical rounded-none">
+                <Card key={index} className="card-technical">
                   <CardHeader className="pb-2">
                     <CardTitle className="font-display text-base font-semibold">
                       {faq.question}

@@ -233,7 +233,7 @@ export default async function ResourcesPage() {
         /* Empty State - No Published Posts */
         <section className="section-padding">
           <div className="container-wide">
-            <div className="card-technical rounded-none mx-auto max-w-2xl p-8 text-center md:p-10">
+            <div className="card-technical mx-auto max-w-2xl p-8 text-center md:p-10">
               <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center border border-hairline text-signal">
                 <BookOpen className="h-8 w-8" />
               </div>

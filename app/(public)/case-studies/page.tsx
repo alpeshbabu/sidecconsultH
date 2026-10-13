@@ -34,7 +34,7 @@ export const metadata: Metadata = {
 
 const CASE_STUDIES = [
   {
-    id: "scrap-reduction-ml-control",
+    id: "scrap-reduction-process-control",
     icon: Cpu,
     sector: "Medical Device (Class II)",
     pillar: "Process Optimization & Technology",
@@ -43,7 +43,7 @@ const CASE_STUDIES = [
       "A Class II molder ran a 32-cavity tool with persistent scrap from short shots and dimensional drift, especially when switching resin lots. Operators chased the process manually, and scrap spiked after every material change.",
     approach: [
       "Characterized the baseline with scientific molding and validated existing sensor data quality",
-      "Trained a predictive model mapping process parameters and material state to part quality",
+      "Mapped process parameters and material state to part quality with structured DOE data",
       "Used multi-objective optimization to balance scrap, cycle time, and dimensional capability",
       "Deployed parameter recommendations for lot-to-lot material adaptation",
     ],
@@ -53,7 +53,7 @@ const CASE_STUDIES = [
       "Faster, calmer material changeovers",
     ],
     governance:
-      "Model and acceptance criteria documented; changes managed under the site's process-validation framework.",
+      "Process windows and acceptance criteria documented; changes managed under the site's process-validation framework.",
   },
   {
     id: "validated-vision-inspection",
@@ -62,20 +62,20 @@ const CASE_STUDIES = [
     pillar: "Quality & Inspection Automation",
     title: "Validated vision inspection for automated defect detection",
     challenge:
-      "A manufacturer wanted automated vision inspection for cosmetic and dimensional defects on an implantable-device component, but prior attempts stalled because the model couldn't be validated or explained to auditors.",
+      "A manufacturer wanted automated vision inspection for cosmetic and dimensional defects on an implantable-device component, but prior attempts stalled because the system couldn't be validated or justified to auditors.",
     approach: [
       "Define sensitivity / false-negative limits up front",
       "Apply Computer Software Assurance (CSA) — deepest testing on the highest-risk failure modes",
-      "Built explainable criteria into the inspection logic so rejections could be easily verified",
-      "Produced IQ/OQ/PQ-style validation evidence and a model-governance plan",
+      "Built clear, documented criteria into the inspection logic so rejections could be easily verified",
+      "Produced IQ/OQ/PQ-style validation evidence and a change-control plan",
     ],
     result: [
-      "Inspection model validated and in production",
+      "Inspection system validated and in production",
       "Clean notified-body audit of the system",
       "Lower manual inspection load",
     ],
     governance:
-      "Full validation package, explainability evidence, and a Predetermined Change Control plan for future retraining.",
+      "Full validation package, traceable inspection criteria, and a change-control plan for future updates.",
   },
   {
     id: "predictive-maintenance-uptime",
@@ -87,14 +87,14 @@ const CASE_STUDIES = [
       "An automotive molder lost expensive production time to unplanned press and auxiliary-equipment failures, and a prior 'sensors everywhere' pilot had produced data nobody used.",
     approach: [
       "Ranked assets by downtime cost and failure predictability — focused only on the high-consequence few",
-      "Built the IIoT data foundation (reliable time-series collection) before any modeling",
+      "Built the IIoT data foundation (reliable time-series collection) before any analysis",
       "Analyzed degradation signatures on critical presses and auxiliary equipment",
       "Set condition thresholds tied to maintenance workflows, not just dashboards",
     ],
     result: [
       "Fewer unplanned stoppages on targeted assets",
       "Higher OEE on the affected lines",
-      "A data foundation reused for later AI work",
+      "A data foundation reused for later process-analytics work",
     ],
     governance:
       "Scoped honestly — assets where predictive maintenance didn't pay were left on preventive schedules.",
@@ -277,7 +277,7 @@ export default function CaseStudiesPage() {
       {/* Your operation next */}
       <section className="section-padding hairline-t">
         <div className="container-wide">
-          <Card className="card-technical rounded-none">
+          <Card className="card-technical">
             <CardContent className="flex flex-col items-start gap-6 p-8 md:flex-row md:items-center md:justify-between">
               <div className="max-w-2xl">
                 <h2 className="font-display text-2xl font-bold tracking-tight">
