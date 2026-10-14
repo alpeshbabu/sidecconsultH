@@ -1,0 +1,111 @@
+# Production stack for a single Hostinger VPS:
+#   caddy  - HTTPS termination (automatic Let's Encrypt), serves /uploads
+#   app    - Next.js standalone server
+#   db     - PostgreSQL 17 (data in the `pgdata` volume)
+#   migrate- one-shot `prisma migrate deploy` (also used for seeding)
+#   cron   - daily appointment-reminder trigger (replaces vercel.json crons)
+#
+# Configuration comes from `.env` next to this file (see deploy/env.example).
+# Day-to-day use goes through deploy/deploy.sh, which sequences the build so
+# `next build` can prerender pages against a migrated database.
+
+name: sidec
+
+services:
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:?set in .env}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set in .env}
+      POSTGRES_DB: ${POSTGRES_DB:?set in .env}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      # Loopback only: reachable from the VPS itself (image build, psql, backups),
+      # never from the internet.
+      - "127.0.0.1:5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  migrate:
+    build:
+      context: .
+      target: migrate
+    image: sidec-migrate
+    env_file: .env
+    environment:
+      DATABASE_URL: ${DATABASE_URL:?set in .env}
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: "no"
+    profiles: ["tools"]
+
+  app:
+    build:
+      context: .
+      target: runner
+      network: host
+      secrets:
+        - database_url
+    image: sidec-app
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      NODE_ENV: production
+      PORT: "3000"
+      HOSTNAME: 0.0.0.0
+    volumes:
+      - uploads:/app/public/uploads
+    depends_on:
+      db:
+        condition: service_healthy
+    expose:
+      - "3000"
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    environment:
+      SITE_DOMAIN: ${SITE_DOMAIN:?set in .env}
+      ACME_EMAIL: ${ACME_EMAIL:-}
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - uploads:/srv/uploads:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - app
+
+  cron:
+    image: alpine:3.20
+    restart: unless-stopped
+    environment:
+      CRON_SECRET: ${CRON_SECRET:-}
+      TZ: ${CRON_TZ:-America/New_York}
+    command: >
+      sh -c 'apk add --no-cache tzdata curl >/dev/null &&
+             echo "0 9 * * * curl -fsS -m 120 -H \"Authorization: Bearer $$CRON_SECRET\" http://app:3000/api/cron/appointment-reminders" | crontab - &&
+             crond -f -l 2'
+    depends_on:
+      - app
+
+secrets:
+  database_url:
+    # Set by deploy/deploy.sh: same credentials as DATABASE_URL but pointing at
+    # 127.0.0.1:5432, because the image build runs on the host network.
+    environment: BUILD_DATABASE_URL
+
+volumes:
+  pgdata:
+  uploads:
+  caddy_data:
+  caddy_config:

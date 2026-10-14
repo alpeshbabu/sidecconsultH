@@ -12,12 +12,10 @@
  * It never creates or modifies users. Run with:  npx tsx prisma/seed-blog-ai.ts
  */
 import "dotenv/config";
-import { PrismaClient, PostStatus, Role } from "../lib/generated/prisma";
-import { withAccelerate } from "@prisma/extension-accelerate";
+import { PostStatus, Role } from "../lib/generated/prisma";
+import { createPrismaClient } from "../lib/prisma-factory";
 
-const prisma = new PrismaClient({
-  accelerateUrl: process.env.DATABASE_URL,
-}).$extends(withAccelerate());
+const prisma = createPrismaClient();
 
 // 6 AI content categories — slugs match lib/constants.ts BLOG_CATEGORIES.
 const AI_CATEGORIES = [

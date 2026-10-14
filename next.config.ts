@@ -1,6 +1,14 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Self-contained server bundle for the Docker image (see Dockerfile).
+  output: "standalone",
+  // Prisma 7 loads its WASM query compiler from disk at runtime; make sure the
+  // generated client (incl. *.wasm) ends up in the standalone bundle.
+  outputFileTracingIncludes: {
+    "/*": ["./lib/generated/prisma/**/*"],
+  },
+
   // Image optimization configuration
   images: {
     remotePatterns: [

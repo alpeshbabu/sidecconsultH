@@ -54,3 +54,6 @@ next-env.d.ts
 
 # one-off scripts and local DB backups
 /scratch/
+
+# VPS backups (deploy/backup.sh)
+/backups/

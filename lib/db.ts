@@ -1,18 +1,9 @@
-import { PrismaClient } from "@/lib/generated/prisma";
+import type { PrismaClient } from "@/lib/generated/prisma";
+import { createPrismaClient } from "@/lib/prisma-factory";
 
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
 };
-
-function createPrismaClient() {
-  return new PrismaClient({
-    accelerateUrl: process.env.DATABASE_URL,
-    log:
-      process.env.NODE_ENV === "development"
-        ? ["query", "error", "warn"]
-        : ["error"],
-  });
-}
 
 export const prisma = globalForPrisma.prisma ?? createPrismaClient();
 

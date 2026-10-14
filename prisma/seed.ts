@@ -1,11 +1,9 @@
 import "dotenv/config";
-import { PrismaClient, Role, PostStatus } from "../lib/generated/prisma";
-import { withAccelerate } from "@prisma/extension-accelerate";
+import { Role, PostStatus } from "../lib/generated/prisma";
+import { createPrismaClient } from "../lib/prisma-factory";
 import { hash } from "bcryptjs";
 
-const prisma = new PrismaClient({
-  accelerateUrl: process.env.DATABASE_URL,
-}).$extends(withAccelerate());
+const prisma = createPrismaClient();
 
 async function main() {
   console.log("🌱 Starting database seed...");

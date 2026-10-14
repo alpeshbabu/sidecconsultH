@@ -1,6 +1,7 @@
-import { PrismaClient } from "@/lib/generated/prisma";
+import "dotenv/config";
+import { createPrismaClient } from "../lib/prisma-factory";
 
-const prisma = new PrismaClient();
+const prisma = createPrismaClient();
 
 async function backupDatabase() {
   try {
